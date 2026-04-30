@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_datos_generales">
+
+    <fragment
+        android:id="@+id/nav_datos_generales"
+        android:name="com.example.contrato.DatosGeneralesFragment"
+        android:label="Datos Generales" />
+
+    <fragment
+        android:id="@+id/nav_condiciones"
+        android:name="com.example.contrato.CondicionesFragment"
+        android:label="Condiciones de Venta" />
+    <fragment
+        android:id="@+id/nav_financiamiento"
+        android:name="com.example.contrato.FinanciamientoFragment"
+        android:label="Financiamiento" />
+</navigation>

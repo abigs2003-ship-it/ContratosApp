@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_dg"
+    app:startDestination="@id/nav_titulares">
+
+    <fragment
+        android:id="@+id/nav_titulares"
+        android:name="com.example.contrato.TitularesFragment"
+        android:label="@string/datosgen"
+        tools:layout="@layout/fragment_titulares" />
+
+    <fragment
+        android:id="@+id/nav_direcciones"
+        android:name="com.example.contrato.PestañaDireccion.PestañaDireccionFragment"
+        android:label="@string/condicionesbot"
+        tools:layout="@layout/fragment_direccion" />
+
+
+</navigation>
