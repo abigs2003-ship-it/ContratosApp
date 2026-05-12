@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView style="@style/FieldLabel" android:text="Street Address" />
+    <EditText android:id="@+id/editUsaCalle" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
+            <TextView style="@style/FieldLabel" android:text="P.O. Box" />
+            <EditText android:id="@+id/editUsaPoBox" style="@style/FieldInput" android:inputType="text" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView style="@style/FieldLabel" android:text="City" />
+            <EditText android:id="@+id/editUsaCity" style="@style/FieldInput" android:inputType="text" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
+            <TextView style="@style/FieldLabel" android:text="State" />
+            <EditText android:id="@+id/editUsaState" style="@style/FieldInput" android:inputType="text" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView style="@style/FieldLabel" android:text="Zip Code" />
+            <EditText android:id="@+id/editUsaZip" style="@style/FieldInput" android:inputType="number" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView style="@style/FieldLabel" android:text="Neighborhood" />
+    <EditText android:id="@+id/editUsaNeighborhood" style="@style/FieldInput" android:inputType="text" />
+</LinearLayout>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pacificagris">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/person_arms_up"
+                    app:tint="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/redes"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_section_content"
+                android:padding="15dp">
+
+                <!-- Platform cards row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                    <!-- Facebook card -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card_facebook"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_circle_facebook"
+                                android:contentDescription="Facebook"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_facebook" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Facebook"
+                                    android:textColor="@color/text_white"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="facebook.com"
+                                    android:textColor="@color/accent_facebook_light"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:letterSpacing="0.05"
+                            android:text="@string/usuario"
+                            android:textColor="@color/accent_facebook_light"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etFacebookUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/bg_input_facebook"
+                            android:inputType="text"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btnAgregarFacebook"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            app:backgroundTint="@null"
+                            android:background="@drawable/bg_btn_facebook"
+                            android:text="@string/agregarredes"
+                            android:textColor="@color/text_white"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Instagram card -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card_instagram"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_circle_instagram"
+                                android:contentDescription="Instagram"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_instagram" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Instagram"
+                                    android:textColor="@color/text_white"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="instagram.com"
+                                    android:textColor="@color/accent_instagram_light"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:letterSpacing="0.05"
+                            android:text="@string/usuario"
+                            android:textColor="@color/accent_instagram_light"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etInstagramUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/bg_input_instagram"
+                            android:inputType="text"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btnAgregarInstagram"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:background="@drawable/bg_btn_instagram"
+                            android:text="@string/agregarredes"
+                            app:backgroundTint="@null"
+                            android:textColor="@color/text_white"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- X / Twitter card -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_card_twitter"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="14dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/bg_circle_twitter"
+                                android:contentDescription="X Twitter"
+                                android:padding="8dp"
+                                android:src="@drawable/ic_x_twitter" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="X (Twitter)"
+                                    android:textColor="@color/text_white"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="x.com"
+                                    android:textColor="@color/accent_twitter_light"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:letterSpacing="0.05"
+                            android:text="@string/usuario"
+                            android:textColor="@color/accent_twitter_light"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etTwitterUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:layout_marginBottom="12dp"
+                            android:background="@drawable/bg_input_twitter"
+                            android:inputType="text"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btnAgregarTwitter"
+                            android:layout_width="match_parent"
+                            android:layout_height="38dp"
+                            android:background="@drawable/bg_btn_twitter"
+                            android:text="@string/agregarredes"
+                            android:textColor="@color/text_white"
+                            android:textSize="13sp"
+                            app:backgroundTint="@null"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Added accounts list -->
+                <LinearLayout
+                    android:id="@+id/containerCuentas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/bg_list_container"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_list_header"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp">
+                        <View
+                            android:layout_width="24dp"
+                            android:layout_height="1dp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:letterSpacing="0.05"
+                            android:text=""
+                            android:textColor="@color/label_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.05"
+                            android:text=""
+                            android:textColor="@color/label_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <View
+                            android:layout_width="28dp"
+                            android:layout_height="1dp" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:background="@drawable/bg_card_twitter"
+                        android:padding="16dp"
+                        android:id="@+id/rvCuentasSociales"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/cbNoRedes"
+                    android:layout_width="wrap_content"
+                    android:fontFamily="serif"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/no_deseo_redes"
+                    android:textColor="@color/pacificaazul"
+                    android:buttonTint="@color/pacificaazul" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/AceptarTarea"
+            android:background="@drawable/btn_continuar"
+            app:backgroundTint="@null"
+            app:icon="@drawable/ic_cont"
+            app:iconSize="20dp"
+            android:text="@string/continuar"
+            android:textSize="15dp"
+            app:iconGravity="textEnd" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,991 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pacificagris"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_section_header"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/inventario"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_section_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="serif"
+                android:text="@string/tipoventa"
+                android:textColor="@color/pacificagris"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="0dp">
+
+
+                <LinearLayout
+                    android:id="@+id/btnTipoVenta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNueva"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="100dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="6dp"
+                        android:checkable="true"
+                        android:text="@string/nueva"
+                        android:textAllCaps="false"
+                        android:textColor="#1E293B"
+                        android:textSize="15sp"
+                        app:backgroundTint="@color/white"
+                        app:cornerRadius="8dp"
+                        app:strokeColor="#CBD5E1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnUpgrade"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="100dp"
+                        android:layout_height="44dp"
+                        android:layout_marginEnd="6dp"
+                        android:checkable="true"
+                        android:text="Upgrade"
+                        android:textAllCaps="false"
+                        android:textColor="#1E293B"
+                        android:textSize="15sp"
+                        app:backgroundTint="@color/white"
+                        app:cornerRadius="8dp"
+                        app:strokeColor="#CBD5E1" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingEnd="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:text="@string/unidad"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spUnidad"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_html_input" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="serif"
+                            android:text="@string/noaños"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editNoAnios"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_html_input"
+                            android:inputType="number"
+                            android:imeOptions="actionDone"
+                            android:padding="8dp"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:paddingStart="6dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="serif"
+                            android:text="@string/temporada"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spTemporada"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_html_input" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:fontFamily="serif"
+                            android:text="@string/año1er"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spAnioUso"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@drawable/bg_html_input" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <ImageButton
+                    android:id="@+id/btnLimpiarInventario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_html_btn_outline"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="8dp"
+                    android:src="@drawable/ic_trash"
+                    app:backgroundTint="@null"
+                    app:tint="@color/black" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- DATOS VENTA  -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_section_header"
+            android:padding="14dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/datosventa"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_section_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Currency Selection Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingEnd="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/moneda"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spMoneda"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_html_input" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="Tipo Cambio"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editTipoCambio"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:text="20.00"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Precio Bruto Row -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/bruto"
+                android:textColor="@color/pacificagris"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editPrecioBruto"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:imeOptions="actionDone"
+                    android:background="@drawable/bg_html_input"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvMonedaBruto"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="MN"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- Monto a Cuenta  (Upgrade) -->
+            <LinearLayout
+                android:id="@+id/layoutMontoCuenta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="serif"
+                    android:text="@string/acuenta"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editMontoCuenta"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:imeOptions="actionNext"
+                        android:nextFocusForward="@string/nocontratos"
+                        android:maxLength="1"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaCuenta"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:fontFamily="serif"
+                        android:imeOptions="actionDone"
+                        android:text="@string/nocontratos"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/editNoContratosVenta"
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:inputType="number"
+
+                        android:imeOptions="actionDone"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_html_input"
+                        android:gravity="center"
+                        android:maxLength="15"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/containerContratosDinamicos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Precio Neto Row -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+
+                android:fontFamily="serif"
+                android:text="@string/precioneto"
+                android:textColor="@color/pacificagris"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editPrecioNeto"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_html_input"
+                    android:focusable="false"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvMonedaNeto"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="MN"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- Tipo de Pago Selection -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="serif"
+                android:text="@string/tipopago"
+                android:textColor="@color/pacificagris"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/rgTipoPago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbFinanciado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Financiado"
+                    android:textSize="15sp" />
+
+                <RadioButton
+                    android:id="@+id/rbContado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Contado"
+                    android:textSize="15sp" />
+            </RadioGroup>
+
+            <!-- Enganche Row -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="serif"
+                android:text="@string/enganchetotal"
+                android:textColor="@color/pacificagris"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editEnganchePorcentaje"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_html_input"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="%"
+                    android:textSize="18sp" />
+
+
+                <EditText
+                    android:id="@+id/editEngancheMonto"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_html_input"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvMonedaEnganche"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="MN"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <!-- Enganche Details Layout -->
+            <LinearLayout
+                android:id="@+id/EngacheColapsable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="12dp"
+                    android:background="#EEEEEE" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="@string/enganchesala"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editEngancheSalaMonto"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaEngancheSala"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editEngancheSalaPorcentaje"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_html_input"
+                        android:gravity="center"
+                        android:hint="%"
+                        android:inputType="numberDecimal"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="%"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="serif"
+                    android:text="@string/descuentos"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editVarios"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:nextFocusForward="@id/editNoDesc"
+                        android:imeOptions="actionNext"
+                        android:layout_weight="1"
+                        android:maxLength="1"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaVarios"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="No.Desc:"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/editNoDesc"
+                        android:layout_width="100dp"
+                        android:layout_marginEnd="60dp"
+                        android:imeOptions="actionDone"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_html_input"
+                        android:gravity="center"
+                        android:inputType="number"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/containerDescuentosDinamicos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="serif"
+                    android:text="@string/enganchediferido"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editEngDiferido"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:nextFocusForward="@id/editNoPagosEng"
+                        android:maxLength="1"
+                        android:imeOptions="actionNext"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaEngDiferido"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/nopagos"
+                        android:textSize="14sp" />
+
+                    <EditText
+                        android:id="@+id/editNoPagosEng"
+                        android:layout_width="100dp"
+                        android:imeOptions="actionDone"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="4dp"
+                        android:background="@drawable/bg_html_input"
+                        android:gravity="center"
+                        android:layout_marginEnd="60dp"
+                        android:inputType="number"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/containerPagosDinamicos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="serif"
+                    android:text="@string/saldoenganche"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editSaldoEng"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_html_input"
+                        android:focusable="false"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaSaldoEng"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Results Section -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginVertical="12dp"
+                android:background="#EEEEEE" />
+
+            <LinearLayout
+                android:id="@+id/layoutMontoFinanciar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="serif"
+                        android:text="@string/montofinanciar"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="1"
+                        android:fontFamily="serif"
+                        android:text="@string/costocontrato"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editMontoFinanciar"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:imeOptions="actionNext"
+                        android:nextFocusForward="@string/costocontrato"
+
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaMontoFinanciar"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/editCostoContrato"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="6dp"
+                        android:imeOptions="actionDone"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_html_input"
+                        android:inputType="numberDecimal"
+                        android:padding="8dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvMonedaCostoContrato"
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:gravity="center"
+                        android:text="MN"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="serif"
+                    android:text="@string/pagosala"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="serif"
+                    android:text="@string/costomembresia"
+                    android:imeOptions="actionDone"
+                    android:textColor="@color/pacificagris"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editpagosala"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_html_input"
+                    android:focusable="false"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvMonedaPagoSala"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="MN"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/editcostomembresia"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_html_input"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tvMonedaCostoMembresia"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:gravity="center"
+                    android:text="MN"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnLimpiarDatosdeVenta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/bg_html_btn_outline"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp"
+                android:src="@drawable/ic_trash"
+                app:backgroundTint="@null"
+                app:tint="@color/black" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/AceptarTarea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_continuar"
+            android:text="@string/continuar"
+            android:textSize="15dp"
+            app:backgroundTint="@null"
+            app:icon="@drawable/ic_cont"
+            app:iconGravity="textEnd"
+            app:iconSize="20dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

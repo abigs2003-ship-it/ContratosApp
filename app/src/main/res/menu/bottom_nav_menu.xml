@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_datos_generales"
@@ -10,5 +11,5 @@
     <item
         android:id="@+id/nav_financiamiento"
         android:icon="@drawable/ic_dollar"
-        android:title="@string/financiamiento" />" />
+        android:title="@string/financiamiento" />
 </menu>

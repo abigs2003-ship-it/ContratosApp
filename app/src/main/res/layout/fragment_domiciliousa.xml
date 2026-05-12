@@ -1,50 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
         android:text="Address Format"
-        android:textColor="#FF2C2C"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textColor="@color/pacificagris"
+        android:fontFamily="serif"
 
-    <RadioGroup
-        android:id="@+id/rgFormat"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <LinearLayout
+        android:id="@+id/llFormatButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:layout_marginBottom="24dp">
 
-        <RadioButton
-            android:id="@+id/rbStandard"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStandard"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:text="Standard" />
+            android:text="Standard"
 
-        <RadioButton
-            android:id="@+id/rbPObox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            android:layout_marginEnd="6dp"
+            app:cornerRadius="8dp"
+            app:strokeColor="#9095D0"
+            android:textColor="#1E293B"
+            app:backgroundTint="@color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPObox"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:text="P.O. Box" />
+            android:text="P.O. Box"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            android:layout_marginEnd="6dp"
+            app:cornerRadius="8dp"
+            app:strokeColor="#CBD5E1"
+            android:textColor="#1E293B"
+            app:backgroundTint="@color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
 
-        <RadioButton
-            android:id="@+id/rbCMR"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCMR"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
             android:layout_weight="1"
-            android:text="CMR" />
-    </RadioGroup>
+            android:text="CMR / APO"
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            app:cornerRadius="8dp"
+            app:strokeColor="#CBD5E1"
+            android:textColor="#1E293B"
+            app:backgroundTint="@color/white"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"/>
+    </LinearLayout>
 
-    <!-- Placeholder for formats -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_formato_placeholder"
         android:layout_width="match_parent"

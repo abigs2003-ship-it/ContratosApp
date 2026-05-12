@@ -1,155 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Street Address"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editCalle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:inputType="textCapWords" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Street"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editStreet"
-                android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="City"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
+                android:text="City"
+                android:fontFamily="serif"
+                android:textSize="15sp"
+                android:textColor="@color/pacificagris"
+                android:textStyle="bold" />
+            <EditText
                 android:id="@+id/editCity"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:inputType="textCapWords"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="State"
-                android:textColor="#FF2C2C"
+                android:fontFamily="serif"
                 android:textSize="15sp"
+                android:textColor="@color/pacificagris"
                 android:textStyle="bold" />
+            <EditText
+                android:id="@+id/editState"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:inputType="textCapWords" />
+        </LinearLayout>
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginEnd="8dp">
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
                 android:text="Zip Code"
-                android:textColor="#FF2C2C"
+                android:fontFamily="serif"
                 android:textSize="15sp"
+                android:textColor="@color/pacificagris"
                 android:textStyle="bold" />
-
-
+            <EditText
+                android:id="@+id/editZipCode"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:background="@drawable/bg_input"
+                android:nextFocusForward="@id/editNeighborhood"
+                android:imeOptions="actionDone"
+                android:paddingStart="12dp"
+                android:inputType="number" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/zipcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Country"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editCountry"
+                android:text="Neighborhood"
+                android:fontFamily="serif"
+                android:textSize="15sp"
+                android:textColor="@color/pacificagris"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/editNeighborhood"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:clickable="false"
-                android:text="USA"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
+                android:layout_height="40dp"
+                android:textSize="15sp"
+                android:background="@drawable/bg_input"
+                android:paddingStart="12dp"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords" />
+        </LinearLayout>
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Country"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editCountryUSA"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:text="USA"
+        android:enabled="false"
+        android:inputType="text" />
+</LinearLayout>

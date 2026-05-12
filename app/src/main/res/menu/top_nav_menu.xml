@@ -5,5 +5,8 @@
     <item
         android:id="@+id/nav_direcciones"
         android:title="@string/direccionpestaña" />
+    <item
+        android:id="@+id/nav_redes_sociales"
+        android:title="@string/redessocialesnav" />
 
 </menu>

@@ -3,755 +3,622 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
+    android:background="@color/pacificagris">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
-        android:baselineAligned="false"
-        android:padding="9dp"
-        >
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:padding="10dp"
-                    android:background="@drawable/rounded">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="@string/domicilioform"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="@color/white" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <RadioGroup
-                    android:id="@+id/rgPais"
-                    android:layout_width="500dp"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_horizontal"
-                    >
-                    <RadioButton
-                        android:id="@+id/rbMexico"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-
-                        android:text="Mexico"/>
-                    <RadioButton
-                        android:id="@+id/rbUSA"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="USA"/>
-                    <RadioButton
-                        android:id="@+id/rbCanada"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Canada"/>
-                    <RadioButton
-                        android:id="@+id/rbOtro"
-                        android:layout_width="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:text="Otro"/>
-                </RadioGroup>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <Button
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    android:layout_height="48dp"
-                    android:backgroundTint="@color/white"
-                    android:shadowColor="@color/black"
-                    android:padding="0dp"
-                    android:text="@string/aceptarbot"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp" />
-                <Button
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    android:layout_height="48dp"
-                    android:backgroundTint="@color/white"
-                    android:shadowColor="@color/black"
-                    android:padding="0dp"
-                    android:text="@string/limpiarbot"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp" />
-
-            </LinearLayout>
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_domicilioformato"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
             android:orientation="vertical"
-            >
-
-
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded">
-
-
-
+                android:layout_height="48dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_home"
+                    app:tint="@color/white" />
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/telefonoform"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/white" />
-
-
+                    android:fontFamily="serif"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/domicilioform"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="80dp"
-                >
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"></Space>
-                <TextView
-                    android:layout_width="0dp"
-                    android:text="Lada"
-                    android:gravity="center"
-                    android:layout_weight="0.5"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="30dp"
-                    >
-                </TextView>
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"></Space>
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="Whatsapp"
-                android:gravity="center"
-                android:layout_marginEnd="10dp"
-                android:textSize="16sp"
-                ></TextView>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    >
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:textSize="16dp"
-                        android:text="Primario"></TextView>
-                </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginEnd="80dp"
-            android:layout_marginStart="20dp">
-            <RadioGroup
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-
-                >
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="80dp"
-
-                    android:text="@string/casa1"
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="80dp"
-
-                    android:text="@string/casa2" />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/oficina1" />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/oficina2" />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/celular1" />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/celular2" />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_marginStart="80dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mensajes" />
-            </RadioGroup>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.5"
-                android:layout_height="match_parent"
+                android:background="@drawable/bg_section_content"
                 android:orientation="vertical"
-                android:layout_marginEnd="30dp">
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
+                android:padding="20dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:hint="(XXX)"
-                        android:inputType="numberDecimal"
-                        android:gravity="center"/>
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="(XXX)"
-                        android:inputType="numberDecimal"
-
-                        android:gravity="center"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="(XXX)"
-                        android:inputType="numberDecimal"
-
-                        android:gravity="center"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="24dp">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnMexico"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/mexico"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="#0A0E21"
+                        android:textColor="@color/white"
+                        android:layout_marginEnd="6dp"
+                        app:cornerRadius="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnUSA"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/usa"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/white"
+                        android:textColor="#1E293B"
+                        app:strokeColor="#CBD5E1"
+                        android:layout_marginEnd="6dp"
+                        app:cornerRadius="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCanada"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/canada"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/white"
+                        android:textColor="#1E293B"
+                        app:strokeColor="#CBD5E1"
+                        android:layout_marginEnd="6dp"
+                        app:cornerRadius="8dp" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnOtro"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_weight="1"
+                        android:text="@string/otro"
+                        android:textSize="14sp"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/white"
+                        android:textColor="#1E293B"
+                        app:strokeColor="#CBD5E1"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="(XXX)"
-                        android:inputType="numberDecimal"
-
-                        android:gravity="center"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <FrameLayout
+                    android:id="@+id/addressContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
+                    android:layout_marginBottom="10dp" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:hint="(XXX)"
-                        android:gravity="center"
-                        android:inputType="numberDecimal"
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:hint="(XXX)"
-                        android:gravity="center"
-                        android:inputType="numberDecimal"
-
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:id="@+id/btnLimpiarDomicilio"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_html_btn_outline"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="8dp"
+                        android:src="@drawable/ic_trash"
+                        app:tint="@color/black"
+                        app:backgroundTint="@null" />
+                </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center"
-                        android:textSize="16sp"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center"
-                        android:textSize="16sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center"
-                        />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"                        android:textSize="14sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:boxStrokeColor="#080C24">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:hint="(XXX-XX-XX)"
-                        android:gravity="center"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-                <CheckBox
-                    android:layout_width="match_parent"
-
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-                <CheckBox
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                </CheckBox>
-            </LinearLayout>
-            <RadioGroup
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-
-                android:gravity="start"
-                >
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-
-                    />
-            </RadioGroup>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/btnLimpiar3"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_height="48dp"
-                android:backgroundTint="@color/white"
-                android:shadowColor="@color/black"
-                android:text="@string/limpiarbot"
-
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                app:cornerRadius="4dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/rounded">
-
-
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="EMAIL"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/white" />
-
-
-
-        </LinearLayout>
+        <!-- TELÉFONOS -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:layout_marginBottom="24dp">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email 1"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email 2"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email 3"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email 4"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="24dp"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/email4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <CheckBox
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="No tiene Correo Electronico"></CheckBox>
-            <Button
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
                 android:layout_height="48dp"
-                android:backgroundTint="@color/white"
-                android:shadowColor="@color/black"
-                android:padding="0dp"
-                android:text="@string/aceptarbot"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                android:textSize="13sp"
-                app:cornerRadius="4dp" />
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/telefonoform"
+                    android:fontFamily="serif"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rounded"
-                >
+                android:background="@drawable/bg_section_content"
+                android:orientation="vertical"
+                android:padding="16dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/nacionalidad"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:layout_marginStart="0dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp">
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.2" android:text="" android:textSize="15sp" android:textStyle="bold" android:textColor="#64748B" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:text="@string/lada"
+                        android:textSize="15sp"
+                        android:fontFamily="serif"
+                        android:textStyle="bold"
+                        android:textColor="#64748B"
+                        android:gravity="center" />
+                    <TextView
+                        android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.5" android:text="" android:textSize="15sp" android:textStyle="bold" android:textColor="#64748B" />
+                    <TextView
+                        android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8" android:text="WhatsApp" android:textSize="15sp" android:textStyle="bold" android:textColor="#64748B" android:gravity="center" />
+                    <TextView
+                        android:fontFamily="serif"
+                        android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8" android:text="@string/principal" android:textSize="15sp" android:textStyle="bold" android:textColor="#64748B" android:gravity="center" />
+                </LinearLayout>
 
-                    android:textColor="@color/white" />
+                <!-- Row 1: Casa 1 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/casa1"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:inputType=""
+                        android:nextFocusForward="@id/etNumeroCasa1"
+                        android:textColor="@color/pacificagris"/>
+                    <EditText 
+                        android:id="@+id/etLadaCasa1"
+                        android:inputType="phone"
+                        android:maxLength="5"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText
+                        android:id="@+id/etNumeroCasa1"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsCasa1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbCasa1"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 2: Casa 2 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/casa2"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText
+                        android:id="@+id/etLadaCasa2"
+                        android:inputType="phone"
+                        android:nextFocusForward="@id/etNumeroCasa2"
+                        android:maxLength="5"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText
+                        android:id="@+id/etNumeroCasa2"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsCasa2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbCasa2"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 3: Oficina 1 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/oficina1"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText android:id="@+id/etLadaOficina1"
+                        android:inputType="phone"
+                        android:maxLength="5"
+                        android:layout_width="0dp"
+                        android:nextFocusForward="@id/etNumeroOficina1"
+                        android:layout_height="36dp"
+                        android:layout_weight="0.6"
+                        android:background="@drawable/bg_input"
+                        android:textSize="15sp"
+                        android:gravity="center"
+                        android:layout_marginEnd="4dp" />
+                    <EditText android:id="@+id/etNumeroOficina1"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsOficina1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbOficina1"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 4: Oficina 2 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/oficina2"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText android:id="@+id/etLadaOficina2"
+                        android:inputType="phone"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/etNumeroOficina2"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText android:id="@+id/etNumeroOficina2"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsOficina2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbOficina2"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 5: Celular 1 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/celular1"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText android:id="@+id/etLadaCel1"
+                        android:inputType="phone"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/etNumeroCel1"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText android:id="@+id/etNumeroCel1"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsCel1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbCelular1"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 6: Celular 2 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/celular2"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText android:id="@+id/etLadaCel2"
+                        android:inputType="phone"
+                        android:maxLength="5"
+                        android:nextFocusForward="@id/etNumeroCel2"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText android:id="@+id/etNumeroCel2"
+                        android:inputType="phone"
+                        android:imeOptions="actionDone"
+                        android:maxLength="9"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsCel2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbCelular2"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <!-- Row 7: Mensajes -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.2"
+                        android:text="@string/mensajes"
+                        android:textStyle="bold"
+                        android:fontFamily="serif"
+                        android:gravity="start"
+                        android:textSize="15sp"
+                        android:textColor="@color/pacificagris" />
+                    <EditText android:id="@+id/etLadaMensajes"
+                        android:inputType="phone"
+                        android:nextFocusForward="@id/etNumeroMensajes"
+                        android:maxLength="5"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <EditText android:id="@+id/etNumeroMensajes"
+                        android:inputType="phone"
+                        android:maxLength="9"
+                        android:imeOptions="actionDone"
+                        android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <CheckBox android:id="@+id/cbWsMensajes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="No" android:textSize="11sp" />
+                    </FrameLayout>
+                    <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
+                        <RadioButton
+                            android:id="@+id/rbMensajes"
+                            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnLimpiarTelefonos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_html_btn_outline"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="8dp"
+                    android:src="@drawable/ic_trash"
+                    app:tint="@color/black"
+                    app:backgroundTint="@null" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- SECTION: CORREO ELECTRÓNICO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_email"
+                    app:tint="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/correo"
+                    android:fontFamily="serif"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <Spinner
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
                 android:layout_height="wrap_content"
-                ></Spinner>
+                android:background="@drawable/bg_section_content"
+                android:orientation="vertical"
+                android:padding="20dp">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email 1"
+                        android:textColor="@color/pacificagris"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+                <EditText android:id="@+id/etEmail1" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+
+                <!-- Email 2 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                    <TextView
+                        android:textColor="@color/pacificagris"
+                        android:fontFamily="serif"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email 2" android:textSize="15sp" android:textStyle="bold" android:layout_marginStart="8dp" />
+                </LinearLayout>
+                <EditText android:id="@+id/etEmail2" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+
+                <!-- Email 3 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Email 3"
+                        android:textColor="@color/pacificagris"
+                        android:fontFamily="serif"
+                        android:textSize="15sp"
+                        android:textStyle="bold" android:layout_marginStart="8dp" />
+                </LinearLayout>
+                <EditText android:id="@+id/etEmail3" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+
+                <!-- Email 4 -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
+                    <TextView android:textColor="@color/pacificagris"
+                        android:fontFamily="serif"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email 4" android:textSize="15sp" android:textStyle="bold" android:layout_marginStart="8dp" />
+                </LinearLayout>
+                <EditText android:id="@+id/etEmail4" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="16dp" />
+
+                <CheckBox
+                    android:id="@+id/cbNoCorreo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/pacificagris"
+                    android:fontFamily="serif"
+                    android:text="@string/nocorreo"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="16dp" />
+                <ImageButton
+                    android:id="@+id/btnLimpiarEmails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_html_btn_outline"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="8dp"
+                    android:src="@drawable/ic_trash"
+                    app:tint="@color/black"
+                    app:backgroundTint="@null" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-    </LinearLayout>
 
+        <!-- SECTION: NACIONALIDAD -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="24dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_world"
+                    app:tint="@color/white" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="@string/nacionalidad"
+                    android:fontFamily="serif"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_section_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_input">
+                    <Spinner
+                        android:id="@+id/spinnerNacionalidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        android:paddingStart="12dp" />
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@android:drawable/arrow_down_float"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="12dp"
+                        app:tint="#64748B" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/AceptarTarea"
+            android:background="@drawable/btn_continuar"
+            app:backgroundTint="@null"
+            app:icon="@drawable/ic_cont"
+            app:iconSize="20dp"
+            android:text="@string/continuar"
+            android:textSize="15dp"
+            app:iconGravity="textEnd" />
+
+    </LinearLayout>
 </androidx.core.widget.NestedScrollView>

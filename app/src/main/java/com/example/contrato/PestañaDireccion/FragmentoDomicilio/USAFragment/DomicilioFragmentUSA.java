@@ -1,5 +1,7 @@
 package com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.Tip
 import com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.TiposFormato.StandardFormatFragment;
 import com.example.contrato.R;
 import com.example.contrato.databinding.FragmentDomiciliousaBinding;
+import com.google.android.material.button.MaterialButton;
 
 public class DomicilioFragmentUSA extends Fragment {
     private FragmentDomiciliousaBinding binding;
@@ -29,19 +32,48 @@ public class DomicilioFragmentUSA extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.rgFormat.setOnCheckedChangeListener((group, id) -> {
-            if (id == R.id.rbStandard) {
-                cargaFragmentoFormato(new StandardFormatFragment());
-            } else if(id == R.id.rbPObox){
-                cargaFragmentoFormato(new POFormatFragment());
-            } else if(id == R.id.rbCMR){
-                cargaFragmentoFormato(new CMRFormatFragment());
-            }else{
-                quitaFragmentoFormato();
-            }
+        setupButtons();
+
+        // Configuración inicial: Standard por defecto
+        selectButton(binding.btnStandard);
+        cargaFragmentoFormato(new StandardFormatFragment());
+    }
+
+    private void setupButtons() {
+        binding.btnStandard.setOnClickListener(v -> {
+            selectButton(binding.btnStandard);
+            cargaFragmentoFormato(new StandardFormatFragment());
         });
 
-        binding.rbStandard.setChecked(true);
+        binding.btnPObox.setOnClickListener(v -> {
+            selectButton(binding.btnPObox);
+            cargaFragmentoFormato(new POFormatFragment());
+        });
+
+        binding.btnCMR.setOnClickListener(v -> {
+            selectButton(binding.btnCMR);
+            cargaFragmentoFormato(new CMRFormatFragment());
+        });
+    }
+
+    private void selectButton(MaterialButton selected) {
+        // Resetear estilos de todos los botones
+        resetButtonStyle(binding.btnStandard);
+        resetButtonStyle(binding.btnPObox);
+        resetButtonStyle(binding.btnCMR);
+
+        // Aplicar estilo de seleccionado (Sólido oscuro)
+        selected.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0A0E21")));
+        selected.setTextColor(Color.WHITE);
+        selected.setStrokeWidth(0);
+    }
+
+    private void resetButtonStyle(MaterialButton button) {
+        // Estilo deseleccionado (Outlined)
+        button.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        button.setTextColor(Color.parseColor("#1E293B"));
+        button.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#CBD5E1")));
+        button.setStrokeWidth(1);
     }
 
     private void cargaFragmentoFormato(Fragment fragmento) {

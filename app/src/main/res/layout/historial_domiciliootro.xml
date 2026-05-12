@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView style="@style/FieldLabel" android:text="Address Line 1" />
+    <EditText android:id="@+id/editOtroLinea1" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <TextView style="@style/FieldLabel" android:text="Address Line 2" />
+    <EditText android:id="@+id/editOtroLinea2" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <TextView style="@style/FieldLabel" android:text="Address Line 3" />
+    <EditText android:id="@+id/editOtroLinea3" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <TextView style="@style/FieldLabel" android:text="Address Line 4" />
+    <EditText android:id="@+id/editOtroLinea4" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <TextView style="@style/FieldLabel" android:text="Address Line 5" />
+    <EditText android:id="@+id/editOtroLinea5" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
+
+    <TextView style="@style/FieldLabel" android:text="Country" />
+    <EditText android:id="@+id/editOtroPais" style="@style/FieldInput" android:inputType="text" />
+</LinearLayout>

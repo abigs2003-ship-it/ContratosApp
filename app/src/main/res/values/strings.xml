@@ -7,7 +7,7 @@
     <string name="titulo">Cotización de Venta</string>
     <string name="datosgen">Datos Generales</string>
     <string name="titularespestaña">TITULARES/BENEFICIARIOS</string>
-    <string name="titularestitulo">TITULARES</string>
+    <string name="titularestitulo">Titulares</string>
     <string name="nombreform">Nombre</string>
     <string name="ocupacionform">Ocupación</string>
     <string name="parentescoform">Parentesco</string>
@@ -15,7 +15,7 @@
     <string name="agregarbot">Agregar</string>
     <string name="limpiarbot">Limpiar</string>
     <string name="borrarbot">Borrar</string>
-    <string name="beneficiariostitulo">BENEFICIARIOS</string>
+    <string name="beneficiariostitulo">Beneficiarios</string>
     <string name="condicionesbot">Condiciones de Venta</string>
     <string name="direccionpestaña">DIRECCIÓN/TELEFONOS/EMAIL</string>
     <string name="saludobarra">Bienvenido,</string>
@@ -24,35 +24,172 @@
     <string name="fechaformato">DD/MM/AAAA</string>
     <string name="financiamiento">Financiamiento</string>
     <string name="selecciona">Selecciona</string>
-    <string name="domicilioform">DOMICILIO</string>
+    <string name="domicilioform">Domicilio</string>
     <string name="aceptarbot">Aceptar</string>
     <string name="formatodir">Formato de Dirección</string>
     <string name="calleform">Calle</string>
-    <string name="next">N. exterior</string>
-    <string name="nint">N. int</string>
+    <string name="next">No. Exterior</string>
+    <string name="nint">No. Int</string>
     <string name="CP">CP</string>
     <string name="colonia">Colonia</string>
     <string name="municipio">Delegación o Municipio</string>
     <string name="ciudad">Ciudad</string>
     <string name="pais">País</string>
-    <string name="telefonoform">TELÉFONOS</string>
-    <string name="casa1">Casa 1</string>
-    <string name="casa2">Casa 2</string>
-    <string name="oficina1">Oficina 1</string>
-    <string name="oficina2">Oficina 2</string>
-    <string name="celular1">Celular 1</string>
-    <string name="celular2">Celular 2</string>
-    <string name="mensajes">Mensajes</string>
-    <string name="nacionalidad">NACIONALIDAD</string>
-    <string name="inventario">INVENTARIO ADQUIRIDO</string>
-    <string name="tipoventa">Tipo Venta</string>
+    <string name="telefonoform">Teléfonos</string>
+    <string name="casa1">🏠 Casa 1</string>
+    <string name="casa2">🏠 Casa 2</string>
+    <string name="oficina1">🏢 Oficina 1</string>
+    <string name="oficina2">🏢 Oficina 2</string>
+    <string name="celular1">📱 Celular 1</string>
+    <string name="celular2">📱 Celular 2</string>
+    <string name="mensajes">💬 Messages</string>
+    <string name="nacionalidad">Nacionalidad</string>
+    <string name="inventario">Inventario adquirido</string>
+    <string name="tipoventa">Tipo de Venta</string>
     <string name="ctobeneficio" translatable="false">Cto Beneficio</string>
     <string name="contrato">No. Contrato</string>
     <string name="unidad">Unidad</string>
     <string name="temporada">Temporada</string>
+    <string-array name="temporadas">
+        <item>Platino</item>
+        <item>Oro</item>
+        <item>Plata</item>
+    </string-array>
     <string name="proyecto">Proyecto</string>
     <string name="noaños">No. Años</string>
-    <string name="datosventa">DATOS DE LA VENTA</string>
+    <string name="datosventa">Datos de la Venta</string>
     <string name="resort_logo" translatable="false">Resort Logo</string>
 
+    <string-array name="tipos_periodo">
+        <item>Mensual</item>
+        <item>Bimestral</item>
+        <item>Trimestral</item>
+        <item>Cuatrimestral</item>
+        <item>Semestral</item>
+        <item>Anual</item>
+    </string-array>
+    <string name="estado">Estado</string>
+
+    <string-array name="parentescos">
+        <item>Contacto</item>
+        <item>Hermano(a)</item>
+        <item>Conyuge</item>
+        <item>Empleado(a)</item>
+        <item>Hijo(a)</item>
+        <item>Padre</item>
+        <item>Madre</item>
+        <item>Primo(a)</item>
+        <item>Tio(a)</item>
+        <item>Socio(a)</item>
+        <item>Otro</item>
+        <item>Selecciona</item>
+    </string-array>
+    <string name="mexico">🇲🇽 México</string>
+    <string name="usa">🇺🇸 EEUU</string>
+    <string name="canada">🇨🇦 Canadá</string>
+    <string name="lada">Lada</string>
+    <string name="principal">Principal</string>
+    <string name="otro">🌐 Otro</string>
+    <string name="nocorreo">No cuenta con correo electrónico</string>
+    <string name="moneda">Moneda</string>
+    <string name="cambio">Tipo de Cambio</string>
+    <string name="bruto">Precio Bruto</string>
+    <string name="neto">Precio Neto</string>
+    <string name="acuenta">Monto a Cuenta</string>
+    <string name="nocontratos">No. Contratos</string>
+    <string name="tipopago">Tipo de Pago</string>
+    <string name="enganchetotal">Enganche Total</string>
+    <string name="enganchesala">Enganche a Pagar en Sala</string>
+    <string name="descuentos">Discounts</string>
+    <string name="enganchediferido">Enganche Diferido</string>
+    <string name="saldoenganche">Saldo Enganche</string>
+    <string name="montofinanciar">Monto a Financiar</string>
+    <string name="pagosala">Total Pago en Sala</string>
+    <string name="costomembresia">Costo Membresía</string>
+    <string name="linea1">Línea 1</string>
+    <string name="linea2">Línea 2</string>
+    <string name="linea3">Linea 3</string>
+    <string name="linea4">Línea 4</string>
+    <string name="linea5">Línea 5</string>
+    <string name="precioneto">Precio Neto</string>
+    <string name="tablaamor">Tabla de Amortización</string>
+    <string name="tipoperiodo">Tipo de Periodo</string>
+    <string name="fechaprimer">Fecha Primer Pago</string>
+    <string name="nopagos">No. Pagos</string>
+    <string name="tasainteres">Tasa de Interés</string>
+    <string name="tablacalculada">Tabla de Amortización Calculada</string>
+    <string name="nueva">Nueva</string>
+    <string name="año1er">Año 1er Uso</string>
+    <string name="continuar">Continuar</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="correo">Correo Electrónico</string>
+    <string name="redes">Redes Sociales</string>
+    <string name="usuario">Usuario</string>
+    <string name="agregarredes">+ Agregar</string>
+    <string name="redessocialesnav">REDES SOCIALES</string>
+    <string name="guardar">Guardar</string>
+    <string name="datosventatab">DATOS DE LA VENTA</string>
+    <string name="varios">VARIOS</string>
+    <string name="no_deseo_redes">No deseo agregar redes sociales</string>
+    <string name="si">Sí</string>
+
+    <string-array name="nacionalidades">
+        <item>Selecciona Nacionalidad</item>
+        <item>Mexicana</item>
+        <item>Estadounidense</item>
+        <item>Canadiense</item>
+        <item>Alemana</item>
+        <item>Argentina</item>
+        <item>Australiana</item>
+        <item>Austriaca</item>
+        <item>Belga</item>
+        <item>Boliviana</item>
+        <item>Brasileña</item>
+        <item>Chilena</item>
+        <item>China</item>
+        <item>Colombiana</item>
+        <item>Costarricense</item>
+        <item>Cubana</item>
+        <item>Danesa</item>
+        <item>Dominicana</item>
+        <item>Ecuatoriana</item>
+        <item>Salvadoreña</item>
+        <item>Escocesa</item>
+        <item>Española</item>
+        <item>Francesa</item>
+        <item>Guatemalteca</item>
+        <item>Haitiana</item>
+        <item>Hondureña</item>
+        <item>Inglesa</item>
+        <item>Irlandesa</item>
+        <item>Italiana</item>
+        <item>Japonesa</item>
+        <item>Libanesa</item>
+        <item>Marroquí</item>
+        <item>Nicaragüense</item>
+        <item>Panameña</item>
+        <item>Paraguaya</item>
+        <item>Peruana</item>
+        <item>Portuguesa</item>
+        <item>Puertorriqueña</item>
+        <item>Rusa</item>
+        <item>Sueca</item>
+        <item>Suiza</item>
+        <item>Uruguaya</item>
+        <item>Venezolana</item>
+        <item>Otra</item>
+    </string-array>
+    <string name="costocontrato">Costo de Contrato</string>
+    <string name="financiado">Financiado</string>
+    <string name="contado">Contado</string>
+    <string name="calcular">Calcular</string>
+    <string name="enviar">Enviar Contrato</string>
+    <string name="fechapago">Fecha Pago</string>
+    <string name="monto">Monto</string>
+    <string name="saldo">Saldo</string>
+    <string name="resumen">Resumen de Pagos</string>
+    <string name="total">Total a Pagar</string>
+    <string name="pagosde">- pagos de</string>
+    <string name="interes">Interés</string>
+    <string name="capacumulado">Cap. Acumulado</string>
 </resources>

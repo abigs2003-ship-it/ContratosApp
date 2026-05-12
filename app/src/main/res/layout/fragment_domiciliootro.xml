@@ -1,192 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:text="@string/linea1"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editLinea1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Línea 1"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        android:inputType="textCapWords" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/linea2"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editLinea2"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editLinea1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Línea 2"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        android:inputType="textCapWords"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/linea3"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editLinea3"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editLinea2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        android:inputType="textCapWords" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Línea 3"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/linea4"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editLinea4"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
+        android:inputType="textCapWords" />
 
-        </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/linea5"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edit5"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+        android:inputType="textCapWords"/>
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pais"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editPaisOtro"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editLinea3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+        android:inputType="textCapWords" />
 
-
-
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Línea 4"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editLinea4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        </LinearLayout>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Línea 5"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editLinea5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="País"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/pais"
-                android:layout_width="match_parent"
-                android:clickable="false"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>

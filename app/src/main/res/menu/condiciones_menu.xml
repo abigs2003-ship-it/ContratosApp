@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_datos_venta"
+        android:title="@string/datosventatab" />
+    <item
+        android:id="@+id/nav_regalos"
+        android:title="@string/varios" />
+
+
+</menu>

@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.contrato.databinding.FragmentDatosgeneralesBinding;
@@ -21,6 +23,7 @@ public class DatosGeneralesFragment extends Fragment {
 
     private FragmentDatosgeneralesBinding binding;
     private NavController navController;
+    private SharedContractViewModel viewModel;
 
     @Nullable
     @Override
@@ -28,6 +31,7 @@ public class DatosGeneralesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         binding = FragmentDatosgeneralesBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.nav_dg_container);
@@ -41,13 +45,48 @@ public class DatosGeneralesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Restaurar la última pestaña seleccionada
+        int lastTab = viewModel.getLastDgTab();
+        if (lastTab > 0) {
+            binding.topTabs.post(() -> {
+                TabLayout.Tab tab = binding.topTabs.getTabAt(lastTab);
+                if (tab != null) {
+                    tab.select();
+                    // Navegar al destino correspondiente
+                    int destinationId = -1;
+                    if (lastTab == 1) destinationId = R.id.nav_direcciones;
+                    else if (lastTab == 2) destinationId = R.id.nav_redes_sociales;
+                    
+                    if (destinationId != -1) {
+                        navController.navigate(destinationId);
+                    }
+                }
+            });
+        }
+
+        NavOptions navOptions = new NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(R.id.nav_titulares, false)
+                .build();
+
         binding.topTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    navController.navigate(R.id.nav_titulares);
-                } else if (tab.getPosition() == 1) {
-                    navController.navigate(R.id.nav_direcciones);
+                int position = tab.getPosition();
+                viewModel.setLastDgTab(position); // Guardar estado
+                
+                int destinationId = -1;
+                if (position == 0) {
+                    destinationId = R.id.nav_titulares;
+                } else if (position == 1) {
+                    destinationId = R.id.nav_direcciones;
+                } else if (position == 2) {
+                    destinationId = R.id.nav_redes_sociales;
+                }
+
+                if (destinationId != -1 && navController.getCurrentDestination() != null 
+                        && navController.getCurrentDestination().getId() != destinationId) {
+                    navController.navigate(destinationId, null, navOptions);
                 }
             }
 
@@ -56,10 +95,16 @@ public class DatosGeneralesFragment extends Fragment {
         });
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.nav_titulares) {
-                Objects.requireNonNull(binding.topTabs.getTabAt(0)).select();
-            } else if (destination.getId() == R.id.nav_direcciones) {
-                Objects.requireNonNull(binding.topTabs.getTabAt(1)).select();
+            int tabIndex = -1;
+            if (destination.getId() == R.id.nav_titulares) tabIndex = 0;
+            else if (destination.getId() == R.id.nav_direcciones) tabIndex = 1;
+            else if (destination.getId() == R.id.nav_redes_sociales) tabIndex = 2;
+
+            if (tabIndex != -1) {
+                viewModel.setLastDgTab(tabIndex);
+                if (binding.topTabs.getSelectedTabPosition() != tabIndex) {
+                    Objects.requireNonNull(binding.topTabs.getTabAt(tabIndex)).select();
+                }
             }
         });
     }

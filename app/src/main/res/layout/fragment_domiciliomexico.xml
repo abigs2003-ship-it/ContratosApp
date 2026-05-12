@@ -1,220 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:text="@string/calleform"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editCalle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:layout_marginBottom="12dp"
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/calleform"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        android:inputType="textCapWords" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editCalle"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.2" android:orientation="vertical" android:layout_marginEnd="8dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/next" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+            <EditText android:id="@+id/edit_next"
+                android:inputType="number"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/next"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:text="@string/nint"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:text="@string/CP"
-                android:textColor="#FF2C2C"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_height="40dp"
+                android:nextFocusForward="@id/edit_nint"
+                android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_next"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edit_nint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                app:boxStrokeColor="#080C24">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="14sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nint" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+            <EditText
+                android:inputType="number"
+                android:id="@+id/edit_nint"
+                android:layout_width="match_parent"
+                android:nextFocusForward="@id/cp"
+                android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/colonia"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editColonia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/municipio"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editDelegacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/ciudad"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editCiudad"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/pais"
-            android:textColor="#FF2C2C"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="24dp"
-            app:boxStrokeColor="#080C24">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/pais"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Mexico"
-                android:clickable="false"
-                android:textSize="14sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="C.P." android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+            <EditText android:id="@+id/cp"
+                android:nextFocusForward="@string/colonia"
+                android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:inputType="number" />
+        </LinearLayout>
     </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Colonia" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editColonia"
+        android:inputType="textCapWords"
+        android:nextFocusForward="@id/editMunicipio"
+        android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:layout_marginBottom="12dp" />
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delegación / Municipio" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+    <EditText android:id="@+id/editMunicipio"
+
+        android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:layout_marginBottom="12dp" android:inputType="textCapWords" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="12dp">
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="8dp">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ciudad" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+            <EditText
+
+                android:inputType="textCapWords"
+                android:nextFocusForward="@id/editEstado"
+                android:id="@+id/editCiudad" android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" />
+        </LinearLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Estado" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+            <EditText
+                android:inputType="textCapWords"
+                android:id="@+id/editEstado"
+                android:imeOptions="actionDone"
+                android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="País"
+        android:fontFamily="serif"
+        android:textSize="15sp"
+        android:textColor="@color/pacificagris"
+        android:textStyle="bold" />
+    <EditText
+        android:id="@+id/editPaisMexico"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:textSize="15sp"
+        android:background="@drawable/bg_input"
+        android:paddingStart="12dp"
+        android:text="México"
+        android:enabled="false"
+        android:inputType="text" />
+</LinearLayout>

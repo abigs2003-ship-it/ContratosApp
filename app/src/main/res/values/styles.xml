@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Add these styles to your res/values/styles.xml -->
+
+    <!-- Compact label above each field -->
+    <style name="FieldLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/pacificaazul</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginBottom">1dp</item>
+        <item name="android:letterSpacing">0.04</item>
+    </style>
+
+    <!-- Compact input box -->
+    <style name="FieldInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/texto_input_color_selector</item>
+        <item name="android:background">@drawable/bg_input_selector</item>
+        <item name="android:backgroundTint">@null</item>
+        <item name="android:padding">8dp</item>
+
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <!-- Bold subsection divider label (Teléfonos, Enganche, etc.) -->
+    <style name="SubsectionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/pacificaazul</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+</resources>

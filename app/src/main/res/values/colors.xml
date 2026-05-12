@@ -8,6 +8,19 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="pacificaazul">#080C24</color>
+    <color name="pacificagris">#2C3E50</color>
+    <color name="menta">#7FDBCA</color>
+
+    <color name="navy_blue">#0A0E21</color>
+    <color name="navy_blue_soft">#161B33</color>
+    <color name="card_border">#E2E8F0</color>
+    <color name="input_hint">#94A3B8</color>
+    <color name="label_gray">#64748B</color>
+    <color name="error_red">#B91C1C</color>
+    <color name="success_green">#15803D</color>
+    <color name="background_gray">#F1F5F9</color>
+
     <color name="primary">#1E293B</color>
     <color name="primarySoft">#334155</color>
     <color name="accent">#2563EB</color>
@@ -16,15 +29,59 @@
     <color name="textPrimary">#0F172A</color>
     <color name="textSecondary">#64748B</color>
     <color name="border">#E2E8F0</color>
-        <color name="primary_blue">#1E88E5</color>
-        <color name="background_light">#F5F7FA</color>
-        <color name="text_primary">#212121</color>
-        <color name="text_secondary">#757575</color>
-        <color name="divider_gray">#E0E0E0</color>
+    <color name="primary_blue">#1E88E5</color>
+    <color name="background_light">#F5F7FA</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider_gray">#E0E0E0</color>
     <color name="warm_beige">#FDF8F0</color>
     <color name="copper_orange">#C96E2C</color>
     <color name="dark_charcoal">#2C2C2C</color>
     <color name="warm_white">#FFF8F0</color>
     <color name="warm_gray">#9B8E7F</color>
     <color name="warm_divider">#E5DDD0</color>
+
+    <color name="html_bg">#F8F6F3</color>
+    <color name="html_header_start">#1A1A2E</color>
+    <color name="html_header_end">#16213E</color>
+    <color name="html_label">#C0392B</color>
+    <color name="html_green">#7FDBCA</color>
+    <color name="html_table_header">#555555</color>
+    <!-- Page background -->
+    <color name="bg_page">#0F0F11</color>
+
+    <!-- Platform card backgrounds -->
+    <color name="bg_card_facebook">#1A2A4A</color>
+    <color name="bg_card_instagram">#2D1A2E</color>
+    <color name="bg_card_twitter">#0D1F2D</color>
+
+    <!-- Platform brand colors -->
+    <color name="brand_facebook">#1877F2</color>
+    <color name="brand_instagram">#C13584</color>
+    <color name="brand_twitter">#1DA1F2</color>
+    <color name="brand_twitter_dark">#111111</color>
+
+    <!-- Platform accent (light tints for labels/subtitles) -->
+    <color name="accent_facebook_light">#5B8FD4</color>
+    <color name="accent_instagram_light">#C97EC8</color>
+    <color name="accent_twitter_light">#4DB8F0</color>
+
+    <!-- Input background (transparent overlay) -->
+    <color name="input_bg_facebook">#1A3060</color>
+    <color name="input_bg_instagram">#3D1F3E</color>
+    <color name="input_bg_twitter">#0F2A3D</color>
+
+    <!-- Tag badge backgrounds -->
+    <color name="tag_bg_facebook">#1A1877F2</color>
+    <color name="tag_bg_instagram">#1AC13584</color>
+    <color name="tag_bg_twitter">#1A1DA1F2</color>
+
+    <!-- Text -->
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_muted_white">#673AB7</color>
+    <color name="hint_dark">#44FFFFFF</color>
+    <color name="label_muted">#666666</color>
+    <color name="row_divider">#14FFFFFF</color>
+    <color name="list_bg">#0AFFFFFF</color>
+    <color name="list_header_bg">#18FFFFFF</color>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color cuando no se está editando (disabled) -->
+    <item android:state_enabled="false" android:color="@color/pacificagris" /> <!-- GRIS -->
+    
+    <!-- Color cuando se está editando (enabled) -->
+    <item android:state_enabled="true" android:color="@color/pacificaazul" /> <!-- AZUL -->
+    
+    <!-- Default -->
+    <item android:color="#000000" />
+</selector>

@@ -1,51 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="0dp"
+    android:padding="10dp"
     android:gravity="center_vertical"
-    android:background="#FFFFFF"
-    android:layout_marginBottom="0dp">
+    android:background="#FFFFFF">
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <View
         android:layout_width="24dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="1dp" />
 
     <TextView
         android:id="@+id/textNombre"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Nombre"
+        android:fontFamily="serif"
+        android:textColor="#000000"
         android:textSize="13sp"
-        android:textColor="#000000" />
+        tools:text="Nombre" />
 
     <TextView
         android:id="@+id/textCumple"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Cumpleaños"
+        android:fontFamily="serif"
+        android:textColor="#000000"
         android:textSize="13sp"
-        android:textColor="#000000" />
+        tools:text="Cumpleaños" />
 
     <TextView
         android:id="@+id/textOcupacion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Ocupación"
+        android:fontFamily="serif"
+        android:textColor="#000000"
         android:textSize="13sp"
-        android:textColor="#000000" />
+        tools:text="Ocupación" />
 
-    <TextView
-        android:id="@+id/textParentesco"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Parentesco"
-        android:textSize="13sp"
-        android:textColor="#000000" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/textParentesco"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="serif"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Parentesco" />
+
+        <!-- btnEditar removed to keep alignment while only showing delete -->
+        
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/btnEliminar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_trash2" />
+    </LinearLayout>
 </LinearLayout>

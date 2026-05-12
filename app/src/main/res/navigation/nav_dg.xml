@@ -17,5 +17,10 @@
         android:label="@string/condicionesbot"
         tools:layout="@layout/fragment_direccion" />
 
+    <fragment
+        android:id="@+id/nav_redes_sociales"
+        android:name="com.example.contrato.RedesSocialesFragment"
+        android:label="@string/condicionesbot"
+        tools:layout="@layout/fragment_redes" />
 
 </navigation>

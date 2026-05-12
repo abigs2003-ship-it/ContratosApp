@@ -3,15 +3,15 @@
     <string name="titulo">Sales Quotation</string>
     <string name="datosgen">General Information</string>
     <string name="titularespestaña">OWNERS/BENEFICIARIES</string>
-    <string name="titularestitulo">OWNERS</string>
-    <string name="nombreform">Name</string>
+    <string name="titularestitulo">Owners</string>
+    <string name="nombreform">" Name"</string>
     <string name="ocupacionform">Occupation</string>
     <string name="parentescoform">Relationship</string>
-    <string name="cumpleform">Birthday</string>
+    <string name="cumpleform">Day of Birth</string>
     <string name="agregarbot">Add</string>
     <string name="limpiarbot">Clean</string>
     <string name="borrarbot">Remove</string>
-    <string name="beneficiariostitulo">BENEFICIARIES</string>
+    <string name="beneficiariostitulo">Beneficiaries</string>
     <string name="condicionesbot">Sales Conditions</string>
     <string name="direccionpestaña">ADDRESS/TELEPHONE/E-MAIL</string>
     <string name="saludobarra">Welcome,</string>
@@ -20,7 +20,7 @@
     <string name="fechaformato">MM/DD/YYYY</string>
     <string name="financiamiento">Financing</string>
     <string name="selecciona">Select</string>
-    <string name="domicilioform">ADDRESS</string>
+    <string name="domicilioform">Address</string>
     <string name="aceptarbot">Accept</string>
     <string name="formatodir">Address Format</string>
     <string name="calleform">Street</string>
@@ -31,21 +31,159 @@
     <string name="municipio">Municipality</string>
     <string name="ciudad">City</string>
     <string name="pais">Country</string>
-    <string name="telefonoform">TELEPHONE NUMBER</string>
-    <string name="casa1">Home 1</string>
-    <string name="casa2">Home 2</string>
-    <string name="oficina1">Office 1</string>
-    <string name="oficina2">Office 2</string>
-    <string name="celular1">Cellphone 1</string>
-    <string name="celular2">Cellphone 2</string>
-    <string name="mensajes">Mesages</string>
-    <string name="nacionalidad">NACIONALITY</string>
-    <string name="inventario">ACQUIRED INVENTORY</string>
-    <string name="tipoventa">Sale Type</string>
+    <string name="telefonoform">Telephone numbers</string>
+    <string name="casa1">🏠 Home 1</string>
+    <string name="casa2">🏠 Home 2</string>
+    <string name="oficina1">🏢 Office 1</string>
+    <string name="oficina2">🏢 Office 2</string>
+    <string name="celular1">📱 Cellphone 1</string>
+    <string name="celular2">📱 Cellphone 2</string>
+    <string name="mensajes">💬 Messages</string>
+    <string name="nacionalidad">Nacionality</string>
+    <string name="inventario">Acquired inventory</string>
+    <string name="tipoventa">Type of Sale</string>
     <string name="contrato">Contract Number</string>
     <string name="unidad">Unit</string>
     <string name="temporada">Season</string>
+    <string-array name="temporadas">
+        <item>Platinum</item>
+        <item>Gold</item>
+        <item>Silver</item>
+    </string-array>
     <string name="proyecto">Project</string>
     <string name="noaños">No. of Years</string>
-    <string name="datosventa">SALE INFORMATION</string>
+    <string name="datosventa">Sale Information</string>
+    <string name="estado">State</string>
+
+    <string-array name="tipos_periodo">
+        <item>Monthly</item>
+        <item>Bimonthly</item>
+        <item>Quarterly</item>
+        <item>Four-monthly</item>
+        <item>Semiannual</item>
+        <item>Annual</item>
+    </string-array>
+
+    <string-array name="parentescos">
+        <item>Sibling</item>
+        <item>Wife</item>
+        <item>Husband</item>
+        <item>Child</item>
+        <item>Employee</item>
+        <item>Partner</item>
+        <item>Cousin</item>
+        <item>Father</item>
+        <item>Mother</item>
+        <item>Uncle/Aunt</item>
+        <item>Other</item>
+        <item>Select</item>
+    </string-array>
+    <string name="mexico">🇲🇽 Mexico</string>
+    <string name="usa">🇺🇸 USA</string>
+    <string name="canada">🇨🇦 Canada</string>
+    <string name="lada">Area Code</string>
+    <string name="principal">Main</string>
+    <string name="otro">🌐 Other</string>
+    <string name="nocorreo">Doesn\'t have email</string>
+    <string name="moneda">Currency</string>
+    <string name="cambio">Exchange rate</string>
+    <string name="bruto">Gross Price</string>
+    <string name="neto">Net Price</string>
+    <string name="acuenta">Payment on Account</string>
+    <string name="nocontratos">No. of Contracts</string>
+    <string name="tipopago">Type of Payment</string>
+    <string name="enganchetotal">Total Down Payment</string>
+    <string name="enganchesala">Down Payment to be paid on site</string>
+    <string name="descuentos">Discounts</string>
+    <string name="enganchediferido">Differed Down Payment</string>
+    <string name="saldoenganche">Downpayment balace</string>
+    <string name="montofinanciar">Amount to Finance</string>
+    <string name="pagosala">Total Payment On-Site</string>
+    <string name="costomembresia">Membership Cost</string>
+    <string name="linea1">Line 1</string>
+    <string name="linea2">Line 2</string>
+    <string name="linea3">Line 3</string>
+    <string name="linea4">Line 4</string>
+    <string name="linea5">Line 5</string>
+    <string name="precioneto">Net Price</string>
+    <string name="tablaamor">Amortization Table</string>
+    <string name="tipoperiodo">Period</string>
+    <string name="fechaprimer">First Payment Date</string>
+    <string name="nopagos">No. Payments</string>
+    <string name="tasainteres">Interest Rate</string>
+    <string name="tablacalculada">Calculated Amortization Table</string>
+    <string name="nueva">New</string>
+    <string name="año1er">Year of 1st use</string>
+    <string name="continuar">Continue</string>
+    <string name="aceptar">Accept</string>
+    <string name="correo">Email</string>
+    <string name="redes">Social Media</string>
+    <string name="usuario">User</string>
+    <string name="agregarredes">+ Add</string>
+    <string name="redessocialesnav">SOCIAL MEDIA</string>
+    <string name="guardar">Save</string>
+    <string name="datosventatab">SALE INFORMATION</string>
+    <string name="varios">VARIOS</string>
+    <string name="no_deseo_redes">I don\'t wish to add any social media</string>
+    <string name="si">Yes</string>
+
+    <string-array name="nacionalidades">
+        <item>Select Nationality</item>
+        <item>Mexican</item>
+        <item>American</item>
+        <item>Canadian</item>
+        <item>German</item>
+        <item>Argentine</item>
+        <item>Australian</item>
+        <item>Austrian</item>
+        <item>Belgian</item>
+        <item>Bolivian</item>
+        <item>Brazilian</item>
+        <item>Chilean</item>
+        <item>Chinese</item>
+        <item>Colombian</item>
+        <item>Costa Rican</item>
+        <item>Cuban</item>
+        <item>Danish</item>
+        <item>Dominican</item>
+        <item>Ecuadorian</item>
+        <item>Salvadoran</item>
+        <item>Scottish</item>
+        <item>Spanish</item>
+        <item>French</item>
+        <item>Guatemalan</item>
+        <item>Haitian</item>
+        <item>Honduran</item>
+        <item>English</item>
+        <item>Irish</item>
+        <item>Italian</item>
+        <item>Japanese</item>
+        <item>Libanesa</item>
+        <item>Moroccan</item>
+        <item>Nicaraguan</item>
+        <item>Panamanian</item>
+        <item>Paraguayan</item>
+        <item>Peruvian</item>
+        <item>Portuguese</item>
+        <item>Puerto Rican</item>
+        <item>Russian</item>
+        <item>Swedish</item>
+        <item>Swiss</item>
+        <item>Uruguayan</item>
+        <item>Venezuelan</item>
+        <item>Other</item>
+    </string-array>
+    <string name="costocontrato">Contract Cost</string>
+    <string name="financiado">Financed</string>
+    <string name="contado">In cash (not financed)</string>
+    <string name="calcular">Calculate</string>
+    <string name="enviar">"Send "</string>
+    <string name="fechapago">Payment Date</string>
+    <string name="monto">Amount</string>
+    <string name="saldo">Balance</string>
+    <string name="resumen">Payment Summary</string>
+    <string name="total">Total to pay</string>
+    <string name="pagosde">_ payments of</string>
+    <string name="interes">Interest</string>
+    <string name="capacumulado">Acc. Campital</string>
 </resources>
