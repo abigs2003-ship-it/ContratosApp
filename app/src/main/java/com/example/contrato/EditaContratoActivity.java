@@ -238,7 +238,11 @@ public class EditaContratoActivity extends AppCompatActivity {
         ImageButton btnDel = new ImageButton(this);
         btnDel.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics()), (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics())));
         btnDel.setImageResource(R.drawable.ic_trash2);
-        btnDel.setBackgroundResource(android.R.attr.selectableItemBackgroundBorderless);
+        
+        TypedValue outValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, outValue, true);
+        btnDel.setBackgroundResource(outValue.resourceId);
+
         btnDel.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         btnDel.setOnClickListener(v -> container.removeView(row));
         return btnDel;
