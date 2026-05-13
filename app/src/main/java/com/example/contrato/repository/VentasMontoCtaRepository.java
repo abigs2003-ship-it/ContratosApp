@@ -8,9 +8,6 @@ import java.util.List;
 
 public class VentasMontoCtaRepository {
 
-    /**
-     * Gets the next incrementing ID for a new monto cta record.
-     */
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdMontoCta), 0) + 1 AS NextId FROM PMT_App_Ventas_Monto_Cta";
         try (Connection conn = DbConnection.getConnection();

@@ -8,9 +8,7 @@ import java.util.List;
 
 public class VentasTitularesRepository {
 
-    /**
-     * Gets the next incrementing ID for a new titular.
-     */
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdTitular), 0) + 1 AS NextId FROM PMT_App_Ventas_Titulares";
         try (Connection conn = DbConnection.getConnection();

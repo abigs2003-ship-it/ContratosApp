@@ -19,7 +19,7 @@ public class MenuActivity extends AppCompatActivity {
         binding = ActivityHomepageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Get user info from SharedPreferences
+        // obtiene info del usuario de sharedpreferences
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
         currentUserId = prefs.getLong("userId", -1);
         String userName = prefs.getString("userName", "");

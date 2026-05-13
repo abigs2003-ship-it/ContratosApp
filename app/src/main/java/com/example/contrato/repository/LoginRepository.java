@@ -16,8 +16,7 @@ public class LoginRepository {
     }
 
     public LoginResult login(String usuario, String password) throws SQLException {
-        // Note: The user specified USE [Contratos], but we use the connection defined in DbConnection.
-        // If the SP is in a different database, we might need to adjust the connection string or call it with database prefix.
+
         String sql = "{call dbo.sp_Login(?, ?)}";
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {

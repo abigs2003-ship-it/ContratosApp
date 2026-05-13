@@ -8,10 +8,8 @@ import java.util.List;
 
 public class VentasContratoRepository {
 
-    /**
-     * Gets the next incrementing ID for a new contract.
-     * Returns 1 if the table is empty.
-     */
+
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdContrato), 0) + 1 AS NextId FROM PMT_App_Ventas_Contrato";
         try (Connection conn = DbConnection.getConnection();

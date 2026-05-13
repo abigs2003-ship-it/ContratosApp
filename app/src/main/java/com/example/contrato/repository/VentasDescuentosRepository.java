@@ -8,9 +8,8 @@ import java.util.List;
 
 public class VentasDescuentosRepository {
 
-    /**
-     * Gets the next incrementing ID for a new discount.
-     */
+
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDescuento), 0) + 1 AS NextId FROM PMT_App_Ventas_Descuentos";
         try (Connection conn = DbConnection.getConnection();

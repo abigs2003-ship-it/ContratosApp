@@ -180,7 +180,7 @@ public class DatosVentaFragment extends Fragment {
 
                 EditText etMonto = createSmallValueEditText("Monto");
                 etMonto.setText(pd.monto);
-                addCurrencyPrefix(etMonto);
+                agregaPrefijoMoneda(etMonto);
 
                 EditText etFecha = createSmallValueEditText("Fecha");
                 etFecha.setFocusable(false);
@@ -211,14 +211,14 @@ public class DatosVentaFragment extends Fragment {
     }
 
     private void setupCurrencyPrefixes() {
-        addCurrencyPrefix(binding.editPrecioBruto);
-        addCurrencyPrefix(binding.editMontoCuenta);
-        addCurrencyPrefix(binding.editEngancheMonto);
-        addCurrencyPrefix(binding.editEngancheSalaMonto);
-        addCurrencyPrefix(binding.editVarios);
-        addCurrencyPrefix(binding.editEngDiferido);
-        addCurrencyPrefix(binding.editCostoContrato);
-        addCurrencyPrefix(binding.editcostomembresia);
+        agregaPrefijoMoneda(binding.editPrecioBruto);
+        agregaPrefijoMoneda(binding.editMontoCuenta);
+        agregaPrefijoMoneda(binding.editEngancheMonto);
+        agregaPrefijoMoneda(binding.editEngancheSalaMonto);
+        agregaPrefijoMoneda(binding.editVarios);
+        agregaPrefijoMoneda(binding.editEngDiferido);
+        agregaPrefijoMoneda(binding.editCostoContrato);
+        agregaPrefijoMoneda(binding.editcostomembresia);
         
         if (binding.editPrecioNeto.getText().toString().isEmpty()) binding.editPrecioNeto.setText("$0.00");
         if (binding.editSaldoEng.getText().toString().isEmpty()) binding.editSaldoEng.setText("$0.00");
@@ -226,7 +226,7 @@ public class DatosVentaFragment extends Fragment {
         if (binding.editpagosala.getText().toString().isEmpty()) binding.editpagosala.setText("$0.00");
     }
 
-    private void addCurrencyPrefix(EditText et) {
+    private void agregaPrefijoMoneda(EditText et) {
         et.setInputType(InputType.TYPE_CLASS_TEXT);
         et.setKeyListener(DigitsKeyListener.getInstance("0123456789.$"));
         et.addTextChangedListener(new TextWatcher() {
@@ -659,7 +659,7 @@ public class DatosVentaFragment extends Fragment {
         etMonto.setTextSize(12);
         etMonto.setPadding(8, 0, 8, 0);
         etMonto.setSingleLine(true);
-        addCurrencyPrefix(etMonto);
+        agregaPrefijoMoneda(etMonto);
         etMonto.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { updateTotalDiscounts(); }
@@ -742,7 +742,7 @@ public class DatosVentaFragment extends Fragment {
 
                 EditText etMonto = createSmallValueEditText("Monto");
                 etMonto.setText(String.format(Locale.US, "$%.2f", split));
-                addCurrencyPrefix(etMonto);
+                agregaPrefijoMoneda(etMonto);
 
                 EditText etFecha = createSmallValueEditText("Fecha");
                 etFecha.setFocusable(false);

@@ -8,9 +8,7 @@ import java.util.List;
 
 public class VentasInventarioRepository {
 
-    /**
-     * Gets the next incrementing ID for a new inventory condition.
-     */
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdCondicionesVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Datos_Inventario";
         try (Connection conn = DbConnection.getConnection();

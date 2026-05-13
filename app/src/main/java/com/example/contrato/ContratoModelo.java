@@ -12,8 +12,8 @@ public class ContratoModelo implements Serializable {
     private String idioma = "Español";
     
     // Titulares y Beneficiarios
-    private List<Person> titulares = new ArrayList<>();
-    private List<Person> beneficiarios = new ArrayList<>();
+    private List<Persona> titulares = new ArrayList<>();
+    private List<Persona> beneficiarios = new ArrayList<>();
 
     // Dirección (Campos generales)
     private String pais;
@@ -33,7 +33,7 @@ public class ContratoModelo implements Serializable {
     private String otroLinea1, otroLinea2, otroLinea3, otroLinea4, otroLinea5, otroPais;
     
     // Contacto
-    private List<PhoneInfo> telefonos = new ArrayList<>();
+    private List<InfoTelefono> telefonos = new ArrayList<>();
     private List<String> emails = new ArrayList<>();
     private boolean noCorreo;
 
@@ -85,20 +85,20 @@ public class ContratoModelo implements Serializable {
         this.id = String.valueOf(System.currentTimeMillis());
     }
 
-    public static class Person implements Serializable {
+    public static class Persona implements Serializable {
         public String nombre, paterno, materno, ocupacion, parentesco, cumple;
-        public Person() {}
-        public Person(String n, String p, String m, String o, String par, String c) {
+        public Persona() {}
+        public Persona(String n, String p, String m, String o, String par, String c) {
             this.nombre = n; this.paterno = p; this.materno = m;
             this.ocupacion = o; this.parentesco = par; this.cumple = c;
         }
     }
 
-    public static class PhoneInfo implements Serializable {
+    public static class InfoTelefono implements Serializable {
         public String etiqueta, lada, numero;
         public boolean isWhatsApp, isPrincipal;
-        public PhoneInfo() {}
-        public PhoneInfo(String etiqueta, String lada, String numero, boolean isWhatsApp, boolean isPrincipal) {
+        public InfoTelefono() {}
+        public InfoTelefono(String etiqueta, String lada, String numero, boolean isWhatsApp, boolean isPrincipal) {
             this.etiqueta = etiqueta;
             this.lada = lada;
             this.numero = numero;
@@ -136,10 +136,10 @@ public class ContratoModelo implements Serializable {
     public void setModifiedDate(String modifiedDate) { this.modifiedDate = modifiedDate; }
     public String getIdioma() { return idioma; }
     public void setIdioma(String idioma) { this.idioma = idioma; }
-    public List<Person> getTitulares() { return titulares; }
-    public void setTitulares(List<Person> titulares) { this.titulares = titulares; }
-    public List<Person> getBeneficiarios() { return beneficiarios; }
-    public void setBeneficiarios(List<Person> beneficiarios) { this.beneficiarios = beneficiarios; }
+    public List<Persona> getTitulares() { return titulares; }
+    public void setTitulares(List<Persona> titulares) { this.titulares = titulares; }
+    public List<Persona> getBeneficiarios() { return beneficiarios; }
+    public void setBeneficiarios(List<Persona> beneficiarios) { this.beneficiarios = beneficiarios; }
     public String getPais() { return pais; }
     public void setPais(String pais) { this.pais = pais; }
     public String getCalle() { return calle; }
@@ -217,8 +217,8 @@ public class ContratoModelo implements Serializable {
     public String getOtroPais() { return otroPais; }
     public void setOtroPais(String otroPais) { this.otroPais = otroPais; }
 
-    public List<PhoneInfo> getTelefonos() { return telefonos; }
-    public void setTelefonos(List<PhoneInfo> telefonos) { this.telefonos = telefonos; }
+    public List<InfoTelefono> getTelefonos() { return telefonos; }
+    public void setTelefonos(List<InfoTelefono> telefonos) { this.telefonos = telefonos; }
     public List<String> getEmails() { return emails; }
     public void setEmails(List<String> emails) { this.emails = emails; }
     public boolean isNoCorreo() { return noCorreo; }

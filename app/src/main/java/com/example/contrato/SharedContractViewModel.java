@@ -100,7 +100,7 @@ public class SharedContractViewModel extends ViewModel {
                     if (!tList.isEmpty()) {
                         VentasTitulares mainTitular = null;
                         for (VentasTitulares vt : tList) {
-                            ContratoModelo.Person p = new ContratoModelo.Person(
+                            ContratoModelo.Persona p = new ContratoModelo.Persona(
                                 vt.nombre, vt.paterno, vt.materno, vt.ocupacion, 
                                 String.valueOf(vt.parentesco),
                                 vt.fechaCumpleaños != null ? dateOnlySdf.format(vt.fechaCumpleaños) : ""
@@ -154,13 +154,13 @@ public class SharedContractViewModel extends ViewModel {
                 m.setOtroLinea4(vig.linea4); m.setOtroLinea5(vig.linea5); m.setOtroPais(vig.pais);
             }
 
-            if (vig.telefonoCasa1 != null && !vig.telefonoCasa1.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Casa 1", vig.ladaCasa1, vig.telefonoCasa1, vig.whatsAppCasa1, "Casa 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoCasa2 != null && !vig.telefonoCasa2.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Casa 2", vig.ladaCasa2, vig.telefonoCasa2, vig.whatsAppCasa2, "Casa 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoCelular1 != null && !vig.telefonoCelular1.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Celular 1", vig.ladaCelular1, vig.telefonoCelular1, vig.whatsAppCelular1, "Celular 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoCelular2 != null && !vig.telefonoCelular2.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Celular 2", vig.ladaCelular2, vig.telefonoCelular2, vig.whatsAppCelular2, "Celular 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoOficina1 != null && !vig.telefonoOficina1.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Oficina 1", vig.ladaOficina1, vig.telefonoOficina1, vig.whatsAppOficina1, "Oficina 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoOficina2 != null && !vig.telefonoOficina2.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Oficina 2", vig.ladaOficina2, vig.telefonoOficina2, vig.whatsAppOficina2, "Oficina 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoMensajes != null && !vig.telefonoMensajes.isEmpty()) m.getTelefonos().add(new ContratoModelo.PhoneInfo("Mensajes", vig.ladaMensajes, vig.telefonoMensajes, vig.whatsAppMensajes, "Mensajes".equals(vig.telefonoDefault)));
+            if (vig.telefonoCasa1 != null && !vig.telefonoCasa1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 1", vig.ladaCasa1, vig.telefonoCasa1, vig.whatsAppCasa1, "Casa 1".equals(vig.telefonoDefault)));
+            if (vig.telefonoCasa2 != null && !vig.telefonoCasa2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 2", vig.ladaCasa2, vig.telefonoCasa2, vig.whatsAppCasa2, "Casa 2".equals(vig.telefonoDefault)));
+            if (vig.telefonoCelular1 != null && !vig.telefonoCelular1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 1", vig.ladaCelular1, vig.telefonoCelular1, vig.whatsAppCelular1, "Celular 1".equals(vig.telefonoDefault)));
+            if (vig.telefonoCelular2 != null && !vig.telefonoCelular2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 2", vig.ladaCelular2, vig.telefonoCelular2, vig.whatsAppCelular2, "Celular 2".equals(vig.telefonoDefault)));
+            if (vig.telefonoOficina1 != null && !vig.telefonoOficina1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 1", vig.ladaOficina1, vig.telefonoOficina1, vig.whatsAppOficina1, "Oficina 1".equals(vig.telefonoDefault)));
+            if (vig.telefonoOficina2 != null && !vig.telefonoOficina2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 2", vig.ladaOficina2, vig.telefonoOficina2, vig.whatsAppOficina2, "Oficina 2".equals(vig.telefonoDefault)));
+            if (vig.telefonoMensajes != null && !vig.telefonoMensajes.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Mensajes", vig.ladaMensajes, vig.telefonoMensajes, vig.whatsAppMensajes, "Mensajes".equals(vig.telefonoDefault)));
 
             if (vig.email1 != null) m.getEmails().add(vig.email1);
             if (vig.email2 != null) m.getEmails().add(vig.email2);
@@ -217,7 +217,7 @@ public class SharedContractViewModel extends ViewModel {
         }
     }
 
-    public void updateContractInDatabase(ContratoModelo model) {
+    public void actualizaContratoInDatabase(ContratoModelo model) {
         new Thread(() -> {
             try {
                 long idContrato = Long.parseLong(model.getId());
@@ -274,9 +274,8 @@ public class SharedContractViewModel extends ViewModel {
                     vig.pais = truncate(model.getOtroPais(), 50);
                 }
 
-                // Reset phones in VIG
                 clearVigPhones(vig);
-                for (ContratoModelo.PhoneInfo p : model.getTelefonos()) {
+                for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
                     if (p.etiqueta.contains("Casa 1")) { 
@@ -324,7 +323,7 @@ public class SharedContractViewModel extends ViewModel {
 
                 infoGralRepo.update(vig);
 
-                // 3. Update Titulares (Delete and Re-insert)
+                // 3. Update Titulares
                 titularesRepo.deleteByContratoId(idContrato);
                 saveTitulares(model.getTitulares(), idContrato, "T", idUsuario, now);
                 saveTitulares(model.getBeneficiarios(), idContrato, "B", idUsuario, now);
@@ -348,7 +347,7 @@ public class SharedContractViewModel extends ViewModel {
                     inventarioRepo.update(vi);
                 }
 
-                // 5. Update Discounts, Regalos, Monto Cta, Deferred (Delete and Re-insert)
+                // 5. Update Discounts, Regalos, Monto Cta, Deferred
                 descuentosRepo.deleteByContratoId(idContrato);
                 for (ContratoModelo.DescuentoDetalle dd : model.getDescuentosDetalle()) {
                     VentasDescuentos vd = new VentasDescuentos();
@@ -395,7 +394,6 @@ public class SharedContractViewModel extends ViewModel {
                     engancheDiferidoRepo.insert(ved);
                 }
 
-                // 6. Update Financing
                 VentasFinanciamientos vf = financiamientoRepo.getByContratoId(idContrato);
                 if (vf != null) {
                     vf.tipoPeriodo = model.getTipoPeriodo();
@@ -406,7 +404,6 @@ public class SharedContractViewModel extends ViewModel {
                     financiamientoRepo.update(vf);
                 }
 
-                // 7. Update Social Accounts
                 redesSocialesRepo.deleteByContratoId(idContrato);
                 if (!model.isNoRedesSociales() && !model.getRedesSociales().isEmpty()) {
                     VentasRedesSociales vrs = new VentasRedesSociales();
@@ -499,7 +496,7 @@ public class SharedContractViewModel extends ViewModel {
                     vig.pais = truncate(model.getOtroPais(), 50);
                 }
 
-                for (ContratoModelo.PhoneInfo p : model.getTelefonos()) {
+                for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
                     if (p.etiqueta.contains("Casa 1")) { 
@@ -663,8 +660,8 @@ public class SharedContractViewModel extends ViewModel {
         }).start();
     }
 
-    private void saveTitulares(List<ContratoModelo.Person> persons, long idContrato, String tipo, long idUsuario, Timestamp now) throws SQLException {
-        for (ContratoModelo.Person p : persons) {
+    private void saveTitulares(List<ContratoModelo.Persona> Personas, long idContrato, String tipo, long idUsuario, Timestamp now) throws SQLException {
+        for (ContratoModelo.Persona p : Personas) {
             VentasTitulares vt = new VentasTitulares();
             vt.idTitular = titularesRepo.getNextId();
             vt.idContrato = idContrato;

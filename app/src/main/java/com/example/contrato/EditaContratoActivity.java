@@ -157,8 +157,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         if (!estaEditando) llenarDatos();
         establecerHabilitacionCampos(binding.mainContent, estaEditando);
 
-        llenarContenedorPersonas(binding.containerTitulares, contrato.getTitulares());
-        llenarContenedorPersonas(binding.containerBeneficiarios, contrato.getBeneficiarios());
+        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
+        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios());
         llenarContenedorTelefonos(contrato.getTelefonos());
         llenarContenedorEmails(contrato.getEmails());
         llenarContenedorRedes(contrato.getRedesSociales());
@@ -200,8 +200,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.spinnerPais.setSelection(Math.max(pos, 0));
         binding.editNacionalidad.setText(contrato.getProvince());
 
-        llenarContenedorPersonas(binding.containerTitulares, contrato.getTitulares());
-        llenarContenedorPersonas(binding.containerBeneficiarios, contrato.getBeneficiarios());
+        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
+        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios());
         llenarContenedorTelefonos(contrato.getTelefonos());
         llenarContenedorEmails(contrato.getEmails());
         binding.checkNoCorreo.setChecked(contrato.isNoCorreo());
@@ -253,12 +253,12 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.editFechaPrimerPago.setText(contrato.getFechaPrimerPago());
     }
 
-    private void llenarContenedorPersonas(ViewGroup contenedor, List<ContratoModelo.Person> personas) {
+    private void llenarContenedorPersonaas(ViewGroup contenedor, List<ContratoModelo.Persona> Personaas) {
         contenedor.removeAllViews();
-        if (personas == null) return;
-        for (ContratoModelo.Person p : personas) {
+        if (Personaas == null) return;
+        for (ContratoModelo.Persona p : Personaas) {
             View fila = LayoutInflater.from(this).inflate(R.layout.list_item_person_historial, contenedor, false);
-            actualizarFilaPersona(fila, p);
+            actualizarFilaPersonaa(fila, p);
 
             View btnEditar = fila.findViewById(R.id.btnEditar);
             View btnEliminar = fila.findViewById(R.id.btnEliminar);
@@ -266,16 +266,16 @@ public class EditaContratoActivity extends AppCompatActivity {
             btnEditar.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
             btnEliminar.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
 
-            btnEditar.setOnClickListener(v -> mostrarDialogoEditarPersona(p, fila));
+            btnEditar.setOnClickListener(v -> mostrarDialogoEditarPersonaa(p, fila));
             btnEliminar.setOnClickListener(v -> {
-                personas.remove(p);
+                Personaas.remove(p);
                 contenedor.removeView(fila);
             });
             contenedor.addView(fila);
         }
     }
 
-    private void actualizarFilaPersona(View fila, ContratoModelo.Person p) {
+    private void actualizarFilaPersonaa(View fila, ContratoModelo.Persona p) {
         String fullName = p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "");
         ((TextView)fila.findViewById(R.id.textNombre)).setText(fullName.trim());
         ((TextView)fila.findViewById(R.id.textCumple)).setText(p.cumple);
@@ -283,10 +283,10 @@ public class EditaContratoActivity extends AppCompatActivity {
         ((TextView)fila.findViewById(R.id.textParentesco)).setText(p.parentesco);
     }
 
-    private void llenarContenedorTelefonos(List<ContratoModelo.PhoneInfo> telefonos) {
+    private void llenarContenedorTelefonos(List<ContratoModelo.InfoTelefono> telefonos) {
         binding.containerTelefonos.removeAllViews();
         if (telefonos == null) return;
-        for (ContratoModelo.PhoneInfo t : telefonos) {
+        for (ContratoModelo.InfoTelefono t : telefonos) {
             View item = LayoutInflater.from(this).inflate(R.layout.item_historial_telefono, binding.containerTelefonos, false);
             ((TextView)item.findViewById(R.id.tvEtiqueta)).setText(t.etiqueta);
             ((TextView)item.findViewById(R.id.tvNumeroCompleto)).setText(String.format("(+%s) %s", t.lada, t.numero));
@@ -371,9 +371,9 @@ public class EditaContratoActivity extends AppCompatActivity {
         }
     }
 
-    private void mostrarDialogoEditarPersona(ContratoModelo.Person p, View fila) {
+    private void mostrarDialogoEditarPersonaa(ContratoModelo.Persona p, View fila) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Editar Persona");
+        builder.setTitle("Editar Personaa");
 
         View view = getLayoutInflater().inflate(R.layout.dialog_editar_persona, null);
         EditText editNom = view.findViewById(R.id.editNombre);
@@ -398,7 +398,7 @@ public class EditaContratoActivity extends AppCompatActivity {
             p.ocupacion = editOcu.getText().toString();
             p.cumple = editCum.getText().toString();
             p.parentesco = editPar.getText().toString();
-            actualizarFilaPersona(fila, p);
+            actualizarFilaPersonaa(fila, p);
         });
         builder.setNegativeButton("Cancelar", null);
         builder.show();
@@ -451,7 +451,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         contrato.setNoAnios(binding.editNoAnios.getText().toString());
         contrato.setFechaPrimerPago(binding.editFechaPrimerPago.getText().toString());
 
-        viewModel.updateContractInDatabase(contrato);
+        viewModel.actualizaContratoInDatabase(contrato);
     }
 
     private void guardarDatosDireccion() {

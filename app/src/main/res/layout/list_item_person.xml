@@ -62,8 +62,7 @@
             android:maxLines="1"
             tools:text="Parentesco" />
 
-        <!-- btnEditar removed to keep alignment while only showing delete -->
-        
+
         <View
             android:layout_width="24dp"
             android:layout_height="24dp"

@@ -33,17 +33,14 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("es-MX"));
         }
 
-        // Receive the generated ID and User ID from MenuActivity
         long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
         long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
         
         SharedContractViewModel viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
         
-        // Ensure ViewModel has the current user ID for database operations
         if (idUsuario != -1) {
             viewModel.setCurrentUserId(idUsuario);
         } else {
-            // Fallback to SharedPreferences if not passed in intent
             SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
             idUsuario = prefs.getLong("userId", -1);
             viewModel.setCurrentUserId(idUsuario);
@@ -89,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
-        // Display the name after Bienvenida (or in the top bar)
+        // nombre despues de bienvenido
         if (!userName.isEmpty()) {
             binding.usuario.setText(userName + "!");
         }

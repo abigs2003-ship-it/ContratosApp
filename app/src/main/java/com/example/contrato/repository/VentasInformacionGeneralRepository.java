@@ -6,9 +6,7 @@ import java.sql.*;
 
 public class VentasInformacionGeneralRepository {
 
-    /**
-     * Gets the next incrementing ID for a new general information record.
-     */
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDatosVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Informacion_General";
         try (Connection conn = DbConnection.getConnection();

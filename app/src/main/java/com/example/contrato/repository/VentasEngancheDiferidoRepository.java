@@ -8,9 +8,7 @@ import java.util.List;
 
 public class VentasEngancheDiferidoRepository {
 
-    /**
-     * Gets the next incrementing ID for a new payment record.
-     */
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdPago), 0) + 1 AS NextId FROM PMT_App_Ventas_EngancheDiferido";
         try (Connection conn = DbConnection.getConnection();

@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 
 import com.example.contrato.databinding.FragmentTitularesBinding;
 import com.example.contrato.databinding.ListItemPersonBinding;
+import com.example.contrato.databinding.ListItemPersonBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +33,8 @@ public class TitularesFragment extends Fragment {
 
     private FragmentTitularesBinding binding;
     private SharedContractViewModel viewModel;
-    private List<ContratoModelo.Person> titularesList = new ArrayList<>();
-    private List<ContratoModelo.Person> beneficiariosList = new ArrayList<>();
+    private List<ContratoModelo.Persona> titularesList = new ArrayList<>();
+    private List<ContratoModelo.Persona> beneficiariosList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -103,10 +104,10 @@ public class TitularesFragment extends Fragment {
                     Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ContratoModelo.Person p = new ContratoModelo.Person(nombre, paterno, materno, ocupacion, parentesco, cumple);
+                ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 titularesList.add(p);
                 saveDataToViewModel();
-                agregarPersonaAContenedor(binding.containerTitulares, p, titularesList);
+                agregarPersonaaAContenedor(binding.containerTitulares, p, titularesList);
                 limpiarCamposTitular();
             } else {
                 Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
@@ -128,10 +129,10 @@ public class TitularesFragment extends Fragment {
                     Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                ContratoModelo.Person p = new ContratoModelo.Person(nombre, paterno, materno, ocupacion, parentesco, cumple);
+                ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 beneficiariosList.add(p);
                 saveDataToViewModel();
-                agregarPersonaAContenedor(binding.containerBeneficiarios, p, beneficiariosList);
+                agregarPersonaaAContenedor(binding.containerBeneficiarios, p, beneficiariosList);
                 limpiarCamposBene();
             } else {
                 Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
@@ -157,12 +158,12 @@ public class TitularesFragment extends Fragment {
             beneficiariosList = new ArrayList<>(contract.getBeneficiarios());
             
             binding.containerTitulares.removeAllViews();
-            for (ContratoModelo.Person p : titularesList) {
-                agregarPersonaAContenedor(binding.containerTitulares, p, titularesList);
+            for (ContratoModelo.Persona p : titularesList) {
+                agregarPersonaaAContenedor(binding.containerTitulares, p, titularesList);
             }
             binding.containerBeneficiarios.removeAllViews();
-            for (ContratoModelo.Person p : beneficiariosList) {
-                agregarPersonaAContenedor(binding.containerBeneficiarios, p, beneficiariosList);
+            for (ContratoModelo.Persona p : beneficiariosList) {
+                agregarPersonaaAContenedor(binding.containerBeneficiarios, p, beneficiariosList);
             }
         }
     }
@@ -208,7 +209,7 @@ public class TitularesFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    private void agregarPersonaAContenedor(LinearLayout contenedor, ContratoModelo.Person p, List<ContratoModelo.Person> list) {
+    private void agregarPersonaaAContenedor(LinearLayout contenedor, ContratoModelo.Persona p, List<ContratoModelo.Persona> list) {
         ListItemPersonBinding bindingItem = ListItemPersonBinding.inflate(getLayoutInflater(), contenedor, false);
         
         String fullName = p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "");

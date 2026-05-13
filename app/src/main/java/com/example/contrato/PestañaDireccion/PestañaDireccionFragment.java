@@ -171,7 +171,7 @@ public class PestañaDireccionFragment extends Fragment {
         if (emails.size() > 3) binding.etEmail4.setText(emails.get(3));
         binding.cbNoCorreo.setChecked(contract.isNoCorreo());
 
-        for (ContratoModelo.PhoneInfo p : contract.getTelefonos()) {
+        for (ContratoModelo.InfoTelefono p : contract.getTelefonos()) {
             if (p.etiqueta.equals("Casa 1")) {
                 binding.etLadaCasa1.setText(p.lada);
                 binding.etNumeroCasa1.setText(p.numero);
@@ -445,7 +445,7 @@ public class PestañaDireccionFragment extends Fragment {
         contract.setEmails(emails);
         contract.setNoCorreo(binding.cbNoCorreo.isChecked());
 
-        List<ContratoModelo.PhoneInfo> phones = new ArrayList<>();
+        List<ContratoModelo.InfoTelefono> phones = new ArrayList<>();
         addPhoneIfNotEmpty(phones, "Casa 1", binding.etLadaCasa1.getText().toString(), binding.etNumeroCasa1.getText().toString(), binding.cbWsCasa1.isChecked(), binding.rbCasa1.isChecked());
         addPhoneIfNotEmpty(phones, "Casa 2", binding.etLadaCasa2.getText().toString(), binding.etNumeroCasa2.getText().toString(), binding.cbWsCasa2.isChecked(), binding.rbCasa2.isChecked());
         addPhoneIfNotEmpty(phones, "Oficina 1", binding.etLadaOficina1.getText().toString(), binding.etNumeroOficina1.getText().toString(), binding.cbWsOficina1.isChecked(), binding.rbOficina1.isChecked());
@@ -458,9 +458,9 @@ public class PestañaDireccionFragment extends Fragment {
         viewModel.setContract(contract);
     }
 
-    private void addPhoneIfNotEmpty(List<ContratoModelo.PhoneInfo> list, String tag, String lada, String num, boolean ws, boolean main) {
+    private void addPhoneIfNotEmpty(List<ContratoModelo.InfoTelefono> list, String tag, String lada, String num, boolean ws, boolean main) {
         if (!num.isEmpty()) {
-            list.add(new ContratoModelo.PhoneInfo(tag, lada, num, ws, main));
+            list.add(new ContratoModelo.InfoTelefono(tag, lada, num, ws, main));
         }
     }
 

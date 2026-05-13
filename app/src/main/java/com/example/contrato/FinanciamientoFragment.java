@@ -33,7 +33,7 @@ public class FinanciamientoFragment extends Fragment {
     private SharedContractViewModel viewModel;
     private final Calendar fechaPrimerPagoSeleccionada = Calendar.getInstance();
     
-    // Internal values for logic and persistence (Spanish)
+
     private static final String[] TIPOS_PERIODO_VALORES = {
             "Mensual", "Bimestral", "Trimestral", "Cuatrimestral", "Semestral", "Anual"
     };
@@ -156,16 +156,14 @@ public class FinanciamientoFragment extends Fragment {
         contract.setModifiedDate(now);
 
         if (!contract.getTitulares().isEmpty()) {
-            ContratoModelo.Person p = contract.getTitulares().get(0);
+            ContratoModelo.Persona p = contract.getTitulares().get(0);
             contract.setClientName(p.nombre + " " + (p.paterno != null ? p.paterno : ""));
         } else {
             contract.setClientName("Sin nombre");
         }
 
-        // Save to local history
-        ContratoManager.getInstance().updateContract(contract);
+        ContratoManager.getInstance().actualizaContrato(contract);
         
-        // Save to SQL Database via ViewModel
         viewModel.saveToDatabase();
     }
 
