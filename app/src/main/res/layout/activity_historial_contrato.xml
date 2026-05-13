@@ -218,10 +218,13 @@
 
                     <!-- Nacionalidad -->
                     <TextView style="@style/FieldLabel" android:text="Nacionalidad" android:layout_marginTop="8dp" />
-                    <EditText 
-                        android:id="@+id/editNacionalidad" 
-                        style="@style/FieldInput" 
-                        android:hint="—" 
+                    <Spinner
+                        android:id="@+id/spinnerNacionalidad"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:background="@drawable/bg_input_selector"
+                        android:backgroundTint="@null"
                         android:enabled="false"/>
 
                 </LinearLayout>
@@ -357,11 +360,25 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Unidad" />
-                            <EditText android:id="@+id/editUnidad" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                            <Spinner
+                                android:id="@+id/spinnerUnidad"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:background="@drawable/bg_input_selector"
+                                android:backgroundTint="@null"
+                                android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Temporada" />
-                            <EditText android:id="@+id/editTemporada" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                            <Spinner
+                                android:id="@+id/spinnerTemporada"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:background="@drawable/bg_input_selector"
+                                android:backgroundTint="@null"
+                                android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -369,7 +386,14 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Moneda" />
-                            <EditText android:id="@+id/editMoneda" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                            <Spinner
+                                android:id="@+id/spinnerMoneda"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:background="@drawable/bg_input_selector"
+                                android:backgroundTint="@null"
+                                android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Tipo de Cambio" />
@@ -609,7 +633,14 @@
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Tipo de Periodo" />
-                            <EditText android:id="@+id/editTipoPeriodo" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                            <Spinner
+                                android:id="@+id/spinnerTipoPeriodo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:background="@drawable/bg_input_selector"
+                                android:backgroundTint="@null"
+                                android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
