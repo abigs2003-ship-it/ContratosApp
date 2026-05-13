@@ -450,6 +450,7 @@ public class DatosVentaFragment extends Fragment {
             double cuenta = parseDouble(binding.editMontoCuenta.getText().toString());
             double neto = bruto - cuenta;
             binding.editPrecioNeto.setText(String.format(Locale.US, "$%.2f", neto));
+            binding.editcostomembresia.setText(String.format(Locale.US, "$%.2f", neto));
 
             if (binding.rbContado.isChecked()) {
                 binding.editEnganchePorcentaje.setText("100");
@@ -459,7 +460,7 @@ public class DatosVentaFragment extends Fragment {
                 updateEngancheSalaMN();
             }
             calculateMontoFinanciar();
-            calculateSaldoEnganche();
+            calculateEngancheDiferido();
             calculateTotalPagoSala();
         } catch (Exception e) {
             binding.editPrecioNeto.setText("$0.00");
@@ -468,18 +469,29 @@ public class DatosVentaFragment extends Fragment {
 
     private void setupDynamicContratos() {
         binding.editNoContratosVenta.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating = false;
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) return;
                 String val = s.toString().trim();
                 if (val.length() > 0) {
                     try {
                         int num = Integer.parseInt(val);
-                        if (num >= 0 && num <= 20) {
+                        if (num > 7) {
+                            isUpdating = true;
+                            num = 7;
+                            binding.editNoContratosVenta.setText("7");
+                            binding.editNoContratosVenta.setSelection(1);
+                            isUpdating = false;
+                        }
+                        if (num >= 0) {
                             binding.containerContratosDinamicos.removeAllViews();
                             for (int i = 0; i < num; i++) {
                                 binding.containerContratosDinamicos.addView(createContractEditText());
                             }
                         }
                     } catch (NumberFormatException ignored) {}
+                } else {
+                    binding.containerContratosDinamicos.removeAllViews();
                 }
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -508,23 +520,27 @@ public class DatosVentaFragment extends Fragment {
     private void setupEngancheCalculos() {
         binding.editEnganchePorcentaje.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.editEnganchePorcentaje.hasFocus()) updateEngancheMN();
+                if (binding.editEnganchePorcentaje.hasFocus()) {
+                    updateEngancheMN();
+                    calculateEngancheDiferido();
+                }
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {
                 calculateMontoFinanciar();
-                calculateSaldoEnganche();
             }
         });
 
         binding.editEngancheMonto.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.editEngancheMonto.hasFocus()) updateEnganchePercent();
+                if (binding.editEngancheMonto.hasFocus()) {
+                    updateEnganchePercent();
+                    calculateEngancheDiferido();
+                }
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {
                 calculateMontoFinanciar();
-                calculateSaldoEnganche();
             }
         });
     }
@@ -532,22 +548,26 @@ public class DatosVentaFragment extends Fragment {
     private void setupEngancheSalaCalculos() {
         binding.editEngancheSalaPorcentaje.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.editEngancheSalaPorcentaje.hasFocus()) updateEngancheSalaMN();
+                if (binding.editEngancheSalaPorcentaje.hasFocus()) {
+                    updateEngancheSalaMN();
+                    calculateEngancheDiferido();
+                }
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {
-                calculateSaldoEnganche();
                 calculateTotalPagoSala();
             }
         });
 
         binding.editEngancheSalaMonto.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (binding.editEngancheSalaMonto.hasFocus()) updateEngancheSalaPercent();
+                if (binding.editEngancheSalaMonto.hasFocus()) {
+                    updateEngancheSalaPercent();
+                    calculateEngancheDiferido();
+                }
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {
-                calculateSaldoEnganche();
                 calculateTotalPagoSala();
             }
         });
@@ -594,13 +614,28 @@ public class DatosVentaFragment extends Fragment {
 
     private void setupDynamicDescuentos() {
         binding.editNoDesc.addTextChangedListener(new TextWatcher() {
+            private boolean isUpdating = false;
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) return;
                 binding.containerDescuentosDinamicos.removeAllViews();
                 try {
-                    int num = Integer.parseInt(s.toString());
+                    String val = s.toString().trim();
+                    if (val.isEmpty()) {
+                        updateTotalDiscounts();
+                        return;
+                    }
+                    int num = Integer.parseInt(val);
+                    if (num > 7) {
+                        isUpdating = true;
+                        num = 7;
+                        binding.editNoDesc.setText("7");
+                        binding.editNoDesc.setSelection(1);
+                        isUpdating = false;
+                    }
                     for (int i = 0; i < num; i++) {
                         binding.containerDescuentosDinamicos.addView(createDiscountRow(i));
                     }
+                    updateTotalDiscounts();
                 } catch (Exception ignored) {}
             }
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -625,6 +660,11 @@ public class DatosVentaFragment extends Fragment {
         etMonto.setPadding(8, 0, 8, 0);
         etMonto.setSingleLine(true);
         addCurrencyPrefix(etMonto);
+        etMonto.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { updateTotalDiscounts(); }
+            @Override public void afterTextChanged(Editable s) {}
+        });
 
         EditText etDesc = new EditText(requireContext());
         LinearLayout.LayoutParams lpDesc = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()), 1.3f);
@@ -640,9 +680,42 @@ public class DatosVentaFragment extends Fragment {
         return row;
     }
 
+    private void updateTotalDiscounts() {
+        double total = 0;
+        for (int i = 0; i < binding.containerDescuentosDinamicos.getChildCount(); i++) {
+            View row = binding.containerDescuentosDinamicos.getChildAt(i);
+            if (row instanceof LinearLayout) {
+                View firstChild = ((LinearLayout) row).getChildAt(0);
+                if (firstChild instanceof EditText) {
+                    total += parseDouble(((EditText) firstChild).getText().toString());
+                }
+            }
+        }
+        binding.editVarios.setText(String.format(Locale.US, "$%.2f", total));
+        calculateEngancheDiferido();
+    }
+
     private void setupDynamicPagosDiferidos() {
         TextWatcher watcher = new TextWatcher() {
+            private boolean isUpdating = false;
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isUpdating) return;
+                
+                if (binding.editNoPagosEng.hasFocus()) {
+                    String val = binding.editNoPagosEng.getText().toString().trim();
+                    if (!val.isEmpty()) {
+                        try {
+                            int num = Integer.parseInt(val);
+                            if (num > 7) {
+                                isUpdating = true;
+                                binding.editNoPagosEng.setText("7");
+                                binding.editNoPagosEng.setSelection(1);
+                                isUpdating = false;
+                            }
+                        } catch (NumberFormatException ignored) {}
+                    }
+                }
+                
                 updatePagosDiferidos();
                 calculateSaldoEnganche();
             }
@@ -657,7 +730,9 @@ public class DatosVentaFragment extends Fragment {
         binding.containerPagosDinamicos.removeAllViews();
         try {
             double totalDiferido = parseDouble(binding.editEngDiferido.getText().toString());
-            int numPagos = Integer.parseInt(binding.editNoPagosEng.getText().toString());
+            String numPagosStr = binding.editNoPagosEng.getText().toString().trim();
+            if (numPagosStr.isEmpty()) return;
+            int numPagos = Integer.parseInt(numPagosStr);
             if (numPagos <= 0) return;
             double split = totalDiferido / numPagos;
             for (int i = 0; i < numPagos; i++) {
@@ -711,12 +786,29 @@ public class DatosVentaFragment extends Fragment {
         return et;
     }
 
+    private void calculateEngancheDiferido() {
+        if (binding == null) return;
+        try {
+            double totalEnganche = parseDouble(binding.editEngancheMonto.getText().toString());
+            double salaEnganche = parseDouble(binding.editEngancheSalaMonto.getText().toString());
+            double discounts = parseDouble(binding.editVarios.getText().toString());
+            double diferido = totalEnganche - salaEnganche - discounts;
+            
+            String formatted = String.format(Locale.US, "$%.2f", Math.max(0, diferido));
+            if (!binding.editEngDiferido.getText().toString().equals(formatted)) {
+                binding.editEngDiferido.setText(formatted);
+            }
+            calculateSaldoEnganche();
+        } catch (Exception ignored) {}
+    }
+
     private void calculateSaldoEnganche() {
         try {
             double engancheMonto = parseDouble(binding.editEngancheMonto.getText().toString());
             double salaMonto = parseDouble(binding.editEngancheSalaMonto.getText().toString());
             double diferidoMonto = parseDouble(binding.editEngDiferido.getText().toString());
-            double saldo = engancheMonto - salaMonto - diferidoMonto;
+            double discounts = parseDouble(binding.editVarios.getText().toString());
+            double saldo = engancheMonto - salaMonto - diferidoMonto - discounts;
             binding.editSaldoEng.setText(String.format(Locale.US, "$%.2f", saldo));
         } catch (Exception ignored) {}
     }
@@ -753,6 +845,7 @@ public class DatosVentaFragment extends Fragment {
                 binding.EngacheColapsable.setVisibility(View.VISIBLE);
             }
             calculateMontoFinanciar();
+            calculateEngancheDiferido();
             calculateTotalPagoSala();
         });
     }

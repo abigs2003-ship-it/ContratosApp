@@ -91,7 +91,7 @@ public class SharedContractViewModel extends ViewModel {
                 for (VentasContrato vc : list) {
                     ContratoModelo m = new ContratoModelo();
                     m.setId(String.valueOf(vc.idContrato));
-                    m.setIdioma(vc.idioma);
+                    m.setIdioma(mapIdiomaFromDb(vc.idioma));
                     if (vc.fechaAlta != null) m.setCreationDate(sdf.format(vc.fechaAlta));
                     if (vc.fechaModificacion != null) m.setModifiedDate(sdf.format(vc.fechaModificacion));
 
@@ -228,7 +228,8 @@ public class SharedContractViewModel extends ViewModel {
                 VentasContrato vc = contratoRepo.getById(idContrato);
                 if (vc != null) {
                     vc.fechaModificacion = now;
-                    vc.idioma = model.getIdioma();
+                    vc.idioma = mapIdiomaToDb(model.getIdioma());
+                    vc.estatus = "A"; // Ensure status is 'A' when updating as well
                     contratoRepo.update(vc);
                 }
 
@@ -408,7 +409,7 @@ public class SharedContractViewModel extends ViewModel {
                 vc.idUsuarioAlta = idUsuario;
                 vc.fechaModificacion = now;
                 vc.estatus = "A";
-                vc.idioma = model.getIdioma();
+                vc.idioma = mapIdiomaToDb(model.getIdioma());
                 contratoRepo.insert(vc);
 
                 VentasInformacionGeneral vig = new VentasInformacionGeneral();
@@ -584,6 +585,18 @@ public class SharedContractViewModel extends ViewModel {
             vt.fechaAlta = now;
             titularesRepo.insert(vt);
         }
+    }
+
+    private String mapIdiomaToDb(String idioma) {
+        if (idioma == null) return "es";
+        if (idioma.equalsIgnoreCase("English")) return "eng";
+        return "es";
+    }
+
+    private String mapIdiomaFromDb(String dbIdioma) {
+        if (dbIdioma == null) return "Español";
+        if (dbIdioma.equalsIgnoreCase("eng")) return "English";
+        return "Español";
     }
 
     private Double parseDouble(String value) {

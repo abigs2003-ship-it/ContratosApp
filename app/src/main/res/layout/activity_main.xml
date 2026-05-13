@@ -52,6 +52,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="4dp"
                     android:textColor="#FFFFFF"
+                    android:textStyle="bold"
                     android:textSize="18sp" />
 
                 <Spinner
