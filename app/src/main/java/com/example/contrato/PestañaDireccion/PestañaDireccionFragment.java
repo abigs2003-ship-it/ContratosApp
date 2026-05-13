@@ -42,6 +42,10 @@ public class PestañaDireccionFragment extends Fragment {
         boolean isValid();
     }
 
+    public interface ClearableFragment {
+        void clearFields();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -244,6 +248,46 @@ public class PestañaDireccionFragment extends Fragment {
                 Navigation.findNavController(v).navigate(R.id.nav_redes_sociales);
             }
         });
+
+        binding.btnLimpiarDomicilio.setOnClickListener(v -> limpiarDomicilio());
+        binding.btnLimpiarTelefonos.setOnClickListener(v -> limpiarTelefonos());
+        binding.btnLimpiarEmails.setOnClickListener(v -> limpiarEmails());
+    }
+
+    private void limpiarDomicilio() {
+        Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.addressContainer);
+        if (currentFragment instanceof ClearableFragment) {
+            ((ClearableFragment) currentFragment).clearFields();
+        }
+    }
+
+    private void limpiarTelefonos() {
+        EditText[] fields = {
+                binding.etLadaCasa1, binding.etNumeroCasa1,
+                binding.etLadaCasa2, binding.etNumeroCasa2,
+                binding.etLadaOficina1, binding.etNumeroOficina1,
+                binding.etLadaOficina2, binding.etNumeroOficina2,
+                binding.etLadaCel1, binding.etNumeroCel1,
+                binding.etLadaCel2, binding.etNumeroCel2,
+                binding.etLadaMensajes, binding.etNumeroMensajes
+        };
+        for (EditText et : fields) et.setText("");
+
+        CheckBox[] ws = {
+                binding.cbWsCasa1, binding.cbWsCasa2, binding.cbWsOficina1,
+                binding.cbWsOficina2, binding.cbWsCel1, binding.cbWsCel2, binding.cbWsMensajes
+        };
+        for (CheckBox cb : ws) cb.setChecked(false);
+
+        for (RadioButton rb : phoneRadioButtons) rb.setChecked(false);
+    }
+
+    private void limpiarEmails() {
+        binding.etEmail1.setText("");
+        binding.etEmail2.setText("");
+        binding.etEmail3.setText("");
+        binding.etEmail4.setText("");
+        binding.cbNoCorreo.setChecked(false);
     }
 
     private boolean validateFields() {

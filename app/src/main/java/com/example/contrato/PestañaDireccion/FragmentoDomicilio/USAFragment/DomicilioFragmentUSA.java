@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
 import com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.TiposFormato.CMRFormatFragment;
 import com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.TiposFormato.POFormatFragment;
 import com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.TiposFormato.StandardFormatFragment;
@@ -18,7 +19,7 @@ import com.example.contrato.R;
 import com.example.contrato.databinding.FragmentDomiciliousaBinding;
 import com.google.android.material.button.MaterialButton;
 
-public class DomicilioFragmentUSA extends Fragment {
+public class DomicilioFragmentUSA extends Fragment implements PestañaDireccionFragment.ClearableFragment {
     private FragmentDomiciliousaBinding binding;
 
     @Nullable
@@ -35,8 +36,10 @@ public class DomicilioFragmentUSA extends Fragment {
         setupButtons();
 
         // Configuración inicial: Standard por defecto
-        selectButton(binding.btnStandard);
-        cargaFragmentoFormato(new StandardFormatFragment());
+        if (getChildFragmentManager().findFragmentById(R.id.fragment_formato_placeholder) == null) {
+            selectButton(binding.btnStandard);
+            cargaFragmentoFormato(new StandardFormatFragment());
+        }
     }
 
     private void setupButtons() {
@@ -82,12 +85,11 @@ public class DomicilioFragmentUSA extends Fragment {
                 .commit();
     }
 
-    private void quitaFragmentoFormato() {
-        Fragment fragment = getChildFragmentManager().findFragmentById(R.id.fragment_formato_placeholder);
-        if (fragment != null) {
-            getChildFragmentManager().beginTransaction()
-                    .remove(fragment)
-                    .commit();
+    @Override
+    public void clearFields() {
+        Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.fragment_formato_placeholder);
+        if (currentFragment instanceof PestañaDireccionFragment.ClearableFragment) {
+            ((PestañaDireccionFragment.ClearableFragment) currentFragment).clearFields();
         }
     }
 

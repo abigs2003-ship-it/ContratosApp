@@ -17,7 +17,7 @@ import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
 import com.example.contrato.SharedContractViewModel;
 import com.example.contrato.databinding.FragmentDomiciliootroBinding;
 
-public class DomicilioFragmentOtro extends Fragment implements PestañaDireccionFragment.ValidatableFragment {
+public class DomicilioFragmentOtro extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
     private FragmentDomiciliootroBinding binding;
     private SharedContractViewModel viewModel;
 
@@ -82,6 +82,19 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
         if (binding == null) return false;
         return !binding.editLinea1.getText().toString().trim().isEmpty() &&
                !binding.editPaisOtro.getText().toString().trim().isEmpty();
+    }
+
+    @Override
+    public void clearFields() {
+        if (binding != null) {
+            binding.editLinea1.setText("");
+            binding.editLinea2.setText("");
+            binding.editLinea3.setText("");
+            binding.editLinea4.setText("");
+            binding.edit5.setText("");
+            binding.editPaisOtro.setText("");
+            saveData();
+        }
     }
 
     @Override

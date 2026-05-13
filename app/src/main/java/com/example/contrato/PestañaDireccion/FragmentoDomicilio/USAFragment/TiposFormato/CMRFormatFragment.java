@@ -17,7 +17,7 @@ import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
 import com.example.contrato.SharedContractViewModel;
 import com.example.contrato.databinding.FragmentCmrFormatBinding;
 
-public class CMRFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment {
+public class CMRFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
 
     private FragmentCmrFormatBinding binding;
     private SharedContractViewModel viewModel;
@@ -82,6 +82,19 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
                !binding.editCity.getText().toString().trim().isEmpty() &&
                !binding.editState.getText().toString().trim().isEmpty() &&
                !binding.zipcode.getText().toString().trim().isEmpty();
+    }
+
+    @Override
+    public void clearFields() {
+        if (binding != null) {
+            binding.editCMR1.setText("");
+            binding.editBox.setText("");
+            binding.editAPO.setText("");
+            binding.editCity.setText("");
+            binding.editState.setText("");
+            binding.zipcode.setText("");
+            saveData();
+        }
     }
 
     @Override

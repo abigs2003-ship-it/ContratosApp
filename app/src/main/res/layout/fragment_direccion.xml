@@ -493,7 +493,8 @@
                         android:textStyle="bold"
                         android:layout_marginStart="8dp" />
                 </LinearLayout>
-                <EditText android:id="@+id/etEmail1" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+                <EditText android:id="@+id/etEmail1" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp"
+                    android:inputType="text"/>
 
                 <!-- Email 2 -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
@@ -502,7 +503,8 @@
                         android:fontFamily="serif"
                         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email 2" android:textSize="15sp" android:textStyle="bold" android:layout_marginStart="8dp" />
                 </LinearLayout>
-                <EditText android:id="@+id/etEmail2" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+                <EditText android:inputType="text"
+                    android:id="@+id/etEmail2" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
 
                 <!-- Email 3 -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
@@ -515,7 +517,8 @@
                         android:textSize="15sp"
                         android:textStyle="bold" android:layout_marginStart="8dp" />
                 </LinearLayout>
-                <EditText android:id="@+id/etEmail3" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
+                <EditText android:inputType="text"
+                    android:id="@+id/etEmail3" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="12dp" />
 
                 <!-- Email 4 -->
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
@@ -523,7 +526,8 @@
                         android:fontFamily="serif"
                         android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email 4" android:textSize="15sp" android:textStyle="bold" android:layout_marginStart="8dp" />
                 </LinearLayout>
-                <EditText android:id="@+id/etEmail4" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="16dp" />
+                <EditText android:inputType="text"
+                    android:id="@+id/etEmail4" android:layout_width="match_parent" android:layout_height="44dp" android:background="@drawable/bg_input" android:hint="correo@ejemplo.com" android:paddingStart="12dp" android:textSize="15sp" android:layout_marginBottom="16dp" />
 
                 <CheckBox
                     android:id="@+id/cbNoCorreo"

@@ -17,7 +17,7 @@ import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
 import com.example.contrato.SharedContractViewModel;
 import com.example.contrato.databinding.FragmentPoboxFormatBinding;
 
-public class POFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment {
+public class POFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
 
     private FragmentPoboxFormatBinding binding;
     private SharedContractViewModel viewModel;
@@ -87,6 +87,18 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
                !binding.editCity.getText().toString().trim().isEmpty() &&
                !binding.editState.getText().toString().trim().isEmpty() &&
                !binding.editZipCode2.getText().toString().trim().isEmpty();
+    }
+
+    @Override
+    public void clearFields() {
+        if (binding != null) {
+            binding.editStreetPO.setText("");
+            binding.editPO.setText("");
+            binding.editCity.setText("");
+            binding.editState.setText("");
+            binding.editZipCode2.setText("");
+            saveData();
+        }
     }
 
     @Override

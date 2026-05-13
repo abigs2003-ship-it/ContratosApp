@@ -20,7 +20,6 @@
         android:background="@drawable/bg_input"
         android:paddingStart="12dp"
         android:layout_marginBottom="12dp"
-
         android:inputType="textCapWords" />
 
     <LinearLayout
@@ -73,7 +72,6 @@
                 android:textSize="15sp"
                 android:background="@drawable/bg_input"
                 android:paddingStart="12dp"
-
                 android:inputType="textCapWords"/>
         </LinearLayout>
     </LinearLayout>
@@ -105,7 +103,6 @@
                 android:textSize="15sp"
                 android:background="@drawable/bg_input"
                 android:paddingStart="12dp"
-
                 android:inputType="textCapWords"/>
         </LinearLayout>
 
@@ -130,11 +127,10 @@
                 android:background="@drawable/bg_input"
                 android:paddingStart="12dp"
                 android:imeOptions="actionDone"
+                android:maxLength="5"
                 android:inputType="number" />
         </LinearLayout>
     </LinearLayout>
-
-
 
     <TextView
         android:layout_width="wrap_content"

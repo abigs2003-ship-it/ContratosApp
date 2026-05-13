@@ -17,7 +17,7 @@ import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
 import com.example.contrato.SharedContractViewModel;
 import com.example.contrato.databinding.FragmentStandardFormatBinding;
 
-public class StandardFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment {
+public class StandardFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
 
     private FragmentStandardFormatBinding binding;
     private SharedContractViewModel viewModel;
@@ -42,7 +42,7 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
             binding.editState.setText(contract.getUsaState());
             binding.editZipCode.setText(contract.getUsaZip());
             binding.editNeighborhood.setText(contract.getUsaNeighborhood());
-            binding.editCountryUSA.setText(contract.getOtroPais()); // USA country is usually fixed but can be stored in otroPais or general pais
+            binding.editCountryUSA.setText(contract.getOtroPais());
         }
     }
 
@@ -71,7 +71,6 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
         contract.setUsaZip(binding.editZipCode.getText().toString());
         contract.setUsaNeighborhood(binding.editNeighborhood.getText().toString());
         
-        // Also update general fields for compatibility when this section is active
         contract.setPais("EEUU");
         contract.setCalle(contract.getUsaCalle());
         contract.setCiudad(contract.getUsaCity());
@@ -90,6 +89,18 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
                !binding.editState.getText().toString().trim().isEmpty() &&
                !binding.editZipCode.getText().toString().trim().isEmpty() &&
                !binding.editNeighborhood.getText().toString().trim().isEmpty();
+    }
+
+    @Override
+    public void clearFields() {
+        if (binding != null) {
+            binding.editCalle.setText("");
+            binding.editCity.setText("");
+            binding.editState.setText("");
+            binding.editZipCode.setText("");
+            binding.editNeighborhood.setText("");
+            saveData();
+        }
     }
 
     @Override

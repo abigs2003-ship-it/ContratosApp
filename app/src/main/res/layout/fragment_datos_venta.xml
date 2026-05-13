@@ -370,8 +370,7 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:imeOptions="actionNext"
-                        android:nextFocusForward="@string/nocontratos"
-                        android:maxLength="1"
+                        android:nextFocusForward="@+id/editNoContratosVenta"
                         android:background="@drawable/bg_html_input"
                         android:inputType="numberDecimal"
                         android:padding="8dp"
@@ -393,7 +392,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:fontFamily="serif"
-                        android:imeOptions="actionDone"
                         android:text="@string/nocontratos"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -408,7 +406,7 @@
                         android:layout_marginStart="4dp"
                         android:background="@drawable/bg_html_input"
                         android:gravity="center"
-                        android:maxLength="15"
+                        android:maxLength="1"
                         android:textSize="14sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -641,10 +639,9 @@
                         android:id="@+id/editVarios"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:nextFocusForward="@id/editNoDesc"
+                        android:nextFocusForward="@+id/editNoDesc"
                         android:imeOptions="actionNext"
                         android:layout_weight="1"
-                        android:maxLength="1"
                         android:background="@drawable/bg_html_input"
                         android:inputType="numberDecimal"
                         android:padding="8dp"
@@ -677,6 +674,7 @@
                         android:layout_marginStart="4dp"
                         android:background="@drawable/bg_html_input"
                         android:gravity="center"
+                        android:maxLength="1"
                         android:inputType="number"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -708,8 +706,7 @@
                         android:layout_width="0dp"
                         android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:nextFocusForward="@id/editNoPagosEng"
-                        android:maxLength="1"
+                        android:nextFocusForward="@+id/editNoPagosEng"
                         android:imeOptions="actionNext"
                         android:background="@drawable/bg_html_input"
                         android:inputType="numberDecimal"
@@ -742,6 +739,7 @@
                         android:background="@drawable/bg_html_input"
                         android:gravity="center"
                         android:layout_marginEnd="60dp"
+                        android:maxLength="1"
                         android:inputType="number"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -841,7 +839,7 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:imeOptions="actionNext"
-                        android:nextFocusForward="@string/costocontrato"
+                        android:nextFocusForward="@+id/editCostoContrato"
 
                         android:background="@drawable/bg_html_input"
                         android:inputType="numberDecimal"
