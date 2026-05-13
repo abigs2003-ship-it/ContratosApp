@@ -38,7 +38,7 @@
     <string name="oficina2">🏢 Oficina 2</string>
     <string name="celular1">📱 Celular 1</string>
     <string name="celular2">📱 Celular 2</string>
-    <string name="mensajes">💬 Messages</string>
+    <string name="mensajes">💬 Mensajes</string>
     <string name="nacionalidad">Nacionalidad</string>
     <string name="inventario">Inventario adquirido</string>
     <string name="tipoventa">Tipo Venta</string>
@@ -81,7 +81,7 @@
     </string-array>
 
     <string name="mexico">🇲🇽 México</string>
-    <string name="usa">🇺🇸 EEUU</string>
+    <string name="usa">🇺🇸 USA</string>
     <string name="canada">🇨🇦 Canadá</string>
     <string name="lada">Lada</string>
     <string name="principal">Principal</string>

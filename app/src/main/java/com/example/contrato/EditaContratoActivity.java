@@ -127,7 +127,6 @@ public class EditaContratoActivity extends AppCompatActivity {
     private void setupAddButtons() {
         binding.btnAddTelefono.setOnClickListener(v -> binding.containerTelefonos.addView(createTelefonoView(new ContratoModelo.InfoTelefono())));
         binding.btnAddEmail.setOnClickListener(v -> binding.containerEmails.addView(createEmailView("")));
-        binding.btnAddRedSocial.setOnClickListener(v -> binding.containerRedes.addView(createRedSocialView(new ContratoModelo.SocialAccount())));
         binding.btnAddRegalo.setOnClickListener(v -> binding.containerRegalos.addView(createRegaloView("")));
         
         binding.btnAddTitular.setOnClickListener(v -> {
@@ -355,7 +354,6 @@ public class EditaContratoActivity extends AppCompatActivity {
 
         binding.btnAddTelefono.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddEmail.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
-        binding.btnAddRedSocial.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddRegalo.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddTitular.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddBeneficiario.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
@@ -525,7 +523,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         EditText editUsuario = item.findViewById(R.id.editUsuario);
         ImageButton btnEliminar = item.findViewById(R.id.btnEliminar);
 
-        setupSpinner(spinnerPlataforma, new String[]{"Facebook", "Instagram", "Twitter", "TikTok", "Otro"});
+        setupSpinner(spinnerPlataforma, new String[]{"Facebook", "Instagram", "Twitter"});
         setSpinnerSelection(spinnerPlataforma, sa.red);
         editUsuario.setText(sa.usuario);
 
@@ -562,8 +560,9 @@ public class EditaContratoActivity extends AppCompatActivity {
         if (value == null) return;
         ArrayAdapter<?> adapter = (ArrayAdapter<?>) spinner.getAdapter();
         if (adapter == null) return;
+        String val = value.trim();
         for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getItem(i).toString().equalsIgnoreCase(value.trim())) {
+            if (adapter.getItem(i).toString().equalsIgnoreCase(val)) {
                 spinner.setSelection(i);
                 return;
             }
@@ -609,7 +608,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         EditText editCum = view.findViewById(R.id.editCumple);
         Spinner spinnerPar = view.findViewById(R.id.spinnerParentesco);
         setupSpinnerFromResource(spinnerPar, R.array.parentescos);
-        
+
         editNom.setText(p.nombre); editPat.setText(p.paterno); editMat.setText(p.materno);
         editOcu.setText(p.ocupacion); editCum.setText(p.cumple);
         try { int pos = Integer.parseInt(p.parentesco); if (pos >= 0 && pos < spinnerPar.getAdapter().getCount()) spinnerPar.setSelection(pos); } catch (Exception e) {}
