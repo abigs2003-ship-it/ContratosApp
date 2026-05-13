@@ -27,7 +27,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/Persona_arms_up"
+                    android:src="@drawable/person_arms_up"
                     app:tint="@color/white" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -47,7 +47,6 @@
                 android:background="@drawable/bg_section_content"
                 android:padding="15dp">
 
-                <!-- Platform cards row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -66,7 +66,7 @@
                 android:background="@drawable/bg_input_field"
                 android:hint="Usuario"
                 android:importantForAutofill="no"
-                android:inputType="textPersonaName"
+                android:inputType="textPersonName"
                 android:paddingHorizontal="20dp"
                 android:textColor="@color/white"
                 android:textColorHint="#CCFFFFFF"
