@@ -1,7 +1,11 @@
 package com.example.contrato;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +23,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.contrato.databinding.ActivityHistorialContratoBinding;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +45,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
         contrato = (ContratoModelo) getIntent().getSerializableExtra("contract");
 
-        configurarSpinnerPais();
+        configurarSpinners();
+        setupDynamicWatchers();
 
         if (contrato != null) {
             llenarDatos();
@@ -63,11 +72,12 @@ public class EditaContratoActivity extends AppCompatActivity {
         });
     }
 
-    private void configurarSpinnerPais() {
+    private void configurarSpinners() {
+        // País
         String[] paises = {"México", "USA Standard", "USA P.O. Box", "USA CMR/APO", "Canadá", "Otro"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paises);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinnerPais.setAdapter(adapter);
+        ArrayAdapter<String> adapterPais = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, paises);
+        adapterPais.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerPais.setAdapter(adapterPais);
 
         binding.spinnerPais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -77,6 +87,114 @@ public class EditaContratoActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+
+        // Idioma
+        String[] idiomas = {"Español", "English"};
+        ArrayAdapter<String> adapterIdioma = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, idiomas);
+        adapterIdioma.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerIdioma.setAdapter(adapterIdioma);
+
+        // Tipo Venta
+        String[] tiposVenta = {"Nueva", "Upgrade"};
+        ArrayAdapter<String> adapterVenta = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposVenta);
+        adapterVenta.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerTipoVenta.setAdapter(adapterVenta);
+
+        // Tipo Pago
+        String[] tiposPago = {"Financiado", "Contado"};
+        ArrayAdapter<String> adapterPago = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tiposPago);
+        adapterPago.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.spinnerTipoPago.setAdapter(adapterPago);
+    }
+
+    private void setupDynamicWatchers() {
+        binding.editNoContratosMontoCta.addTextChangedListener(new DynamicWatcher(binding.containerContratosMontoCuenta, 1));
+        binding.editNoPagosEng.addTextChangedListener(new DynamicWatcher(binding.containerPagosDiferidos, 2));
+        binding.editNoDesc.addTextChangedListener(new DynamicWatcher(binding.containerDescuentos, 3));
+    }
+
+    private class DynamicWatcher implements TextWatcher {
+        private ViewGroup container;
+        private int type; // 1: Contratos, 2: Pagos, 3: Descuentos
+        public DynamicWatcher(ViewGroup container, int type) { this.container = container; this.type = type; }
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (!estaEditando) return;
+            try {
+                int num = Integer.parseInt(s.toString());
+                if (num > 15) num = 15; // Limit
+                rebuildContainer(container, type, num);
+            } catch (Exception e) {
+                container.removeAllViews();
+            }
+        }
+        @Override public void afterTextChanged(Editable s) {}
+    }
+
+    private void rebuildContainer(ViewGroup container, int type, int num) {
+        container.removeAllViews();
+        for (int i = 0; i < num; i++) {
+            if (type == 1) container.addView(createContractEditText(""));
+            else if (type == 2) container.addView(createPagoDiferidoRow(null));
+            else if (type == 3) container.addView(createDescuentoRow(null));
+        }
+    }
+
+    private View createContractEditText(String text) {
+        EditText et = new EditText(this);
+        et.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        et.setHint("No. Contrato");
+        et.setText(text);
+        et.setEnabled(estaEditando);
+        return et;
+    }
+
+    private View createPagoDiferidoRow(ContratoModelo.PagoDiferido p) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        EditText etMonto = new EditText(this);
+        etMonto.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        etMonto.setHint("Monto");
+        etMonto.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        EditText etFecha = new EditText(this);
+        etFecha.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.2f));
+        etFecha.setHint("DD/MM/YYYY");
+        etFecha.setFocusable(false);
+        etFecha.setOnClickListener(v -> { if (estaEditando) showDatePicker(etFecha); });
+
+        if (p != null) { etMonto.setText(p.monto); etFecha.setText(p.fecha); }
+        etMonto.setEnabled(estaEditando);
+        etFecha.setEnabled(estaEditando);
+
+        row.addView(etMonto);
+        row.addView(etFecha);
+        return row;
+    }
+
+    private View createDescuentoRow(ContratoModelo.DescuentoDetalle d) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        EditText etMonto = new EditText(this);
+        etMonto.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        etMonto.setHint("Monto");
+        etMonto.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        EditText etDesc = new EditText(this);
+        etDesc.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 2f));
+        etDesc.setHint("Descripción");
+
+        if (d != null) { etMonto.setText(d.monto); etDesc.setText(d.descripcion); }
+        etMonto.setEnabled(estaEditando);
+        etDesc.setEnabled(estaEditando);
+
+        row.addView(etMonto);
+        row.addView(etDesc);
+        return row;
+    }
+
+    private void showDatePicker(EditText et) {
+        Calendar c = Calendar.getInstance();
+        new DatePickerDialog(this, (view, y, m, d) -> et.setText(String.format(Locale.getDefault(), "%02d/%02d/%d", d, m + 1, y)), 
+            c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private void cambiarFormatoDireccion(String pais) {
@@ -157,15 +275,21 @@ public class EditaContratoActivity extends AppCompatActivity {
         if (!estaEditando) llenarDatos();
         establecerHabilitacionCampos(binding.mainContent, estaEditando);
 
+        // Update enable state for generated views
+        enableGeneratedViews(binding.containerContratosMontoCuenta, estaEditando);
+        enableGeneratedViews(binding.containerPagosDiferidos, estaEditando);
+        enableGeneratedViews(binding.containerDescuentos, estaEditando);
+        
         llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
         llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios());
-        llenarContenedorTelefonos(contrato.getTelefonos());
-        llenarContenedorEmails(contrato.getEmails());
-        llenarContenedorRedes(contrato.getRedesSociales());
-        llenarContenedorRegalos(contrato.getRegalos());
-        llenarContenedorContratosMontoCuenta(contrato.getContratosMontoCuenta());
-        llenarContenedorPagosDiferidos(contrato.getPagosDiferidos());
-        llenarContenedorDescuentos(contrato.getDescuentosDetalle());
+    }
+
+    private void enableGeneratedViews(ViewGroup layout, boolean enabled) {
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            if (child instanceof ViewGroup) enableGeneratedViews((ViewGroup) child, enabled);
+            else child.setEnabled(enabled);
+        }
     }
 
     private void establecerHabilitacionCampos(ViewGroup layout, boolean habilitado) {
@@ -185,19 +309,10 @@ public class EditaContratoActivity extends AppCompatActivity {
         String fechas = String.format("Creado: %s | Modificado: %s", contrato.getCreationDate(), contrato.getModifiedDate());
         binding.tvFechas.setText(fechas);
 
-        binding.editIdioma.setText(contrato.getIdioma());
+        setSpinnerSelection(binding.spinnerIdioma, contrato.getIdioma());
 
         String paisContrato = contrato.getPais() != null ? contrato.getPais() : "México";
-        int pos = -1;
-        ArrayAdapter<?> adapter = (ArrayAdapter<?>) binding.spinnerPais.getAdapter();
-        for (int i = 0; i < adapter.getCount(); i++) {
-            Object item = adapter.getItem(i);
-            if (item != null && item.toString().equalsIgnoreCase(paisContrato)) {
-                pos = i;
-                break;
-            }
-        }
-        binding.spinnerPais.setSelection(Math.max(pos, 0));
+        setSpinnerSelection(binding.spinnerPais, paisContrato);
         binding.editNacionalidad.setText(contrato.getProvince());
 
         llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
@@ -209,7 +324,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.checkNoRedes.setChecked(contrato.isNoRedesSociales());
         llenarContenedorRedes(contrato.getRedesSociales());
 
-        binding.editTipoVenta.setText(contrato.getTipoVenta());
+        setSpinnerSelection(binding.spinnerTipoVenta, contrato.getTipoVenta());
         binding.editUnidad.setText(contrato.getUnidad());
         binding.editTemporada.setText(contrato.getTemporada());
         binding.editMoneda.setText(contrato.getMoneda());
@@ -217,9 +332,13 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.editPrecioBruto.setText(contrato.getPrecioBruto());
         binding.editPrecioNeto.setText(contrato.getPrecioNeto());
         binding.editMontoCuenta.setText(contrato.getMontoCuenta());
-        binding.editTipoPago.setText(contrato.getTipoPago());
+        setSpinnerSelection(binding.spinnerTipoPago, contrato.getTipoPago());
 
-        llenarContenedorContratosMontoCuenta(contrato.getContratosMontoCuenta());
+        binding.editNoContratosMontoCta.setText(String.valueOf(contrato.getContratosMontoCuenta().size()));
+        binding.containerContratosMontoCuenta.removeAllViews();
+        for (String c : contrato.getContratosMontoCuenta()) {
+            binding.containerContratosMontoCuenta.addView(createContractEditText(c));
+        }
 
         binding.editEngancheTotal.setText(contrato.getEngancheTotal());
         binding.editEngancheMonto.setText(contrato.getEngancheMonto());
@@ -229,13 +348,19 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.editEngDiferidoMonto.setText(contrato.getEngDiferidoMonto());
         binding.editNoPagosEng.setText(contrato.getNoPagosEng());
 
-        llenarContenedorPagosDiferidos(contrato.getPagosDiferidos());
+        binding.containerPagosDiferidos.removeAllViews();
+        for (ContratoModelo.PagoDiferido p : contrato.getPagosDiferidos()) {
+            binding.containerPagosDiferidos.addView(createPagoDiferidoRow(p));
+        }
 
         binding.editVariosMonto.setText(contrato.getVariosMonto());
         binding.editSaldoEnganche.setText(contrato.getSaldoEnganche());
 
         binding.editNoDesc.setText(contrato.getNoDesc());
-        llenarContenedorDescuentos(contrato.getDescuentosDetalle());
+        binding.containerDescuentos.removeAllViews();
+        for (ContratoModelo.DescuentoDetalle d : contrato.getDescuentosDetalle()) {
+            binding.containerDescuentos.addView(createDescuentoRow(d));
+        }
 
         binding.editCostoContrato.setText(contrato.getCostoContrato());
         binding.editPagoSala.setText(contrato.getPagoSala());
@@ -251,6 +376,17 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.editAnioUso.setText(contrato.getAnioUso());
         binding.editNoAnios.setText(contrato.getNoAnios());
         binding.editFechaPrimerPago.setText(contrato.getFechaPrimerPago());
+    }
+
+    private void setSpinnerSelection(Spinner spinner, String value) {
+        if (value == null) return;
+        ArrayAdapter<?> adapter = (ArrayAdapter<?>) spinner.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).toString().equalsIgnoreCase(value)) {
+                spinner.setSelection(i);
+                return;
+            }
+        }
     }
 
     private void llenarContenedorPersonaas(ViewGroup contenedor, List<ContratoModelo.Persona> Personaas) {
@@ -280,7 +416,14 @@ public class EditaContratoActivity extends AppCompatActivity {
         ((TextView)fila.findViewById(R.id.textNombre)).setText(fullName.trim());
         ((TextView)fila.findViewById(R.id.textCumple)).setText(p.cumple);
         ((TextView)fila.findViewById(R.id.textOcupacion)).setText(p.ocupacion);
-        ((TextView)fila.findViewById(R.id.textParentesco)).setText(p.parentesco);
+        
+        String parentescoDisplay = p.parentesco;
+        try {
+            int pos = Integer.parseInt(p.parentesco);
+            String[] array = getResources().getStringArray(R.array.parentescos);
+            if (pos >= 0 && pos < array.length) parentescoDisplay = array[pos];
+        } catch (Exception ignored) {}
+        ((TextView)fila.findViewById(R.id.textParentesco)).setText(parentescoDisplay);
     }
 
     private void llenarContenedorTelefonos(List<ContratoModelo.InfoTelefono> telefonos) {
@@ -317,6 +460,16 @@ public class EditaContratoActivity extends AppCompatActivity {
             View item = LayoutInflater.from(this).inflate(R.layout.item_cuenta_social_historial, binding.containerRedes, false);
             ((TextView)item.findViewById(R.id.tvPlatformTag)).setText(sa.red);
             ((TextView)item.findViewById(R.id.tvNombre)).setText(sa.usuario);
+
+            ImageView ivIcon = item.findViewById(R.id.ivPlatformIcon);
+            if (sa.red != null) {
+                String platform = sa.red.toLowerCase();
+                if (platform.contains("facebook")) ivIcon.setImageResource(R.drawable.ic_facebook);
+                else if (platform.contains("instagram")) ivIcon.setImageResource(R.drawable.ic_instagram);
+                else if (platform.contains("twitter") || platform.contains(" x ")) ivIcon.setImageResource(R.drawable.ic_x_twitter);
+                else ivIcon.setImageResource(R.drawable.ic_world);
+            }
+
             item.findViewById(R.id.btnEliminar).setVisibility(View.GONE);
             binding.containerRedes.addView(item);
         }
@@ -335,42 +488,6 @@ public class EditaContratoActivity extends AppCompatActivity {
         }
     }
 
-    private void llenarContenedorContratosMontoCuenta(List<String> contratos) {
-        binding.containerContratosMontoCuenta.removeAllViews();
-        if (contratos == null) return;
-        for (String c : contratos) {
-            TextView tv = new TextView(this);
-            tv.setText(c);
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            tv.setPadding(10, 5, 10, 5);
-            binding.containerContratosMontoCuenta.addView(tv);
-        }
-    }
-
-    private void llenarContenedorPagosDiferidos(List<ContratoModelo.PagoDiferido> pagos) {
-        binding.containerPagosDiferidos.removeAllViews();
-        if (pagos == null) return;
-        for (ContratoModelo.PagoDiferido p : pagos) {
-            TextView tv = new TextView(this);
-            tv.setText(String.format(Locale.getDefault(), "%s - %s", p.monto, p.fecha));
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            tv.setPadding(10, 5, 10, 5);
-            binding.containerPagosDiferidos.addView(tv);
-        }
-    }
-
-    private void llenarContenedorDescuentos(List<ContratoModelo.DescuentoDetalle> descuentos) {
-        binding.containerDescuentos.removeAllViews();
-        if (descuentos == null) return;
-        for (ContratoModelo.DescuentoDetalle d : descuentos) {
-            TextView tv = new TextView(this);
-            tv.setText(String.format(Locale.getDefault(), "%s: %s", d.descripcion, d.monto));
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-            tv.setPadding(10, 5, 10, 5);
-            binding.containerDescuentos.addView(tv);
-        }
-    }
-
     private void mostrarDialogoEditarPersonaa(ContratoModelo.Persona p, View fila) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Editar Personaa");
@@ -381,14 +498,25 @@ public class EditaContratoActivity extends AppCompatActivity {
         EditText editMat = view.findViewById(R.id.editMaterno);
         EditText editOcu = view.findViewById(R.id.editOcupacion);
         EditText editCum = view.findViewById(R.id.editCumple);
-        EditText editPar = view.findViewById(R.id.editParentesco);
+        Spinner spinnerPar = view.findViewById(R.id.spinnerParentesco);
+
+        String[] parentescos = getResources().getStringArray(R.array.parentescos);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, parentescos);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPar.setAdapter(adapter);
 
         editNom.setText(p.nombre);
         editPat.setText(p.paterno);
         editMat.setText(p.materno);
         editOcu.setText(p.ocupacion);
         editCum.setText(p.cumple);
-        editPar.setText(p.parentesco);
+        
+        try {
+            int pos = Integer.parseInt(p.parentesco);
+            if (pos >= 0 && pos < adapter.getCount()) spinnerPar.setSelection(pos);
+        } catch (Exception e) {
+            spinnerPar.setSelection(adapter.getCount() - 1);
+        }
 
         builder.setView(view);
         builder.setPositiveButton("Guardar", (dialog, which) -> {
@@ -397,7 +525,7 @@ public class EditaContratoActivity extends AppCompatActivity {
             p.materno = editMat.getText().toString();
             p.ocupacion = editOcu.getText().toString();
             p.cumple = editCum.getText().toString();
-            p.parentesco = editPar.getText().toString();
+            p.parentesco = String.valueOf(spinnerPar.getSelectedItemPosition());
             actualizarFilaPersonaa(fila, p);
         });
         builder.setNegativeButton("Cancelar", null);
@@ -406,7 +534,7 @@ public class EditaContratoActivity extends AppCompatActivity {
 
     private void guardarCambios() {
         if (contrato == null) return;
-        contrato.setIdioma(binding.editIdioma.getText().toString());
+        contrato.setIdioma(binding.spinnerIdioma.getSelectedItem().toString());
         contrato.setPais(binding.spinnerPais.getSelectedItem().toString());
         contrato.setProvince(binding.editNacionalidad.getText().toString());
         contrato.setModifiedDate(new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()));
@@ -416,7 +544,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         contrato.setNoCorreo(binding.checkNoCorreo.isChecked());
         contrato.setNoRedesSociales(binding.checkNoRedes.isChecked());
 
-        contrato.setTipoVenta(binding.editTipoVenta.getText().toString());
+        contrato.setTipoVenta(binding.spinnerTipoVenta.getSelectedItem().toString());
         contrato.setUnidad(binding.editUnidad.getText().toString());
         contrato.setTemporada(binding.editTemporada.getText().toString());
         contrato.setMoneda(binding.editMoneda.getText().toString());
@@ -424,7 +552,15 @@ public class EditaContratoActivity extends AppCompatActivity {
         contrato.setPrecioBruto(binding.editPrecioBruto.getText().toString());
         contrato.setPrecioNeto(binding.editPrecioNeto.getText().toString());
         contrato.setMontoCuenta(binding.editMontoCuenta.getText().toString());
-        contrato.setTipoPago(binding.editTipoPago.getText().toString());
+        contrato.setTipoPago(binding.spinnerTipoPago.getSelectedItem().toString());
+
+        // Save dynamic contracts
+        List<String> contracts = new ArrayList<>();
+        for (int i = 0; i < binding.containerContratosMontoCuenta.getChildCount(); i++) {
+            View v = binding.containerContratosMontoCuenta.getChildAt(i);
+            if (v instanceof EditText) contracts.add(((EditText) v).getText().toString());
+        }
+        contrato.setContratosMontoCuenta(contracts);
 
         contrato.setEngancheTotal(binding.editEngancheTotal.getText().toString());
         contrato.setEngancheMonto(binding.editEngancheMonto.getText().toString());
@@ -434,10 +570,33 @@ public class EditaContratoActivity extends AppCompatActivity {
         contrato.setEngDiferidoMonto(binding.editEngDiferidoMonto.getText().toString());
         contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
 
+        // Save dynamic payments
+        List<ContratoModelo.PagoDiferido> payments = new ArrayList<>();
+        for (int i = 0; i < binding.containerPagosDiferidos.getChildCount(); i++) {
+            View row = binding.containerPagosDiferidos.getChildAt(i);
+            if (row instanceof LinearLayout) {
+                String m = ((EditText)((LinearLayout)row).getChildAt(0)).getText().toString();
+                String f = ((EditText)((LinearLayout)row).getChildAt(1)).getText().toString();
+                payments.add(new ContratoModelo.PagoDiferido(m, f));
+            }
+        }
+        contrato.setPagosDiferidos(payments);
+
         contrato.setVariosMonto(binding.editVariosMonto.getText().toString());
         contrato.setSaldoEnganche(binding.editSaldoEnganche.getText().toString());
-
         contrato.setNoDesc(binding.editNoDesc.getText().toString());
+
+        // Save dynamic discounts
+        List<ContratoModelo.DescuentoDetalle> discounts = new ArrayList<>();
+        for (int i = 0; i < binding.containerDescuentos.getChildCount(); i++) {
+            View row = binding.containerDescuentos.getChildAt(i);
+            if (row instanceof LinearLayout) {
+                String m = ((EditText)((LinearLayout)row).getChildAt(0)).getText().toString();
+                String d = ((EditText)((LinearLayout)row).getChildAt(1)).getText().toString();
+                discounts.add(new ContratoModelo.DescuentoDetalle(m, d));
+            }
+        }
+        contrato.setDescuentosDetalle(discounts);
 
         contrato.setCostoContrato(binding.editCostoContrato.getText().toString());
         contrato.setPagoSala(binding.editPagoSala.getText().toString());

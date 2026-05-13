@@ -80,18 +80,16 @@
             android:layout_height="wrap_content"
             android:text="Parentesco"
             android:textSize="12sp"
-            android:textColor="@color/pacificaazul"
+            android:textColor="#3EAF84"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
-        <EditText
-            android:id="@+id/editParentesco"
+        
+        <Spinner
+            android:id="@+id/spinnerParentesco"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
-            android:textSize="15sp"
-            android:background="@drawable/bg_input_selector"
-            android:padding="8dp"
-            android:inputType="text" />
+            android:minHeight="48dp"
+            android:background="@drawable/bg_input_selector" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
