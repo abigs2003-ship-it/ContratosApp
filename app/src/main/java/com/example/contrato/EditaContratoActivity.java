@@ -424,9 +424,7 @@ public class EditaContratoActivity extends AppCompatActivity {
 
         binding.checkNoRedes.setChecked(contrato.isNoRedesSociales());
         binding.containerRedes.removeAllViews();
-        if (contrato.getRedesSociales() != null) {
-            for (ContratoModelo.SocialAccount sa : contrato.getRedesSociales()) binding.containerRedes.addView(createRedSocialView(sa));
-        }
+
 
         setSpinnerSelection(binding.spinnerTipoVenta, contrato.getTipoVenta());
         setSpinnerSelection(binding.spinnerUnidad, contrato.getUnidad());
@@ -517,20 +515,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         return item;
     }
 
-    private View createRedSocialView(ContratoModelo.SocialAccount sa) {
-        View item = getLayoutInflater().inflate(R.layout.item_cuenta_social_historial, binding.containerRedes, false);
-        Spinner spinnerPlataforma = item.findViewById(R.id.spinnerPlataforma);
-        EditText editUsuario = item.findViewById(R.id.editUsuario);
-        ImageButton btnEliminar = item.findViewById(R.id.btnEliminar);
 
-        setupSpinner(spinnerPlataforma, new String[]{"Facebook", "Instagram", "Twitter"});
-        setSpinnerSelection(spinnerPlataforma, sa.red);
-        editUsuario.setText(sa.usuario);
-
-        btnEliminar.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
-        btnEliminar.setOnClickListener(v -> binding.containerRedes.removeView(item));
-        return item;
-    }
 
     private View createRegaloView(String regalo) {
         View item = getLayoutInflater().inflate(R.layout.item_regalos, binding.containerRegalos, false);
@@ -663,7 +648,6 @@ public class EditaContratoActivity extends AppCompatActivity {
         for (int i = 0; i < binding.containerRedes.getChildCount(); i++) {
             View v = binding.containerRedes.getChildAt(i);
             ContratoModelo.SocialAccount sa = new ContratoModelo.SocialAccount();
-            sa.red = ((Spinner)v.findViewById(R.id.spinnerPlataforma)).getSelectedItem().toString();
             sa.usuario = ((EditText)v.findViewById(R.id.editUsuario)).getText().toString();
             socials.add(sa);
         }
