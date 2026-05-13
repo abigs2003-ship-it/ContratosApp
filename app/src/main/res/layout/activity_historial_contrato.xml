@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#99FFFFFF"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:text="Creado: ... | Modificado: ..." />
         </LinearLayout>
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:text="EDITAR"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:minHeight="0dp"
             android:paddingHorizontal="10dp" />
 
@@ -70,7 +70,7 @@
             android:text="GUARDAR"
             android:visibility="gone"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="14sp"
             android:minHeight="0dp"
             android:paddingHorizontal="10dp" />
     </LinearLayout>
@@ -90,7 +90,7 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- ─── DATOS GENERALES ─── -->
+            <!-- ─── IDIOMA ─── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -137,14 +137,13 @@
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:background="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="6dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardElevation="1dp">
                 <LinearLayout
                     android:id="@+id/containerTitulares"
-                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -168,11 +167,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 app:cardCornerRadius="6dp"
+                app:cardBackgroundColor="@color/white"
                 app:cardElevation="1dp">
                 <LinearLayout
                     android:id="@+id/containerBeneficiarios"
                     android:layout_width="match_parent"
-                    android:background="@color/white"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp" />
@@ -234,7 +233,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ─── CONTACTO ─── -->
+            <!-- ─── CONTACTO (TELÉFONOS) ─── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -242,7 +241,35 @@
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="2dp"
                 android:gravity="center_vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Contacto" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Teléfonos" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <ImageButton android:id="@+id/btnAddTelefono" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone" app:tint="@color/white" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="1dp">
+                <LinearLayout
+                    android:id="@+id/containerTelefonos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- ─── CONTACTO (EMAILS) ─── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_section_header"
+                android:paddingHorizontal="12dp"
+                android:layout_marginBottom="2dp"
+                android:gravity="center_vertical">
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Correos Electrónicos" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <ImageButton android:id="@+id/btnAddEmail" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone" app:tint="@color/white" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -257,31 +284,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <TextView style="@style/SubsectionLabel" android:text="Teléfonos" android:layout_weight="1"/>
-                        <ImageButton android:id="@+id/btnAddTelefono" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/containerTelefonos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="2dp" />
-
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <TextView style="@style/SubsectionLabel" android:text="Correos Electrónicos" android:layout_weight="1"/>
-                        <ImageButton android:id="@+id/btnAddEmail" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
-                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerEmails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="2dp" />
-
+                        android:orientation="vertical" />
                     <CheckBox
                         android:id="@+id/checkNoCorreo"
                         android:layout_width="wrap_content"
@@ -303,7 +310,8 @@
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="2dp"
                 android:gravity="center_vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Redes Sociales" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Redes Sociales" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <ImageButton android:id="@+id/btnAddRedSocial" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone" app:tint="@color/white" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -318,17 +326,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <CheckBox
-                            android:id="@+id/checkNoRedes"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="No cuenta con redes sociales"
-                            android:textSize="15sp"
-                            android:enabled="false" />
-                        <ImageButton android:id="@+id/btnAddRedSocial" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
-                    </LinearLayout>
+                    <CheckBox
+                        android:id="@+id/checkNoRedes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No cuenta con redes sociales"
+                        android:textSize="15sp"
+                        android:enabled="false" />
                     <LinearLayout
                         android:id="@+id/containerRedes"
                         android:layout_width="match_parent"
@@ -361,7 +365,6 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <!-- Tipo de Venta (full width) -->
                     <TextView style="@style/FieldLabel" android:text="Tipo de Venta" />
                     <Spinner
                         android:id="@+id/spinnerTipoVenta"
@@ -373,7 +376,6 @@
                         android:backgroundTint="@null"
                         android:enabled="false"/>
 
-                    <!-- Unidad + Temporada -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Unidad" />
@@ -399,7 +401,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Moneda + T.C. -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Moneda" />
@@ -418,7 +419,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Precio Bruto + Precio Neto -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Precio Bruto" />
@@ -430,7 +430,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Monto a Cuenta + Tipo Pago -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Monto a Cuenta" />
@@ -449,7 +448,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Contratos Monto a Cuenta -->
                     <TextView style="@style/SubsectionLabel" android:text="Contratos Monto a Cuenta" />
                     <EditText
                         android:id="@+id/editNoContratosMontoCta"
@@ -469,11 +467,9 @@
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
 
-                    <!-- Enganche Total -->
                     <TextView style="@style/FieldLabel" android:text="Enganche Total" />
                     <EditText android:id="@+id/editEngancheTotal" style="@style/FieldInput" android:layout_marginBottom="4dp" android:hint="—" android:enabled="false"/>
 
-                    <!-- Enganche $ + % -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Enganche ($)" />
@@ -485,7 +481,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Eng. Sala + Eng. Sala % -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Enganche Sala ($)" />
@@ -497,7 +492,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Eng. Diferido + No. Pagos Eng -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Eng. Diferido" />
@@ -509,7 +503,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Pagos Diferidos -->
                     <TextView style="@style/SubsectionLabel" android:text="Pagos Diferidos" />
                     <LinearLayout
                         android:id="@+id/containerPagosDiferidos"
@@ -518,7 +511,6 @@
                         android:orientation="vertical"
                         android:layout_marginBottom="8dp" />
 
-                    <!-- Varios + Saldo Enganche -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Varios" />
@@ -560,6 +552,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- ─── REGALOS ─── -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -567,7 +560,8 @@
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="2dp"
                 android:gravity="center_vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="Regalos" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Regalos" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <ImageButton android:id="@+id/btnAddRegalo" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone" app:tint="@color/white" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -582,20 +576,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
-                        <TextView style="@style/SubsectionLabel" android:text="Regalos" android:layout_weight="1"/>
-                        <ImageButton android:id="@+id/btnAddRegalo" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
-                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerRegalos"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:paddingTop="2dp" />
-
+                        android:orientation="vertical" />
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
-
                     <TextView style="@style/SubsectionLabel" android:text="Comentarios " />
                     <EditText
                         android:id="@+id/editComentarios"
@@ -605,7 +591,7 @@
                         android:gravity="top|start"
                         android:padding="8dp"
                         android:hint="Sin comentarios..."
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:enabled="false"
                         android:singleLine="false" />
                 </LinearLayout>
@@ -635,7 +621,6 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <!-- Monto a Financiar + Num Pagos -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Monto a Financiar" />
@@ -647,7 +632,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Tasa + Tipo Periodo -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Tasa de Interés (%)" />
@@ -666,7 +650,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Año 1er Uso + No. Años -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Año 1er Uso" />
@@ -678,7 +661,6 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Fecha Primer Pago (full) -->
                     <TextView style="@style/FieldLabel" android:text="Fecha Primer Pago" />
                     <EditText android:id="@+id/editFechaPrimerPago" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
 

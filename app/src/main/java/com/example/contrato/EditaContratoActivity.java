@@ -484,12 +484,14 @@ public class EditaContratoActivity extends AppCompatActivity {
     private View createTelefonoView(ContratoModelo.InfoTelefono t) {
         View item = getLayoutInflater().inflate(R.layout.item_historial_telefono, binding.containerTelefonos, false);
         EditText editEtiqueta = item.findViewById(R.id.editEtiqueta);
+        EditText editLada = item.findViewById(R.id.editLada);
         EditText editNumero = item.findViewById(R.id.editNumero);
         CheckBox checkWhatsapp = item.findViewById(R.id.checkWhatsapp);
         RadioButton radioPrincipal = item.findViewById(R.id.radioPrincipal);
         ImageButton btnEliminar = item.findViewById(R.id.btnEliminar);
 
         editEtiqueta.setText(t.etiqueta);
+        editLada.setText(t.lada);
         editNumero.setText(t.numero);
         checkWhatsapp.setChecked(t.isWhatsApp);
         radioPrincipal.setChecked(t.isPrincipal);
@@ -644,6 +646,7 @@ public class EditaContratoActivity extends AppCompatActivity {
             View v = binding.containerTelefonos.getChildAt(i);
             ContratoModelo.InfoTelefono it = new ContratoModelo.InfoTelefono();
             it.etiqueta = ((EditText)v.findViewById(R.id.editEtiqueta)).getText().toString();
+            it.lada = ((EditText)v.findViewById(R.id.editLada)).getText().toString();
             it.numero = ((EditText)v.findViewById(R.id.editNumero)).getText().toString();
             it.isWhatsApp = ((CheckBox)v.findViewById(R.id.checkWhatsapp)).isChecked();
             it.isPrincipal = ((RadioButton)v.findViewById(R.id.radioPrincipal)).isChecked();

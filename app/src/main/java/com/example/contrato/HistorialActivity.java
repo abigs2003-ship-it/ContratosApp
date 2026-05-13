@@ -19,6 +19,7 @@ public class HistorialActivity extends AppCompatActivity {
     private ActivityHistoryBinding binding;
     private ContratoAdapter adapter;
     private SharedContractViewModel viewModel;
+    private boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,12 @@ public class HistorialActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
 
         binding.btnBack.setOnClickListener(v -> finish());
+        
+        binding.btnEditMode.setOnClickListener(v -> {
+            isEditMode = !isEditMode;
+            adapter.setEditMode(isEditMode);
+            binding.btnEditMode.setText(isEditMode ? "CANCELAR" : "EDITAR");
+        });
 
         setupRecyclerView();
         setupObservers();
@@ -67,7 +74,7 @@ public class HistorialActivity extends AppCompatActivity {
         adapter.setOnContractDeleteListener(contract -> {
             new AlertDialog.Builder(this)
                     .setTitle("Eliminar Contrato")
-                    .setMessage("¿Estás seguro de que deseas eliminar este contrato? Esta acción no se puede deshacer.")
+                    .setMessage("¿Está seguro de que desea borrar el contrato?")
                     .setPositiveButton("Eliminar", (dialog, which) -> {
                         binding.progressBar.setVisibility(View.VISIBLE);
                         viewModel.deleteContrato(contract);

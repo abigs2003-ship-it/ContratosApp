@@ -221,8 +221,6 @@ public class SharedContractViewModel extends ViewModel {
         new Thread(() -> {
             try {
                 long idContrato = Long.parseLong(model.getId());
-                
-                // Delete from all tables
                 infoGralRepo.deleteByContratoId(idContrato);
                 titularesRepo.deleteByContratoId(idContrato);
                 inventarioRepo.deleteByContratoId(idContrato);
@@ -232,11 +230,8 @@ public class SharedContractViewModel extends ViewModel {
                 engancheDiferidoRepo.deleteByContratoId(idContrato);
                 financiamientoRepo.deleteByContratoId(idContrato);
                 redesSocialesRepo.deleteByContratoId(idContrato);
-                
-                // Finally, delete the main contract record
                 contratoRepo.delete(idContrato);
-                
-                loadHistoryFromDatabase(); // Refresh history
+                loadHistoryFromDatabase();
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMessage.postValue("Error al eliminar contrato: " + e.getMessage());
@@ -251,7 +246,6 @@ public class SharedContractViewModel extends ViewModel {
                 Timestamp now = new Timestamp(System.currentTimeMillis());
                 long idUsuario = currentUserId != -1 ? currentUserId : 1;
 
-                // 1. Update Main Contract
                 VentasContrato vc = contratoRepo.getById(idContrato);
                 Timestamp originalFechaAlta = now;
                 long originalIdUsuarioAlta = idUsuario;
@@ -260,11 +254,10 @@ public class SharedContractViewModel extends ViewModel {
                     originalIdUsuarioAlta = vc.idUsuarioAlta;
                     vc.fechaModificacion = now;
                     vc.idioma = mapIdiomaToDb(model.getIdioma());
-                    vc.estatus = "A"; // Ensure status is 'A' when updating as well
+                    vc.estatus = "A";
                     contratoRepo.update(vc);
                 }
 
-                // 2. Update Info General
                 VentasInformacionGeneral vig = infoGralRepo.getByContratoId(idContrato);
                 if (vig == null) vig = new VentasInformacionGeneral();
                 vig.idContrato = idContrato;
@@ -310,37 +303,37 @@ public class SharedContractViewModel extends ViewModel {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
                     if (p.etiqueta.contains("Casa 1")) { 
-                        vig.ladaCasa1 = truncate(cleanLada, 3); 
+                        vig.ladaCasa1 = truncate(cleanLada, 5); 
                         vig.telefonoCasa1 = truncate(cleanNum, 15); 
                         vig.whatsAppCasa1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Casa 2")) { 
-                        vig.ladaCasa2 = truncate(cleanLada, 3); 
+                        vig.ladaCasa2 = truncate(cleanLada, 5); 
                         vig.telefonoCasa2 = truncate(cleanNum, 15); 
                         vig.whatsAppCasa2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Celular 1")) { 
-                        vig.ladaCelular1 = truncate(cleanLada, 3); 
+                        vig.ladaCelular1 = truncate(cleanLada, 5); 
                         vig.telefonoCelular1 = truncate(cleanNum, 15); 
                         vig.whatsAppCelular1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Celular 2")) { 
-                        vig.ladaCelular2 = truncate(cleanLada, 3); 
+                        vig.ladaCelular2 = truncate(cleanLada, 5); 
                         vig.telefonoCelular2 = truncate(cleanNum, 15); 
                         vig.whatsAppCelular2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Oficina 1")) { 
-                        vig.ladaOficina1 = truncate(cleanLada, 3); 
+                        vig.ladaOficina1 = truncate(cleanLada, 5); 
                         vig.telefonoOficina1 = truncate(cleanNum, 15); 
                         vig.whatsAppOficina1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Oficina 2")) { 
-                        vig.ladaOficina2 = truncate(cleanLada, 3); 
+                        vig.ladaOficina2 = truncate(cleanLada, 5); 
                         vig.telefonoOficina2 = truncate(cleanNum, 15); 
                         vig.whatsAppOficina2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Mensajes")) { 
-                        vig.ladaMensajes = truncate(cleanLada, 3); 
+                        vig.ladaMensajes = truncate(cleanLada, 5); 
                         vig.telefonoMensajes = truncate(cleanNum, 15); 
                         vig.whatsAppMensajes = p.isWhatsApp; 
                     }
@@ -354,12 +347,10 @@ public class SharedContractViewModel extends ViewModel {
 
                 infoGralRepo.update(vig);
 
-                // 3. Update Titulares
                 titularesRepo.deleteByContratoId(idContrato);
                 saveTitulares(model.getTitulares(), idContrato, "T", originalIdUsuarioAlta, originalFechaAlta);
                 saveTitulares(model.getBeneficiarios(), idContrato, "B", originalIdUsuarioAlta, originalFechaAlta);
 
-                // 4. Update Inventory
                 VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
                 if (vi != null) {
                     vi.unidad = model.getUnidad(); vi.temporada = model.getTemporada(); vi.tipoVenta = model.getTipoVenta();
@@ -378,7 +369,6 @@ public class SharedContractViewModel extends ViewModel {
                     inventarioRepo.update(vi);
                 }
 
-                // 5. Update Discounts, Regalos, Monto Cta, Deferred
                 descuentosRepo.deleteByContratoId(idContrato);
                 for (ContratoModelo.DescuentoDetalle dd : model.getDescuentosDetalle()) {
                     VentasDescuentos vd = new VentasDescuentos();
@@ -531,37 +521,37 @@ public class SharedContractViewModel extends ViewModel {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
                     if (p.etiqueta.contains("Casa 1")) { 
-                        vig.ladaCasa1 = truncate(cleanLada, 3); 
+                        vig.ladaCasa1 = truncate(cleanLada, 5); 
                         vig.telefonoCasa1 = truncate(cleanNum, 15); 
                         vig.whatsAppCasa1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Casa 2")) { 
-                        vig.ladaCasa2 = truncate(cleanLada, 3); 
+                        vig.ladaCasa2 = truncate(cleanLada, 5); 
                         vig.telefonoCasa2 = truncate(cleanNum, 15); 
                         vig.whatsAppCasa2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Celular 1")) { 
-                        vig.ladaCelular1 = truncate(cleanLada, 3); 
+                        vig.ladaCelular1 = truncate(cleanLada, 5); 
                         vig.telefonoCelular1 = truncate(cleanNum, 15); 
                         vig.whatsAppCelular1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Celular 2")) { 
-                        vig.ladaCelular2 = truncate(cleanLada, 3); 
+                        vig.ladaCelular2 = truncate(cleanLada, 5); 
                         vig.telefonoCelular2 = truncate(cleanNum, 15); 
                         vig.whatsAppCelular2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Oficina 1")) { 
-                        vig.ladaOficina1 = truncate(cleanLada, 3); 
+                        vig.ladaOficina1 = truncate(cleanLada, 5); 
                         vig.telefonoOficina1 = truncate(cleanNum, 15); 
                         vig.whatsAppOficina1 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Oficina 2")) { 
-                        vig.ladaOficina2 = truncate(cleanLada, 3); 
+                        vig.ladaOficina2 = truncate(cleanLada, 5); 
                         vig.telefonoOficina2 = truncate(cleanNum, 15); 
                         vig.whatsAppOficina2 = p.isWhatsApp; 
                     }
                     else if (p.etiqueta.contains("Mensajes")) { 
-                        vig.ladaMensajes = truncate(cleanLada, 3); 
+                        vig.ladaMensajes = truncate(cleanLada, 5); 
                         vig.telefonoMensajes = truncate(cleanNum, 15); 
                         vig.whatsAppMensajes = p.isWhatsApp; 
                     }
@@ -696,7 +686,7 @@ public class SharedContractViewModel extends ViewModel {
             VentasTitulares vt = new VentasTitulares();
             vt.idTitular = titularesRepo.getNextId();
             vt.idContrato = idContrato;
-            vt.nombre = truncate(p.nombre, 50); // Assuming 50 based on pattern
+            vt.nombre = truncate(p.nombre, 50); 
             vt.paterno = truncate(p.paterno, 50);
             vt.materno = truncate(p.materno, 50);
             vt.tipoTitular = tipo;

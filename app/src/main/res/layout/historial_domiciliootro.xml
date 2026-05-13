@@ -4,21 +4,21 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView style="@style/FieldLabel" android:text="Address Line 1" />
+    <TextView style="@style/FieldLabel" android:text="Línea 1" />
     <EditText android:id="@+id/editOtroLinea1" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
 
-    <TextView style="@style/FieldLabel" android:text="Address Line 2" />
+    <TextView style="@style/FieldLabel" android:text="Línea 2" />
     <EditText android:id="@+id/editOtroLinea2" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
 
-    <TextView style="@style/FieldLabel" android:text="Address Line 3" />
+    <TextView style="@style/FieldLabel" android:text="Línea 3" />
     <EditText android:id="@+id/editOtroLinea3" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
 
-    <TextView style="@style/FieldLabel" android:text="Address Line 4" />
+    <TextView style="@style/FieldLabel" android:text="Línea 4" />
     <EditText android:id="@+id/editOtroLinea4" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
 
-    <TextView style="@style/FieldLabel" android:text="Address Line 5" />
+    <TextView style="@style/FieldLabel" android:text="Línea 5" />
     <EditText android:id="@+id/editOtroLinea5" style="@style/FieldInput" android:layout_marginBottom="4dp" android:inputType="text" />
 
-    <TextView style="@style/FieldLabel" android:text="Country" />
+    <TextView style="@style/FieldLabel" android:text="Pais" />
     <EditText android:id="@+id/editOtroPais" style="@style/FieldInput" android:inputType="text" />
 </LinearLayout>

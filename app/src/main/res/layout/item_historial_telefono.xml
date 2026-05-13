@@ -15,6 +15,15 @@
         android:layout_marginEnd="4dp" />
 
     <EditText
+        android:id="@+id/editLada"
+        style="@style/FieldInput"
+        android:layout_width="65dp"
+        android:hint="Lada"
+        android:inputType="number"
+        android:maxLength="5"
+        android:layout_marginEnd="4dp" />
+
+    <EditText
         android:id="@+id/editNumero"
         style="@style/FieldInput"
         android:layout_width="0dp"
@@ -27,14 +36,14 @@
         android:id="@+id/checkWhatsapp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WhatsApp"
+        android:text="W"
         android:textSize="12sp" />
 
     <RadioButton
         android:id="@+id/radioPrincipal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Principal"
+        android:text="P"
         android:textSize="12sp" />
 
     <ImageButton
@@ -43,6 +52,7 @@
         android:layout_height="28dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_trash2"
+        android:tint="@android:color/holo_red_dark"
         android:contentDescription="Eliminar" />
 
 </LinearLayout>

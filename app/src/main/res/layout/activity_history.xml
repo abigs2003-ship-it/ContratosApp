@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/pacificaazul"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
         android:padding="16dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -24,14 +25,26 @@
             app:tint="@color/white" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_weight="1"
             android:fontFamily="serif"
             android:text="Historial de Contratos"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditMode"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDITAR"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="10dp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

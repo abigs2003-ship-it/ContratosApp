@@ -1,6 +1,7 @@
 package com.example.contrato;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
     private List<ContratoModelo> contractList;
     private OnContractClickListener listener;
     private OnContractDeleteListener deleteListener;
+    private boolean isEditMode = false;
 
     public interface OnContractClickListener {
         void onContractClick(ContratoModelo contract);
@@ -35,6 +37,11 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +59,8 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
         holder.binding.tvModifiedDate.setText("Modificado: " + contract.getModifiedDate());
         
         holder.binding.textContainer.setOnClickListener(v -> listener.onContractClick(contract));
+        
+        holder.binding.btnDelete.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
         holder.binding.btnDelete.setOnClickListener(v -> {
             if (deleteListener != null) {
                 deleteListener.onContractDelete(contract);
