@@ -11,14 +11,24 @@
         android:layout_height="16dp"
         android:src="@drawable/ic_email"
         android:layout_marginEnd="8dp"
+        android:tint="@color/pacificaazul"
         android:alpha="0.6"/>
 
-    <TextView
-        android:id="@+id/tvEmail"
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/editEmail"
+        style="@style/FieldInput"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="correo@ejemplo.com"
-        android:textSize="15sp"
-        android:textColor="#333333" />
+        android:layout_weight="1"
+        android:hint="correo@ejemplo.com"
+        android:inputType="textEmailAddress" />
+
+    <ImageButton
+        android:id="@+id/btnEliminar"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_trash2"
+        android:contentDescription="Eliminar" />
 
 </LinearLayout>

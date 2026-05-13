@@ -253,7 +253,10 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <TextView style="@style/SubsectionLabel" android:text="Teléfonos" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView style="@style/SubsectionLabel" android:text="Teléfonos" android:layout_weight="1"/>
+                        <ImageButton android:id="@+id/btnAddTelefono" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerTelefonos"
                         android:layout_width="match_parent"
@@ -263,7 +266,10 @@
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
 
-                    <TextView style="@style/SubsectionLabel" android:text="Correos Electrónicos" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView style="@style/SubsectionLabel" android:text="Correos Electrónicos" android:layout_weight="1"/>
+                        <ImageButton android:id="@+id/btnAddEmail" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerEmails"
                         android:layout_width="match_parent"
@@ -306,13 +312,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <CheckBox
-                        android:id="@+id/checkNoRedes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="No cuenta con redes sociales"
-                        android:textSize="15sp"
-                        android:enabled="false" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <CheckBox
+                            android:id="@+id/checkNoRedes"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="No cuenta con redes sociales"
+                            android:textSize="15sp"
+                            android:enabled="false" />
+                        <ImageButton android:id="@+id/btnAddRedSocial" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerRedes"
                         android:layout_width="match_parent"
@@ -565,7 +575,10 @@
                     android:orientation="vertical"
                     android:padding="8dp">
 
-                    <TextView style="@style/SubsectionLabel" android:text="Regalos" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView style="@style/SubsectionLabel" android:text="Regalos" android:layout_weight="1"/>
+                        <ImageButton android:id="@+id/btnAddRegalo" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone"/>
+                    </LinearLayout>
                     <LinearLayout
                         android:id="@+id/containerRegalos"
                         android:layout_width="match_parent"

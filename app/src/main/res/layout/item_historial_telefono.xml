@@ -6,45 +6,43 @@
     android:paddingVertical="4dp"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tvEtiqueta"
+    <EditText
+        android:id="@+id/editEtiqueta"
+        style="@style/FieldInput"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Casa 1"
-        android:textSize="15sp"
-        android:textColor="@color/pacificagris"
-        android:textStyle="bold" />
+        android:hint="Etiqueta"
+        android:layout_marginEnd="4dp" />
 
-    <TextView
-        android:id="@+id/tvNumeroCompleto"
+    <EditText
+        android:id="@+id/editNumero"
+        style="@style/FieldInput"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_weight="1.5"
-        android:text="(+52) 1234567890"
-        android:textSize="15sp"
-        android:textColor="#100F0F" />
+        android:hint="Número"
+        android:inputType="phone"
+        android:layout_marginEnd="4dp" />
 
-    <TextView
-        android:id="@+id/tvWhatsapp"
-        android:layout_width="0dp"
+    <CheckBox
+        android:id="@+id/checkWhatsapp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
-        android:text="WhatsApp: Si"
-        android:textSize="15sp"
-        android:textColor="#4CAF50"
-        android:gravity="center" />
+        android:text="WhatsApp"
+        android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tvPrincipal"
-        android:layout_width="0dp"
+    <RadioButton
+        android:id="@+id/radioPrincipal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
         android:text="Principal"
-        android:textSize="15sp"
-        android:textColor="@color/pacificaazul"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:visibility="invisible" />
+        android:textSize="12sp" />
+
+    <ImageButton
+        android:id="@+id/btnEliminar"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_trash2"
+        android:contentDescription="Eliminar" />
 
 </LinearLayout>
