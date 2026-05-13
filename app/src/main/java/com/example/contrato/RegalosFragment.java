@@ -96,7 +96,8 @@ public class RegalosFragment extends Fragment {
 
     private void agregarRegaloAContenedor(String nombre) {
         ItemRegalosBinding bindingItem = ItemRegalosBinding.inflate(getLayoutInflater(), binding.ContenedorRegalos, false);
-        bindingItem.tvNombre.setText(nombre);
+        bindingItem.editNombre.setText(nombre);
+        bindingItem.editNombre.setEnabled(false);
         bindingItem.btnBorrarRegalo.setOnClickListener(v -> {
             binding.ContenedorRegalos.removeView(bindingItem.getRoot());
             regalosList.remove(nombre);
