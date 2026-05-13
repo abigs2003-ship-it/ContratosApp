@@ -290,11 +290,11 @@ public class EditaContratoActivity extends AppCompatActivity {
             View item = LayoutInflater.from(this).inflate(R.layout.item_historial_telefono, binding.containerTelefonos, false);
             ((TextView)item.findViewById(R.id.tvEtiqueta)).setText(t.etiqueta);
             ((TextView)item.findViewById(R.id.tvNumeroCompleto)).setText(String.format("(+%s) %s", t.lada, t.numero));
-            ((TextView)item.findViewById(R.id.tvWhatsapp)).setText(String.format("WS: %s", t.isWhatsApp ? "Si" : "No"));
-            ((TextView)item.findViewById(R.id.tvWhatsapp)).setTextColor(t.isWhatsApp ? 0xFF4CAF50 : 0xFF64748B);
+            ((TextView)item.findViewById(R.id.tvWhatsapp)).setText(String.format("WhatsApp: %s", t.isWhatsApp ? "Si" : "No"));
+            ((TextView)item.findViewById(R.id.tvWhatsapp)).setTextColor(t.isWhatsApp ? 0xFF4CAF50 : 0xFF100F0F);
 
             View tvPrincipal = item.findViewById(R.id.tvPrincipal);
-            tvPrincipal.setVisibility(t.isPrincipal ? View.VISIBLE : View.GONE);
+            tvPrincipal.setVisibility(t.isPrincipal ? View.VISIBLE : View.INVISIBLE);
 
             binding.containerTelefonos.addView(item);
         }
@@ -314,7 +314,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.containerRedes.removeAllViews();
         if (redes == null) return;
         for (ContratoModelo.SocialAccount sa : redes) {
-            View item = LayoutInflater.from(this).inflate(R.layout.item_cuenta_social, binding.containerRedes, false);
+            View item = LayoutInflater.from(this).inflate(R.layout.item_cuenta_social_historial, binding.containerRedes, false);
             ((TextView)item.findViewById(R.id.tvPlatformTag)).setText(sa.red);
             ((TextView)item.findViewById(R.id.tvNombre)).setText(sa.usuario);
             item.findViewById(R.id.btnEliminar).setVisibility(View.GONE);

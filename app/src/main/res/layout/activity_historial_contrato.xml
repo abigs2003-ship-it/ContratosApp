@@ -39,7 +39,7 @@
                 android:fontFamily="serif"
                 android:text="Detalle del Contrato"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#99FFFFFF"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:text="Creado: ... | Modificado: ..." />
         </LinearLayout>
 
@@ -55,7 +55,7 @@
             android:id="@+id/btnEditToggle"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:text="EDITAR"
             android:textColor="@color/white"
             android:textSize="15sp"
@@ -66,7 +66,7 @@
             android:id="@+id/btnGuardar"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:text="GUARDAR"
             android:visibility="gone"
             android:textColor="@color/white"
@@ -98,7 +98,7 @@
                 android:paddingHorizontal="12dp"
                 android:layout_marginBottom="2dp"
                 android:gravity="center_vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Datos Generales" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Idioma" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -111,7 +111,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <TextView style="@style/FieldLabel" android:text="Idioma" />
                     <EditText android:id="@+id/editIdioma" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

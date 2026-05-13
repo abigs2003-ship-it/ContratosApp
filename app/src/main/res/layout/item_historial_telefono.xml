@@ -23,14 +23,15 @@
         android:layout_weight="1.5"
         android:text="(+52) 1234567890"
         android:textSize="15sp"
-        android:textColor="#333333" />
+        android:textColor="#100F0F" />
 
     <TextView
         android:id="@+id/tvWhatsapp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.8"
-        android:text="WS: Si"
+        android:text="WhatsApp: Si"
+        android:textStyle="bold"
         android:textSize="15sp"
         android:textColor="#4CAF50"
         android:gravity="center" />
@@ -43,8 +44,8 @@
         android:text="Principal"
         android:textSize="15sp"
         android:textColor="@color/pacificaazul"
-        android:textStyle="italic"
+        android:textStyle="bold"
         android:gravity="center"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
 </LinearLayout>
