@@ -269,7 +269,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Right: Resumen -->
+                <!--  Resumen -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/contenedorResumenPagos"
                     android:layout_width="280dp"
