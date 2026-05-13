@@ -226,7 +226,11 @@ public class SharedContractViewModel extends ViewModel {
 
                 // 1. Update Main Contract
                 VentasContrato vc = contratoRepo.getById(idContrato);
+                Timestamp originalFechaAlta = now;
+                long originalIdUsuarioAlta = idUsuario;
                 if (vc != null) {
+                    if (vc.fechaAlta != null) originalFechaAlta = vc.fechaAlta;
+                    originalIdUsuarioAlta = vc.idUsuarioAlta;
                     vc.fechaModificacion = now;
                     vc.idioma = mapIdiomaToDb(model.getIdioma());
                     vc.estatus = "A"; // Ensure status is 'A' when updating as well
@@ -325,8 +329,8 @@ public class SharedContractViewModel extends ViewModel {
 
                 // 3. Update Titulares
                 titularesRepo.deleteByContratoId(idContrato);
-                saveTitulares(model.getTitulares(), idContrato, "T", idUsuario, now);
-                saveTitulares(model.getBeneficiarios(), idContrato, "B", idUsuario, now);
+                saveTitulares(model.getTitulares(), idContrato, "T", originalIdUsuarioAlta, originalFechaAlta);
+                saveTitulares(model.getBeneficiarios(), idContrato, "B", originalIdUsuarioAlta, originalFechaAlta);
 
                 // 4. Update Inventory
                 VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
@@ -355,8 +359,8 @@ public class SharedContractViewModel extends ViewModel {
                     vd.idContrato = idContrato;
                     vd.montoDescuento = parseDouble(dd.monto);
                     vd.descripcion = dd.descripcion;
-                    vd.fechaAlta = now;
-                    vd.idUsuarioAlta = idUsuario;
+                    vd.fechaAlta = originalFechaAlta;
+                    vd.idUsuarioAlta = originalIdUsuarioAlta;
                     descuentosRepo.insert(vd);
                 }
 
@@ -366,8 +370,8 @@ public class SharedContractViewModel extends ViewModel {
                     vr.idRegalo = regalosRepo.getNextId();
                     vr.idContrato = idContrato;
                     vr.descripcion = regalo;
-                    vr.fechaAlta = now;
-                    vr.idUsuarioAlta = idUsuario;
+                    vr.fechaAlta = originalFechaAlta;
+                    vr.idUsuarioAlta = originalIdUsuarioAlta;
                     regalosRepo.insert(vr);
                 }
 
@@ -377,8 +381,8 @@ public class SharedContractViewModel extends ViewModel {
                     vmc.idMontoCta = montoCtaRepo.getNextId();
                     vmc.idContrato = idContrato;
                     vmc.xref = xref;
-                    vmc.fechaAlta = now;
-                    vmc.idUsuarioAlta = idUsuario;
+                    vmc.fechaAlta = originalFechaAlta;
+                    vmc.idUsuarioAlta = originalIdUsuarioAlta;
                     montoCtaRepo.insert(vmc);
                 }
 
@@ -389,8 +393,8 @@ public class SharedContractViewModel extends ViewModel {
                     ved.idContrato = idContrato;
                     ved.cantidadPago = parseDouble(pd.monto);
                     ved.fechaPago = parseSqlDate(pd.fecha);
-                    ved.fechaAlta = now;
-                    ved.idUsuarioAlta = idUsuario;
+                    ved.fechaAlta = originalFechaAlta;
+                    ved.idUsuarioAlta = originalIdUsuarioAlta;
                     engancheDiferidoRepo.insert(ved);
                 }
 
@@ -414,8 +418,8 @@ public class SharedContractViewModel extends ViewModel {
                         else if ("Facebook".equalsIgnoreCase(sa.red)) vrs.usuarioFacebook = sa.usuario;
                         else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrs.usuarioTwitter = sa.usuario;
                     }
-                    vrs.fechaAlta = now;
-                    vrs.idUsuarioAlta = idUsuario;
+                    vrs.fechaAlta = originalFechaAlta;
+                    vrs.idUsuarioAlta = originalIdUsuarioAlta;
                     redesSocialesRepo.insert(vrs);
                 }
 
