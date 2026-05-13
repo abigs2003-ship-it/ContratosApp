@@ -22,7 +22,6 @@ import androidx.navigation.Navigation;
 
 import com.example.contrato.databinding.FragmentTitularesBinding;
 import com.example.contrato.databinding.ListItemPersonBinding;
-import com.example.contrato.databinding.ListItemPersonBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,13 +96,15 @@ public class TitularesFragment extends Fragment {
             String materno = (binding.layoutMaterno.getVisibility() == View.VISIBLE) ? binding.editMaterno.getText().toString() : "";
             String cumple = binding.editFechaCumpleanos.getText().toString();
             String ocupacion = binding.editOcupacion.getText().toString();
-            String parentesco = binding.spinnerParentesco.getSelectedItem().toString();
+            
+            int position = binding.spinnerParentesco.getSelectedItemPosition();
+            if (position == adapter.getCount()) {
+                Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String parentesco = String.valueOf(position);
 
             if (!nombre.isEmpty()) {
-                if (binding.spinnerParentesco.getSelectedItemPosition() == adapter.getCount()) {
-                    Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 titularesList.add(p);
                 saveDataToViewModel();
@@ -122,13 +123,15 @@ public class TitularesFragment extends Fragment {
             String materno = (binding.layoutMaternoBene.getVisibility() == View.VISIBLE) ? binding.editMaternoBene.getText().toString() : "";
             String cumple = binding.editCumpleBene.getText().toString();
             String ocupacion = binding.editOcupacionBene.getText().toString();
-            String parentesco = binding.spinnerParentescoBene.getSelectedItem().toString();
+
+            int position = binding.spinnerParentescoBene.getSelectedItemPosition();
+            if (position == adapter.getCount()) {
+                Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String parentesco = String.valueOf(position);
 
             if (!nombre.isEmpty()) {
-                if (binding.spinnerParentescoBene.getSelectedItemPosition() == adapter.getCount()) {
-                    Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 beneficiariosList.add(p);
                 saveDataToViewModel();
@@ -216,7 +219,17 @@ public class TitularesFragment extends Fragment {
         bindingItem.textNombre.setText(fullName.trim());
         bindingItem.textCumple.setText(p.cumple);
         bindingItem.textOcupacion.setText(p.ocupacion);
-        bindingItem.textParentesco.setText(p.parentesco);
+        
+        // Display parentesco name instead of ID
+        String parentescoDisplay = p.parentesco;
+        try {
+            int pos = Integer.parseInt(p.parentesco);
+            String[] array = getResources().getStringArray(R.array.parentescos);
+            if (pos >= 0 && pos < array.length) {
+                parentescoDisplay = array[pos];
+            }
+        } catch (Exception ignored) {}
+        bindingItem.textParentesco.setText(parentescoDisplay);
         
         bindingItem.btnEliminar.setOnClickListener(v -> {
             contenedor.removeView(bindingItem.getRoot());

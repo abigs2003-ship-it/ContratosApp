@@ -46,6 +46,7 @@
     <string name="unidad">Unit</string>
     <string name="temporada">Season</string>
     <string-array name="temporadas">
+        <item>Select</item>
         <item>Platinum</item>
         <item>Gold</item>
         <item>Silver</item>

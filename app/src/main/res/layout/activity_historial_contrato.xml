@@ -111,7 +111,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <EditText android:id="@+id/editIdioma" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                    <Spinner
+                        android:id="@+id/spinnerIdioma"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:background="@drawable/bg_input_selector"
+                        android:backgroundTint="@null"
+                        android:enabled="false"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -336,7 +343,15 @@
 
                     <!-- Tipo de Venta (full width) -->
                     <TextView style="@style/FieldLabel" android:text="Tipo de Venta" />
-                    <EditText android:id="@+id/editTipoVenta" style="@style/FieldInput" android:layout_marginBottom="4dp" android:hint="—" android:enabled="false"/>
+                    <Spinner
+                        android:id="@+id/spinnerTipoVenta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@drawable/bg_input_selector"
+                        android:backgroundTint="@null"
+                        android:enabled="false"/>
 
                     <!-- Unidad + Temporada -->
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
@@ -382,12 +397,28 @@
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Tipo de Pago" />
-                            <EditText android:id="@+id/editTipoPago" style="@style/FieldInput" android:hint="—" android:enabled="false"/>
+                            <Spinner
+                                android:id="@+id/spinnerTipoPago"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:minHeight="40dp"
+                                android:background="@drawable/bg_input_selector"
+                                android:backgroundTint="@null"
+                                android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <!-- Contratos Monto a Cuenta -->
                     <TextView style="@style/SubsectionLabel" android:text="Contratos Monto a Cuenta" />
+                    <EditText
+                        android:id="@+id/editNoContratosMontoCta"
+                        style="@style/FieldInput"
+                        android:layout_width="80dp"
+                        android:hint="Cant."
+                        android:inputType="number"
+                        android:enabled="false"
+                        android:layout_marginBottom="4dp" />
+
                     <LinearLayout
                         android:id="@+id/containerContratosMontoCuenta"
                         android:layout_width="match_parent"
