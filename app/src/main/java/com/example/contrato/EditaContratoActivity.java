@@ -94,18 +94,32 @@ public class EditaContratoActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        setupSpinner(binding.spinnerIdioma, new String[]{"Español", "English"});
-        setupSpinner(binding.spinnerNacionalidad, new String[]{"Mexicana", "Estadounidense", "Canadiense", "Otra"});
+        setupSpinnerFromResource(binding.spinnerIdioma, R.array.idiomas);
+        setupSpinnerFromResource(binding.spinnerNacionalidad, R.array.nacionalidades);
+        setupSpinnerFromResource(binding.spinnerTemporada, R.array.temporadas);
+        setupSpinnerFromResource(binding.spinnerTipoPeriodo, R.array.tipos_periodo);
+        
         setupSpinner(binding.spinnerTipoVenta, new String[]{"Nueva", "Upgrade"});
-        setupSpinner(binding.spinnerUnidad, new String[]{"Unidad 1", "Unidad 2", "Unidad 3"});
-        setupSpinner(binding.spinnerTemporada, new String[]{"Alta", "Baja", "Media"});
-        setupSpinner(binding.spinnerMoneda, new String[]{"MXN", "USD"});
+        setupSpinner(binding.spinnerMoneda, new String[]{"MXN", "USD", "CAD"});
         setupSpinner(binding.spinnerTipoPago, new String[]{"Financiado", "Contado"});
-        setupSpinner(binding.spinnerTipoPeriodo, new String[]{"Mensual", "Bimensual", "Trimestral", "Semestral", "Anual"});
+
+        viewModel.getUnidades().observe(this, unidades -> {
+            if (unidades != null && !unidades.isEmpty()) {
+                setupSpinner(binding.spinnerUnidad, unidades.toArray(new String[0]));
+                if (contrato != null) setSpinnerSelection(binding.spinnerUnidad, contrato.getUnidad());
+            }
+        });
+        viewModel.fetchUnidades();
     }
 
     private void setupSpinner(Spinner spinner, String[] items) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    private void setupSpinnerFromResource(Spinner spinner, int resId) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, resId, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
@@ -115,6 +129,16 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.btnAddEmail.setOnClickListener(v -> binding.containerEmails.addView(createEmailView("")));
         binding.btnAddRedSocial.setOnClickListener(v -> binding.containerRedes.addView(createRedSocialView(new ContratoModelo.SocialAccount())));
         binding.btnAddRegalo.setOnClickListener(v -> binding.containerRegalos.addView(createRegaloView("")));
+        
+        binding.btnAddTitular.setOnClickListener(v -> {
+            ContratoModelo.Persona p = new ContratoModelo.Persona("", "", "", "", "0", "");
+            mostrarDialogoEditarPersonaa(p, null, true, binding.containerTitulares, contrato.getTitulares());
+        });
+        
+        binding.btnAddBeneficiario.setOnClickListener(v -> {
+            ContratoModelo.Persona p = new ContratoModelo.Persona("", "", "", "", "0", "");
+            mostrarDialogoEditarPersonaa(p, null, false, binding.containerBeneficiarios, contrato.getBeneficiarios());
+        });
     }
 
     private void setupDynamicWatchers() {
@@ -329,6 +353,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.btnAddEmail.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddRedSocial.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         binding.btnAddRegalo.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
+        binding.btnAddTitular.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
+        binding.btnAddBeneficiario.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
 
         if (!estaEditando) llenarDatos();
         establecerHabilitacionCampos(binding.mainContent, estaEditando);
@@ -341,8 +367,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         enableGeneratedViews(binding.containerRedes, estaEditando);
         enableGeneratedViews(binding.containerRegalos, estaEditando);
         
-        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
-        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios());
+        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares(), true);
+        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios(), false);
     }
 
     private void enableGeneratedViews(ViewGroup layout, boolean enabled) {
@@ -380,8 +406,8 @@ public class EditaContratoActivity extends AppCompatActivity {
         setSpinnerSelection(binding.spinnerPais, paisContrato);
         setSpinnerSelection(binding.spinnerNacionalidad, contrato.getProvince());
 
-        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares());
-        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios());
+        llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares(), true);
+        llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios(), false);
         
         binding.containerTelefonos.removeAllViews();
         if (contrato.getTelefonos() != null) {
@@ -529,15 +555,16 @@ public class EditaContratoActivity extends AppCompatActivity {
     private void setSpinnerSelection(Spinner spinner, String value) {
         if (value == null) return;
         ArrayAdapter<?> adapter = (ArrayAdapter<?>) spinner.getAdapter();
+        if (adapter == null) return;
         for (int i = 0; i < adapter.getCount(); i++) {
-            if (adapter.getItem(i).toString().equalsIgnoreCase(value)) {
+            if (adapter.getItem(i).toString().equalsIgnoreCase(value.trim())) {
                 spinner.setSelection(i);
                 return;
             }
         }
     }
 
-    private void llenarContenedorPersonaas(ViewGroup contenedor, List<ContratoModelo.Persona> Personaas) {
+    private void llenarContenedorPersonaas(ViewGroup contenedor, List<ContratoModelo.Persona> Personaas, boolean isTitular) {
         contenedor.removeAllViews();
         if (Personaas == null) return;
         for (ContratoModelo.Persona p : Personaas) {
@@ -545,7 +572,7 @@ public class EditaContratoActivity extends AppCompatActivity {
             actualizarFilaPersonaa(fila, p);
             fila.findViewById(R.id.btnEditar).setVisibility(estaEditando ? View.VISIBLE : View.GONE);
             fila.findViewById(R.id.btnEliminar).setVisibility(estaEditando ? View.VISIBLE : View.GONE);
-            fila.findViewById(R.id.btnEditar).setOnClickListener(v -> mostrarDialogoEditarPersonaa(p, fila));
+            fila.findViewById(R.id.btnEditar).setOnClickListener(v -> mostrarDialogoEditarPersonaa(p, fila, isTitular, contenedor, Personaas));
             fila.findViewById(R.id.btnEliminar).setOnClickListener(v -> { Personaas.remove(p); contenedor.removeView(fila); });
             contenedor.addView(fila);
         }
@@ -565,9 +592,9 @@ public class EditaContratoActivity extends AppCompatActivity {
         ((TextView)fila.findViewById(R.id.textParentesco)).setText(parentescoDisplay);
     }
 
-    private void mostrarDialogoEditarPersonaa(ContratoModelo.Persona p, View fila) {
+    private void mostrarDialogoEditarPersonaa(ContratoModelo.Persona p, View fila, boolean isTitular, ViewGroup container, List<ContratoModelo.Persona> list) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Editar Persona");
+        builder.setTitle(fila == null ? "Agregar Persona" : "Editar Persona");
         View view = getLayoutInflater().inflate(R.layout.dialog_editar_persona, null);
         EditText editNom = view.findViewById(R.id.editNombre);
         EditText editPat = view.findViewById(R.id.editPaterno);
@@ -575,17 +602,24 @@ public class EditaContratoActivity extends AppCompatActivity {
         EditText editOcu = view.findViewById(R.id.editOcupacion);
         EditText editCum = view.findViewById(R.id.editCumple);
         Spinner spinnerPar = view.findViewById(R.id.spinnerParentesco);
-        String[] parentescos = getResources().getStringArray(R.array.parentescos);
-        setupSpinner(spinnerPar, parentescos);
+        setupSpinnerFromResource(spinnerPar, R.array.parentescos);
+        
         editNom.setText(p.nombre); editPat.setText(p.paterno); editMat.setText(p.materno);
         editOcu.setText(p.ocupacion); editCum.setText(p.cumple);
-        try { int pos = Integer.parseInt(p.parentesco); if (pos >= 0 && pos < parentescos.length) spinnerPar.setSelection(pos); } catch (Exception e) {}
+        try { int pos = Integer.parseInt(p.parentesco); if (pos >= 0 && pos < spinnerPar.getAdapter().getCount()) spinnerPar.setSelection(pos); } catch (Exception e) {}
+        
         builder.setView(view);
         builder.setPositiveButton("Guardar", (dialog, which) -> {
             p.nombre = editNom.getText().toString(); p.paterno = editPat.getText().toString();
             p.materno = editMat.getText().toString(); p.ocupacion = editOcu.getText().toString();
             p.cumple = editCum.getText().toString(); p.parentesco = String.valueOf(spinnerPar.getSelectedItemPosition());
-            actualizarFilaPersonaa(fila, p);
+            
+            if (fila == null) {
+                list.add(p);
+                llenarContenedorPersonaas(container, list, isTitular);
+            } else {
+                actualizarFilaPersonaa(fila, p);
+            }
         });
         builder.setNegativeButton("Cancelar", null);
         builder.show();

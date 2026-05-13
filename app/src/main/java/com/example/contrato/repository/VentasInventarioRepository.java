@@ -8,7 +8,6 @@ import java.util.List;
 
 public class VentasInventarioRepository {
 
-
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdCondicionesVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Datos_Inventario";
         try (Connection conn = DbConnection.getConnection();
@@ -152,11 +151,11 @@ public class VentasInventarioRepository {
         }
     }
 
-    public void delete(long id) throws SQLException {
-        String sql = "DELETE FROM PMT_App_Ventas_Datos_Inventario WHERE IdCondicionesVenta=?";
+    public void deleteByContratoId(long idContrato) throws SQLException {
+        String sql = "DELETE FROM PMT_App_Ventas_Datos_Inventario WHERE IdContrato=?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
+            ps.setLong(1, idContrato);
             ps.executeUpdate();
         }
     }

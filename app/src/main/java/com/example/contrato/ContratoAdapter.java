@@ -11,14 +11,23 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
 
     private List<ContratoModelo> contractList;
     private OnContractClickListener listener;
+    private OnContractDeleteListener deleteListener;
 
     public interface OnContractClickListener {
         void onContractClick(ContratoModelo contract);
     }
 
+    public interface OnContractDeleteListener {
+        void onContractDelete(ContratoModelo contract);
+    }
+
     public ContratoAdapter(List<ContratoModelo> contractList, OnContractClickListener listener) {
         this.contractList = contractList;
         this.listener = listener;
+    }
+
+    public void setOnContractDeleteListener(OnContractDeleteListener deleteListener) {
+        this.deleteListener = deleteListener;
     }
 
     public void setContracts(List<ContratoModelo> contracts) {
@@ -42,7 +51,12 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
         holder.binding.tvCreatedDate.setText("Creado: " + contract.getCreationDate());
         holder.binding.tvModifiedDate.setText("Modificado: " + contract.getModifiedDate());
         
-        holder.itemView.setOnClickListener(v -> listener.onContractClick(contract));
+        holder.binding.textContainer.setOnClickListener(v -> listener.onContractClick(contract));
+        holder.binding.btnDelete.setOnClickListener(v -> {
+            if (deleteListener != null) {
+                deleteListener.onContractDelete(contract);
+            }
+        });
     }
 
     @Override

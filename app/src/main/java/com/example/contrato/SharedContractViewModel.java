@@ -217,6 +217,33 @@ public class SharedContractViewModel extends ViewModel {
         }
     }
 
+    public void deleteContrato(ContratoModelo model) {
+        new Thread(() -> {
+            try {
+                long idContrato = Long.parseLong(model.getId());
+                
+                // Delete from all tables
+                infoGralRepo.deleteByContratoId(idContrato);
+                titularesRepo.deleteByContratoId(idContrato);
+                inventarioRepo.deleteByContratoId(idContrato);
+                descuentosRepo.deleteByContratoId(idContrato);
+                regalosRepo.deleteByContratoId(idContrato);
+                montoCtaRepo.deleteByContratoId(idContrato);
+                engancheDiferidoRepo.deleteByContratoId(idContrato);
+                financiamientoRepo.deleteByContratoId(idContrato);
+                redesSocialesRepo.deleteByContratoId(idContrato);
+                
+                // Finally, delete the main contract record
+                contratoRepo.delete(idContrato);
+                
+                loadHistoryFromDatabase(); // Refresh history
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage.postValue("Error al eliminar contrato: " + e.getMessage());
+            }
+        }).start();
+    }
+
     public void actualizaContratoInDatabase(ContratoModelo model) {
         new Thread(() -> {
             try {

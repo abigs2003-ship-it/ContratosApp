@@ -43,7 +43,7 @@
     <string name="inventario">Inventario adquirido</string>
     <string name="tipoventa">Tipo Venta</string>
     <string name="contrato">No. Contrato</string>
-    <string name="unidad">Unit</string>
+    <string name="unidad">Unidad</string>
     <string name="temporada">Temporada</string>
     <string-array name="temporadas">
         <item>Selecciona</item>
@@ -96,7 +96,7 @@
     <string name="tipopago">Tipo de Pago</string>
     <string name="enganchetotal">Enganche Total</string>
     <string name="enganchesala">Enganche a Pagar en Sala</string>
-    <string name="descuentos">Discounts</string>
+    <string name="descuentos">Varios (desc)</string>
     <string name="enganchediferido">Enganche Diferido</string>
     <string name="saldoenganche">Saldo Enganche</string>
     <string name="montofinanciar">Monto a Financiar</string>

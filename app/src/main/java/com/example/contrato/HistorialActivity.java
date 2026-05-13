@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.contrato.databinding.ActivityHistoryBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class HistorialActivity extends AppCompatActivity {
 
@@ -59,10 +59,21 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         adapter = new ContratoAdapter(new ArrayList<>(), contract -> {
-
             Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
             intent.putExtra("contract", contract);
             startActivity(intent);
+        });
+
+        adapter.setOnContractDeleteListener(contract -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Eliminar Contrato")
+                    .setMessage("¿Estás seguro de que deseas eliminar este contrato? Esta acción no se puede deshacer.")
+                    .setPositiveButton("Eliminar", (dialog, which) -> {
+                        binding.progressBar.setVisibility(View.VISIBLE);
+                        viewModel.deleteContrato(contract);
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
         });
 
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
