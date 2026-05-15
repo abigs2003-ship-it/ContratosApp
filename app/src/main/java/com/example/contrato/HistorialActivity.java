@@ -18,16 +18,20 @@ public class HistorialActivity extends AppCompatActivity {
 
     private ActivityHistoryBinding binding;
     private ContratoAdapter adapter;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
     private boolean isEditMode = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1); //recupera el id del usuario que inicio sesión desde el MainActivity
 
-        viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
+
+
+        viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
 
         binding.btnBack.setOnClickListener(v -> finish());
         
@@ -40,15 +44,15 @@ public class HistorialActivity extends AppCompatActivity {
         setupRecyclerView();
         setupObservers();
         
-        viewModel.loadHistoryFromDatabase();
+        viewModel.cargaHistorialBaseDatos(idUsuario); //por ahora se cargan todos los historiales
     }
 
     private void setupObservers() {
-        viewModel.getHistory().observe(this, contracts -> {
+        viewModel.getHistory().observe(this, Contratos -> {
             binding.progressBar.setVisibility(View.GONE);
-            if (contracts != null) {
-                adapter.setContracts(contracts);
-                if (contracts.isEmpty()) {
+            if (Contratos != null) {
+                adapter.setContratos(Contratos);
+                if (Contratos.isEmpty()) {
                     binding.tvNoData.setVisibility(View.VISIBLE);
                 } else {
                     binding.tvNoData.setVisibility(View.GONE);
@@ -65,23 +69,12 @@ public class HistorialActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView() {
-        adapter = new ContratoAdapter(new ArrayList<>(), contract -> {
+        adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
             Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
-            intent.putExtra("contract", contract);
+            intent.putExtra("contrato", contrato);
             startActivity(intent);
         });
 
-        adapter.setOnContractDeleteListener(contract -> {
-            new AlertDialog.Builder(this)
-                    .setTitle("Eliminar Contrato")
-                    .setMessage("¿Está seguro de que desea borrar el contrato?")
-                    .setPositiveButton("Eliminar", (dialog, which) -> {
-                        binding.progressBar.setVisibility(View.VISIBLE);
-                        viewModel.deleteContrato(contract);
-                    })
-                    .setNegativeButton("Cancelar", null)
-                    .show();
-        });
 
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewHistory.setAdapter(adapter);
@@ -92,7 +85,9 @@ public class HistorialActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.loadHistoryFromDatabase();
+        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1); //recupera el id del usuario que inicio sesión desde el MainActivity
+
+        viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
     @Override

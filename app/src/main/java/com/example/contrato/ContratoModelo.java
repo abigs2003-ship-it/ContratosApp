@@ -15,19 +15,22 @@ public class ContratoModelo implements Serializable {
     private List<Persona> titulares = new ArrayList<>();
     private List<Persona> beneficiarios = new ArrayList<>();
 
-    // Dirección (Campos generales)
+    // Dirección
     private String pais;
     private String calle;
+
+    private String numExt;
+
+    private String numInt;
     private String ciudad;
     private String estado;
     private String cp;
     private String colonia;
     private String municipio;
-    private String province;
+    private String nacionalidad;
     private String poBox;
 
     // Dirección específica por país
-    private String mexCalle, mexNumExt, mexNumInt, mexColonia, mexMunicipio, mexCiudad, mexEstado, mexCP;
     private String usaCalle, usaCity, usaState, usaZip, usaNeighborhood, usaPoBox, usaBox, usaCmr, usaApo;
     private String canCalle, canCity, canProvince, canPostalCode;
     private String otroLinea1, otroLinea2, otroLinea3, otroLinea4, otroLinea5, otroPais;
@@ -38,7 +41,7 @@ public class ContratoModelo implements Serializable {
     private boolean noCorreo;
 
     // Redes Sociales
-    private List<SocialAccount> redesSociales = new ArrayList<>();
+    private List<CuentaRed> redesSociales = new ArrayList<>();
     private boolean noRedesSociales;
 
     // Datos Venta
@@ -107,10 +110,10 @@ public class ContratoModelo implements Serializable {
         }
     }
 
-    public static class SocialAccount implements Serializable {
+    public static class CuentaRed implements Serializable {
         public String red, usuario;
-        public SocialAccount() {}
-        public SocialAccount(String r, String u) { this.red = r; this.usuario = u; }
+        public CuentaRed() {}
+        public CuentaRed(String r, String u) { this.red = r; this.usuario = u; }
     }
 
     public static class PagoDiferido implements Serializable {
@@ -154,8 +157,8 @@ public class ContratoModelo implements Serializable {
     public void setColonia(String colonia) { this.colonia = colonia; }
     public String getMunicipio() { return municipio; }
     public void setMunicipio(String municipio) { this.municipio = municipio; }
-    public String getProvince() { return province; }
-    public void setProvince(String province) { this.province = province; }
+    public String getNacionalidad() { return nacionalidad; }
+    public void setNacionalidad(String nacionalidad) { this.nacionalidad = nacionalidad; }
     public String getPoBox() { return poBox; }
     public void setPoBox(String poBox) { this.poBox = poBox; }
     
@@ -223,8 +226,8 @@ public class ContratoModelo implements Serializable {
     public void setEmails(List<String> emails) { this.emails = emails; }
     public boolean isNoCorreo() { return noCorreo; }
     public void setNoCorreo(boolean noCorreo) { this.noCorreo = noCorreo; }
-    public List<SocialAccount> getRedesSociales() { return redesSociales; }
-    public void setRedesSociales(List<SocialAccount> redesSociales) { this.redesSociales = redesSociales; }
+    public List<CuentaRed> getRedesSociales() { return redesSociales; }
+    public void setRedesSociales(List<CuentaRed> redesSociales) { this.redesSociales = redesSociales; }
     public boolean isNoRedesSociales() { return noRedesSociales; }
     public void setNoRedesSociales(boolean noRedesSociales) { this.noRedesSociales = noRedesSociales; }
 

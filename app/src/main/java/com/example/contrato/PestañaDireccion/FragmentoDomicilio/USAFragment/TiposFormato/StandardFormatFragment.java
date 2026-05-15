@@ -14,19 +14,19 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
-import com.example.contrato.SharedContractViewModel;
+import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentStandardFormatBinding;
 
 public class StandardFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
 
     private FragmentStandardFormatBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentStandardFormatBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
         loadExistingData();
         setupAutoSave();
@@ -35,14 +35,14 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            binding.editCalle.setText(contract.getUsaCalle());
-            binding.editCity.setText(contract.getUsaCity());
-            binding.editState.setText(contract.getUsaState());
-            binding.editZipCode.setText(contract.getUsaZip());
-            binding.editNeighborhood.setText(contract.getUsaNeighborhood());
-            binding.editCountryUSA.setText(contract.getOtroPais());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            binding.editCalle.setText(Contrato.getUsaCalle());
+            binding.editCity.setText(Contrato.getUsaCity());
+            binding.editState.setText(Contrato.getUsaState());
+            binding.editZipCode.setText(Contrato.getUsaZip());
+            binding.editNeighborhood.setText(Contrato.getUsaNeighborhood());
+            binding.editCountryUSA.setText(Contrato.getOtroPais());
         }
     }
 
@@ -62,23 +62,23 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
 
     private void saveData() {
         if (binding == null) return;
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setUsaCalle(binding.editCalle.getText().toString());
-        contract.setUsaCity(binding.editCity.getText().toString());
-        contract.setUsaState(binding.editState.getText().toString());
-        contract.setUsaZip(binding.editZipCode.getText().toString());
-        contract.setUsaNeighborhood(binding.editNeighborhood.getText().toString());
+        Contrato.setUsaCalle(binding.editCalle.getText().toString());
+        Contrato.setUsaCity(binding.editCity.getText().toString());
+        Contrato.setUsaState(binding.editState.getText().toString());
+        Contrato.setUsaZip(binding.editZipCode.getText().toString());
+        Contrato.setUsaNeighborhood(binding.editNeighborhood.getText().toString());
         
-        contract.setPais("EEUU");
-        contract.setCalle(contract.getUsaCalle());
-        contract.setCiudad(contract.getUsaCity());
-        contract.setEstado(contract.getUsaState());
-        contract.setCp(contract.getUsaZip());
-        contract.setColonia(contract.getUsaNeighborhood());
+        Contrato.setPais("EEUU");
+        Contrato.setCalle(Contrato.getUsaCalle());
+        Contrato.setCiudad(Contrato.getUsaCity());
+        Contrato.setEstado(Contrato.getUsaState());
+        Contrato.setCp(Contrato.getUsaZip());
+        Contrato.setColonia(Contrato.getUsaNeighborhood());
 
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     @Override

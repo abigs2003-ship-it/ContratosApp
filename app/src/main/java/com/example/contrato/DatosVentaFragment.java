@@ -40,13 +40,13 @@ import java.util.Locale;
 public class DatosVentaFragment extends Fragment {
     private FragmentDatosVentaBinding binding;
     private List<DescuentoItem> listaDescuentos = new ArrayList<>();
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDatosVentaBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         seleccionaBoton(binding.btnNueva);
 
         return binding.getRoot();
@@ -78,7 +78,7 @@ public class DatosVentaFragment extends Fragment {
 
         binding.AceptarTarea.setOnClickListener(v -> {
             if (validarCampos()) {
-                saveDataToViewModel();
+                guardaDatosViewModel();
                 Navigation.findNavController(v).navigate(R.id.nav_regalos);
             }
         });
@@ -92,9 +92,9 @@ public class DatosVentaFragment extends Fragment {
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 binding.spUnidad.setAdapter(adapter);
                 
-                ContratoModelo contract = viewModel.getContractValue();
-                if (contract != null && contract.getUnidad() != null) {
-                    setSpinnerValue(binding.spUnidad, contract.getUnidad());
+                ContratoModelo Contrato = viewModel.getContratoValue();
+                if (Contrato != null && Contrato.getUnidad() != null) {
+                    setSpinnerValue(binding.spUnidad, Contrato.getUnidad());
                 }
             }
         });
@@ -109,71 +109,71 @@ public class DatosVentaFragment extends Fragment {
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) return;
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) return;
 
-        if ("Upgrade".equals(contract.getTipoVenta())) {
+        if ("Upgrade".equals(Contrato.getTipoVenta())) {
             seleccionaBoton(binding.btnUpgrade);
         } else {
             seleccionaBoton(binding.btnNueva);
         }
         actualizarVisibilidadMontoCuenta();
 
-        setSpinnerValue(binding.spUnidad, contract.getUnidad());
-        setSpinnerValue(binding.spTemporada, contract.getTemporada());
-        setSpinnerValue(binding.spAnioUso, contract.getAnioUso());
-        binding.editNoAnios.setText(contract.getNoAnios());
+        setSpinnerValue(binding.spUnidad, Contrato.getUnidad());
+        setSpinnerValue(binding.spTemporada, Contrato.getTemporada());
+        setSpinnerValue(binding.spAnioUso, Contrato.getAnioUso());
+        binding.editNoAnios.setText(Contrato.getNoAnios());
 
-        setSpinnerValue(binding.spMoneda, contract.getMoneda());
-        binding.editTipoCambio.setText(contract.getTipoCambio());
-        binding.editPrecioBruto.setText(contract.getPrecioBruto());
-        binding.editMontoCuenta.setText(contract.getMontoCuenta());
-        binding.editPrecioNeto.setText(contract.getPrecioNeto());
+        setSpinnerValue(binding.spMoneda, Contrato.getMoneda());
+        binding.editTipoCambio.setText(Contrato.getTipoCambio());
+        binding.editPrecioBruto.setText(Contrato.getPrecioBruto());
+        binding.editMontoCuenta.setText(Contrato.getMontoCuenta());
+        binding.editPrecioNeto.setText(Contrato.getPrecioNeto());
 
-        if ("Financiado".equals(contract.getTipoPago())) {
+        if ("Financiado".equals(Contrato.getTipoPago())) {
             binding.rbFinanciado.setChecked(true);
-        } else if ("Contado".equals(contract.getTipoPago())) {
+        } else if ("Contado".equals(Contrato.getTipoPago())) {
             binding.rbContado.setChecked(true);
         }
 
-        binding.editEnganchePorcentaje.setText(contract.getEnganchePorcentaje());
-        binding.editEngancheMonto.setText(contract.getEngancheMonto());
-        binding.editEngancheSalaMonto.setText(contract.getEngancheSalaMonto());
-        binding.editEngancheSalaPorcentaje.setText(contract.getEngancheSalaPorcentaje());
-        binding.editVarios.setText(contract.getVariosMonto());
-        binding.editNoDesc.setText(contract.getNoDesc());
-        binding.editEngDiferido.setText(contract.getEngDiferidoMonto());
-        binding.editNoPagosEng.setText(contract.getNoPagosEng());
-        binding.editSaldoEng.setText(contract.getSaldoEnganche());
-        binding.editMontoFinanciar.setText(contract.getMontoFinanciar());
-        binding.editCostoContrato.setText(contract.getCostoContrato());
-        binding.editpagosala.setText(contract.getPagoSala());
-        binding.editcostomembresia.setText(contract.getCostoMembresia());
+        binding.editEnganchePorcentaje.setText(Contrato.getEnganchePorcentaje());
+        binding.editEngancheMonto.setText(Contrato.getEngancheMonto());
+        binding.editEngancheSalaMonto.setText(Contrato.getEngancheSalaMonto());
+        binding.editEngancheSalaPorcentaje.setText(Contrato.getEngancheSalaPorcentaje());
+        binding.editVarios.setText(Contrato.getVariosMonto());
+        binding.editNoDesc.setText(Contrato.getNoDesc());
+        binding.editEngDiferido.setText(Contrato.getEngDiferidoMonto());
+        binding.editNoPagosEng.setText(Contrato.getNoPagosEng());
+        binding.editSaldoEng.setText(Contrato.getSaldoEnganche());
+        binding.editMontoFinanciar.setText(Contrato.getMontoFinanciar());
+        binding.editCostoContrato.setText(Contrato.getCostoContrato());
+        binding.editpagosala.setText(Contrato.getPagoSala());
+        binding.editcostomembresia.setText(Contrato.getCostoMembresia());
 
-        // Restore dynamic contracts
-        if (contract.getContratosMontoCuenta() != null) {
-            binding.editNoContratosVenta.setText(String.valueOf(contract.getContratosMontoCuenta().size()));
+        // Restore dynamic Contratos
+        if (Contrato.getContratosMontoCuenta() != null) {
+            binding.editNoContratosVenta.setText(String.valueOf(Contrato.getContratosMontoCuenta().size()));
             binding.containerContratosDinamicos.removeAllViews();
-            for (String xref : contract.getContratosMontoCuenta()) {
-                EditText et = createContractEditText();
+            for (String xref : Contrato.getContratosMontoCuenta()) {
+                EditText et = createContratoEditText();
                 et.setText(xref);
                 binding.containerContratosDinamicos.addView(et);
             }
         }
 
         // Restore Discounts
-        if (contract.getDescuentosDetalle() != null) {
+        if (Contrato.getDescuentosDetalle() != null) {
             listaDescuentos.clear();
-            for (int i = 0; i < contract.getDescuentosDetalle().size(); i++) {
-                ContratoModelo.DescuentoDetalle dd = contract.getDescuentosDetalle().get(i);
+            for (int i = 0; i < Contrato.getDescuentosDetalle().size(); i++) {
+                ContratoModelo.DescuentoDetalle dd = Contrato.getDescuentosDetalle().get(i);
                 listaDescuentos.add(new DescuentoItem(i + 1, dd.descripcion, "REM-" + (i + 1), parseDouble(dd.monto), parseDouble(dd.monto), "REF-" + (i + 1)));
             }
         }
 
         // Restore Deferred Payments
-        if (contract.getPagosDiferidos() != null && !contract.getPagosDiferidos().isEmpty()) {
+        if (Contrato.getPagosDiferidos() != null && !Contrato.getPagosDiferidos().isEmpty()) {
             binding.containerPagosDinamicos.removeAllViews();
-            for (ContratoModelo.PagoDiferido pd : contract.getPagosDiferidos()) {
+            for (ContratoModelo.PagoDiferido pd : Contrato.getPagosDiferidos()) {
                 LinearLayout row = new LinearLayout(requireContext());
                 row.setOrientation(LinearLayout.HORIZONTAL);
                 row.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -207,7 +207,7 @@ public class DatosVentaFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        saveDataToViewModel();
+        guardaDatosViewModel();
     }
 
     private void setupCurrencyPrefixes() {
@@ -486,7 +486,7 @@ public class DatosVentaFragment extends Fragment {
                         if (num >= 0) {
                             binding.containerContratosDinamicos.removeAllViews();
                             for (int i = 0; i < num; i++) {
-                                binding.containerContratosDinamicos.addView(createContractEditText());
+                                binding.containerContratosDinamicos.addView(createContratoEditText());
                             }
                         }
                     } catch (NumberFormatException ignored) {}
@@ -499,7 +499,7 @@ public class DatosVentaFragment extends Fragment {
         });
     }
 
-    private EditText createContractEditText() {
+    private EditText createContratoEditText() {
         EditText et = new EditText(requireContext());
         int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 220, getResources().getDisplayMetrics());
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
@@ -850,44 +850,44 @@ public class DatosVentaFragment extends Fragment {
         });
     }
 
-    private void saveDataToViewModel() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+    private void guardaDatosViewModel() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
 
-        contract.setTipoVenta(binding.btnNueva.isChecked() ? "Nueva" : "Upgrade");
-        if (binding.spUnidad.getSelectedItem() != null) contract.setUnidad(binding.spUnidad.getSelectedItem().toString());
-        if (binding.spTemporada.getSelectedItem() != null) contract.setTemporada(binding.spTemporada.getSelectedItem().toString());
-        if (binding.spAnioUso.getSelectedItem() != null) contract.setAnioUso(binding.spAnioUso.getSelectedItem().toString());
-        contract.setNoAnios(binding.editNoAnios.getText().toString());
+        Contrato.setTipoVenta(binding.btnNueva.isChecked() ? "Nueva" : "Upgrade");
+        if (binding.spUnidad.getSelectedItem() != null) Contrato.setUnidad(binding.spUnidad.getSelectedItem().toString());
+        if (binding.spTemporada.getSelectedItem() != null) Contrato.setTemporada(binding.spTemporada.getSelectedItem().toString());
+        if (binding.spAnioUso.getSelectedItem() != null) Contrato.setAnioUso(binding.spAnioUso.getSelectedItem().toString());
+        Contrato.setNoAnios(binding.editNoAnios.getText().toString());
 
-        if (binding.spMoneda.getSelectedItem() != null) contract.setMoneda(binding.spMoneda.getSelectedItem().toString());
-        contract.setTipoCambio(binding.editTipoCambio.getText().toString());
-        contract.setPrecioBruto(binding.editPrecioBruto.getText().toString());
-        contract.setMontoCuenta(binding.editMontoCuenta.getText().toString());
-        contract.setPrecioNeto(binding.editPrecioNeto.getText().toString());
-        contract.setTipoPago(binding.rbFinanciado.isChecked() ? "Financiado" : "Contado");
+        if (binding.spMoneda.getSelectedItem() != null) Contrato.setMoneda(binding.spMoneda.getSelectedItem().toString());
+        Contrato.setTipoCambio(binding.editTipoCambio.getText().toString());
+        Contrato.setPrecioBruto(binding.editPrecioBruto.getText().toString());
+        Contrato.setMontoCuenta(binding.editMontoCuenta.getText().toString());
+        Contrato.setPrecioNeto(binding.editPrecioNeto.getText().toString());
+        Contrato.setTipoPago(binding.rbFinanciado.isChecked() ? "Financiado" : "Contado");
 
-        contract.setEnganchePorcentaje(binding.editEnganchePorcentaje.getText().toString());
-        contract.setEngancheMonto(binding.editEngancheMonto.getText().toString());
-        contract.setEngancheSalaMonto(binding.editEngancheSalaMonto.getText().toString());
-        contract.setEngancheSalaPorcentaje(binding.editEngancheSalaPorcentaje.getText().toString());
-        contract.setVariosMonto(binding.editVarios.getText().toString());
-        contract.setNoDesc(binding.editNoDesc.getText().toString());
-        contract.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
-        contract.setNoPagosEng(binding.editNoPagosEng.getText().toString());
-        contract.setSaldoEnganche(binding.editSaldoEng.getText().toString());
-        contract.setMontoFinanciar(binding.editMontoFinanciar.getText().toString());
-        contract.setCostoContrato(binding.editCostoContrato.getText().toString());
-        contract.setPagoSala(binding.editpagosala.getText().toString());
-        contract.setCostoMembresia(binding.editcostomembresia.getText().toString());
+        Contrato.setEnganchePorcentaje(binding.editEnganchePorcentaje.getText().toString());
+        Contrato.setEngancheMonto(binding.editEngancheMonto.getText().toString());
+        Contrato.setEngancheSalaMonto(binding.editEngancheSalaMonto.getText().toString());
+        Contrato.setEngancheSalaPorcentaje(binding.editEngancheSalaPorcentaje.getText().toString());
+        Contrato.setVariosMonto(binding.editVarios.getText().toString());
+        Contrato.setNoDesc(binding.editNoDesc.getText().toString());
+        Contrato.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
+        Contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
+        Contrato.setSaldoEnganche(binding.editSaldoEng.getText().toString());
+        Contrato.setMontoFinanciar(binding.editMontoFinanciar.getText().toString());
+        Contrato.setCostoContrato(binding.editCostoContrato.getText().toString());
+        Contrato.setPagoSala(binding.editpagosala.getText().toString());
+        Contrato.setCostoMembresia(binding.editcostomembresia.getText().toString());
 
-        // Save dynamic contracts (Xrefs)
-        List<String> contracts = new ArrayList<>();
+        // Save dynamic Contratos (Xrefs)
+        List<String> Contratos = new ArrayList<>();
         for (int i = 0; i < binding.containerContratosDinamicos.getChildCount(); i++) {
             View v = binding.containerContratosDinamicos.getChildAt(i);
-            if (v instanceof EditText) contracts.add(((EditText) v).getText().toString());
+            if (v instanceof EditText) Contratos.add(((EditText) v).getText().toString());
         }
-        contract.setContratosMontoCuenta(contracts);
+        Contrato.setContratosMontoCuenta(Contratos);
 
         // Save dynamic discounts
         List<ContratoModelo.DescuentoDetalle> discounts = new ArrayList<>();
@@ -905,7 +905,7 @@ public class DatosVentaFragment extends Fragment {
                 }
             }
         }
-        contract.setDescuentosDetalle(discounts);
+        Contrato.setDescuentosDetalle(discounts);
 
         // Save Deferred Payments
         List<ContratoModelo.PagoDiferido> deferredPayments = new ArrayList<>();
@@ -917,9 +917,9 @@ public class DatosVentaFragment extends Fragment {
                 deferredPayments.add(new ContratoModelo.PagoDiferido(m, f));
             }
         }
-        contract.setPagosDiferidos(deferredPayments);
+        Contrato.setPagosDiferidos(deferredPayments);
 
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     private void limpiarInventario() {

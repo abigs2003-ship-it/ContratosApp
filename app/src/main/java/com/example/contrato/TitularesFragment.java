@@ -3,6 +3,8 @@ package com.example.contrato;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +33,7 @@ import java.util.List;
 public class TitularesFragment extends Fragment {
 
     private FragmentTitularesBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
     private List<ContratoModelo.Persona> titularesList = new ArrayList<>();
     private List<ContratoModelo.Persona> beneficiariosList = new ArrayList<>();
 
@@ -39,7 +41,7 @@ public class TitularesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentTitularesBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         return binding.getRoot();
     }
 
@@ -57,8 +59,15 @@ public class TitularesFragment extends Fragment {
             }
         }
 
-        binding.editFechaCumpleanos.setOnClickListener(v -> showDatePickerDialog(binding.editFechaCumpleanos));
-        binding.editCumpleBene.setOnClickListener(v -> showDatePickerDialog(binding.editCumpleBene));
+        binding.textInputLayoutFechaCumpleanos.setEndIconOnClickListener(v -> {
+            muestraDatePicker(binding.editFechaCumpleanos);
+        });
+        binding.textInputLayoutFechaCumpleanosBene.setEndIconOnClickListener(v -> {
+            muestraDatePicker(binding.editFechaCumpleanosBene);
+        });
+
+        setupFormatoFecha(binding.editFechaCumpleanos);
+        setupFormatoFecha(binding.editFechaCumpleanosBene);
 
         List<String> parentescosList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.parentescos)));
 
@@ -107,7 +116,7 @@ public class TitularesFragment extends Fragment {
             if (!nombre.isEmpty()) {
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 titularesList.add(p);
-                saveDataToViewModel();
+                guardaDatosViewModel();
                 agregarPersonaaAContenedor(binding.containerTitulares, p, titularesList);
                 limpiarCamposTitular();
             } else {
@@ -121,7 +130,7 @@ public class TitularesFragment extends Fragment {
             String nombre = binding.editNombreBene.getText().toString();
             String paterno = binding.editPaternoBene.getText().toString();
             String materno = (binding.layoutMaternoBene.getVisibility() == View.VISIBLE) ? binding.editMaternoBene.getText().toString() : "";
-            String cumple = binding.editCumpleBene.getText().toString();
+            String cumple = binding.editFechaCumpleanosBene.getText().toString();
             String ocupacion = binding.editOcupacionBene.getText().toString();
 
             int position = binding.spinnerParentescoBene.getSelectedItemPosition();
@@ -134,7 +143,7 @@ public class TitularesFragment extends Fragment {
             if (!nombre.isEmpty()) {
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
                 beneficiariosList.add(p);
-                saveDataToViewModel();
+                guardaDatosViewModel();
                 agregarPersonaaAContenedor(binding.containerBeneficiarios, p, beneficiariosList);
                 limpiarCamposBene();
             } else {
@@ -149,16 +158,39 @@ public class TitularesFragment extends Fragment {
                 Toast.makeText(requireContext(), "Debe agregar al menos un titular", Toast.LENGTH_SHORT).show();
                 return;
             }
-            saveDataToViewModel();
+            guardaDatosViewModel();
             Navigation.findNavController(v).navigate(R.id.nav_direcciones);
         });
     }
 
+    private void setupFormatoFecha(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            private String prev = "";
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                prev = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                if (str.length() < prev.length()) return; 
+
+                if (str.length() == 2 || str.length() == 5) {
+                    s.append("/");
+                }
+            }
+        });
+    }
+
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            titularesList = new ArrayList<>(contract.getTitulares());
-            beneficiariosList = new ArrayList<>(contract.getBeneficiarios());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            titularesList = new ArrayList<>(Contrato.getTitulares());
+            beneficiariosList = new ArrayList<>(Contrato.getBeneficiarios());
             
             binding.containerTitulares.removeAllViews();
             for (ContratoModelo.Persona p : titularesList) {
@@ -174,20 +206,20 @@ public class TitularesFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        saveDataToViewModel();
+        guardaDatosViewModel();
     }
 
-    private void saveDataToViewModel() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+    private void guardaDatosViewModel() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setTitulares(new ArrayList<>(titularesList));
-        contract.setBeneficiarios(new ArrayList<>(beneficiariosList));
+        Contrato.setTitulares(new ArrayList<>(titularesList));
+        Contrato.setBeneficiarios(new ArrayList<>(beneficiariosList));
         
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
-    private void showDatePickerDialog(EditText editText) {
+    private void muestraDatePicker(EditText editText) {
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
@@ -220,7 +252,7 @@ public class TitularesFragment extends Fragment {
         bindingItem.textCumple.setText(p.cumple);
         bindingItem.textOcupacion.setText(p.ocupacion);
         
-        // Display parentesco name instead of ID
+        
         String parentescoDisplay = p.parentesco;
         try {
             int pos = Integer.parseInt(p.parentesco);
@@ -234,7 +266,7 @@ public class TitularesFragment extends Fragment {
         bindingItem.btnEliminar.setOnClickListener(v -> {
             contenedor.removeView(bindingItem.getRoot());
             list.remove(p);
-            saveDataToViewModel();
+            guardaDatosViewModel();
         });
 
         contenedor.addView(bindingItem.getRoot());
@@ -256,7 +288,7 @@ public class TitularesFragment extends Fragment {
         if (binding.editPaternoBene.getText() != null) binding.editPaternoBene.getText().clear();
         if (binding.editMaternoBene.getText() != null) binding.editMaternoBene.getText().clear();
         if (binding.editOcupacionBene.getText() != null) binding.editOcupacionBene.getText().clear();
-        if (binding.editCumpleBene.getText() != null) binding.editCumpleBene.getText().clear();
+        if (binding.editFechaCumpleanosBene.getText() != null) binding.editFechaCumpleanosBene.getText().clear();
         if (binding.spinnerParentescoBene.getAdapter() != null) {
             binding.spinnerParentescoBene.setSelection(binding.spinnerParentescoBene.getAdapter().getCount());
         }

@@ -21,14 +21,14 @@ import java.util.List;
 public class RegalosFragment extends Fragment {
 
     private FragmentRegalosBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
     private List<String> regalosList = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentRegalosBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         return binding.getRoot();
     }
 
@@ -43,7 +43,7 @@ public class RegalosFragment extends Fragment {
             if (!nombreRegalo.isEmpty()) {
                 regalosList.add(nombreRegalo);
                 agregarRegaloAContenedor(nombreRegalo);
-                saveDataToViewModel();
+                guardaDatosViewModel();
                 binding.editNombreRegalo.setText("");
             } else {
                 Toast.makeText(getContext(), "Por favor, escribe el nombre del regalo", Toast.LENGTH_SHORT).show();
@@ -51,7 +51,7 @@ public class RegalosFragment extends Fragment {
         });
 
         binding.AceptarTarea.setOnClickListener(v -> {
-            saveDataToViewModel();
+            guardaDatosViewModel();
             irAFinanciamiento();
         });
     }
@@ -67,31 +67,31 @@ public class RegalosFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        saveDataToViewModel();
+        guardaDatosViewModel();
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            if (contract.getRegalos() != null) {
-                regalosList = new ArrayList<>(contract.getRegalos());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            if (Contrato.getRegalos() != null) {
+                regalosList = new ArrayList<>(Contrato.getRegalos());
                 binding.ContenedorRegalos.removeAllViews();
                 for (String r : regalosList) {
                     agregarRegaloAContenedor(r);
                 }
             }
-            binding.editComentarios.setText(contract.getComentarios());
+            binding.editComentarios.setText(Contrato.getComentarios());
         }
     }
 
-    private void saveDataToViewModel() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+    private void guardaDatosViewModel() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
 
-        contract.setRegalos(new ArrayList<>(regalosList));
-        contract.setComentarios(binding.editComentarios.getText().toString().trim());
+        Contrato.setRegalos(new ArrayList<>(regalosList));
+        Contrato.setComentarios(binding.editComentarios.getText().toString().trim());
 
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     private void agregarRegaloAContenedor(String nombre) {
@@ -101,7 +101,7 @@ public class RegalosFragment extends Fragment {
         bindingItem.btnBorrarRegalo.setOnClickListener(v -> {
             binding.ContenedorRegalos.removeView(bindingItem.getRoot());
             regalosList.remove(nombre);
-            saveDataToViewModel();
+            guardaDatosViewModel();
             reordenarNumeracion();
         });
 

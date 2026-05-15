@@ -54,7 +54,9 @@
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerHistory"
-        tools:listitem="@layout/item_contract_history" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="1dp"
+        tools:listitem="@layout/item_contrato_historial" />
 
     <ProgressBar
         android:id="@+id/progressBar"

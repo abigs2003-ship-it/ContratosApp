@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.contrato.Login.LoginActivity;
 import com.example.contrato.databinding.ActivityMainBinding;
 
 import java.util.Objects;
@@ -33,10 +34,14 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("es-MX"));
         }
 
+
         long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
         long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
+
+        Intent intent2 = new Intent(this, HistorialActivity.class);
+        intent2.putExtra("ID_USUARIO", idUsuario);
         
-        SharedContractViewModel viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
+        SharedContratoViewModel viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
         
         if (idUsuario != -1) {
             viewModel.setCurrentUserId(idUsuario);
@@ -47,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (idContrato != -1) {
-            ContratoModelo model = viewModel.getContractValue();
+            ContratoModelo model = viewModel.getContratoValue();
             if (model == null) model = new ContratoModelo();
             model.setId(String.valueOf(idContrato));
-            viewModel.setContract(model);
+            viewModel.setContrato(model);
         }
 
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);

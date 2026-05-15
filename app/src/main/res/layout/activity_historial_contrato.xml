@@ -310,6 +310,7 @@
                 android:layout_marginBottom="2dp"
                 android:gravity="center_vertical">
                 <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="Redes Sociales" android:fontFamily="serif" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                <ImageButton android:id="@+id/btnAddRed" android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_add" android:background="?attr/selectableItemBackgroundBorderless" android:visibility="gone" app:tint="@color/white" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView

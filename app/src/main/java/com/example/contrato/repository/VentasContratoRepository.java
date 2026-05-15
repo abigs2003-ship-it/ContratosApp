@@ -69,6 +69,28 @@ public class VentasContratoRepository {
         return null;
     }
 
+    //agarrar solo los contratos del usuario actual
+    public List<VentasContrato> getByUserId(long UsuarioId) throws SQLException {
+        List<VentasContrato> lista = new ArrayList<>();
+        String sql = "SELECT * FROM PMT_App_Ventas_Contrato WHERE IdUsuarioAlta = ? ORDER BY FechaModificacion DESC";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, UsuarioId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    VentasContrato c = new VentasContrato();
+                    c.idContrato = rs.getLong("IdContrato");
+                    c.fechaAlta = rs.getTimestamp("FechaAlta");
+                    c.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
+                    c.fechaModificacion = rs.getTimestamp("FechaModificacion");
+                    c.estatus = rs.getString("Estatus");
+                    c.idioma = rs.getString("Idioma");
+                    lista.add(c);
+                }
+            }
+        }
+        return lista;
+    }
     public List<VentasContrato> getAll() throws SQLException {
         List<VentasContrato> list = new ArrayList<>();
         String sql = "SELECT * FROM PMT_App_Ventas_Contrato ORDER BY FechaModificacion DESC";

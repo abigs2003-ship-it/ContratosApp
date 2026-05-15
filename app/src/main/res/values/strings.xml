@@ -8,7 +8,7 @@
     <string name="datosgen">Datos Generales</string>
     <string name="titularespestaña">TITULARES/BENEFICIARIOS</string>
     <string name="titularestitulo">Titulares</string>
-    <string name="nombreform">Nombre</string>
+    <string name="nombreform">Nombre(s)</string>
     <string name="ocupacionform">Ocupación</string>
     <string name="parentescoform">Parentesco</string>
     <string name="cumpleform">Cumpleaños</string>
@@ -19,20 +19,20 @@
     <string name="condicionesbot">Condiciones de Venta</string>
     <string name="direccionpestaña">DIRECCIÓN/TELEFONOS/EMAIL</string>
     <string name="saludobarra">Bienvenido,</string>
-    <string name="apellidoform">A. Paterno</string>
-    <string name="maternoform">A. Materno</string>
+    <string name="apellidoform">Apellido Paterno</string>
+    <string name="maternoform">Apellido Materno</string>
     <string name="fechaformato">DD/MM/AAAA</string>
     <string name="financiamiento">Financiamiento</string>
-    <string name="selecciona">Selecciona</string>
+    <string name="selecciona">Seleccionar</string>
     <string name="domicilioform">Domicilio</string>
     <string name="aceptarbot">Aceptar</string>
     <string name="formatodir">Formato de Dirección</string>
-    <string name="calleform">Calle</string>
-    <string name="next">No. Exterior</string>
+    <string name="calleform">Calle *</string>
+    <string name="next">No. Exterior *</string>
     <string name="nint">No. Int</string>
     <string name="CP">CP</string>
-    <string name="colonia">Colonia</string>
-    <string name="municipio">Delegación o Municipio</string>
+    <string name="colonia">Colonia *</string>
+    <string name="municipio">Delegación o Municipio *</string>
     <string name="ciudad">Ciudad</string>
     <string name="pais">País</string>
     <string name="telefonoform">Teléfonos</string>
@@ -69,7 +69,7 @@
         <item>Semestral</item>
         <item>Anual</item>
     </string-array>
-    <string name="estado">Estado</string>
+    <string name="estado">Estado *</string>
 
     <string-array name="parentescos">
         <item>Contacto</item>
@@ -193,4 +193,101 @@
     <string name="pagosde">- pagos de</string>
     <string name="interes">Interés</string>
     <string name="capacumulado">Cap. Acumulado</string>
+    <string-array name="Estados">
+        <item>Seleccionar</item>
+        <item>Aguascalientes</item>
+        <item>Baja California</item>
+        <item>Baja California Sur</item>
+        <item>Campeche</item>
+        <item>Chiapas</item>
+        <item>Chihuahua</item>
+        <item>Ciudad de México</item>
+        <item>Coahuila</item>
+        <item>Colima</item>
+        <item>Durango</item>
+        <item>Estado de México</item>
+        <item>Guanajuato</item>
+        <item>Guerrero</item>
+        <item>Hidalgo</item>
+        <item>Jalisco</item>
+        <item>Michoacán</item>
+        <item>Morelos</item>
+        <item>Nayarit</item>
+        <item>Nuevo León</item>
+        <item>Oaxaca</item>
+        <item>Puebla</item>
+        <item>Queretaro</item>
+        <item>Quintana Roo</item>
+        <item>San Luis Potosí</item>
+        <item>Sinaloa</item>
+        <item>Sonora</item>
+        <item>Tabasco</item>
+        <item>Tamaulipas</item>
+        <item>Tlaxcala</item>
+        <item>Veracruz</item>
+        <item>Yucatán</item>
+        <item>Zacatecas</item>
+
+    </string-array>
+
+    <string-array name="EstadosUSA">
+        <item>Select</item>
+        <item>AL Alabama</item>
+        <item>AK Alaska</item>
+        <item>AZ Arizona</item>
+        <item>AR Arkansas</item>
+        <item>CA California</item>
+        <item>CZ Canal Zone</item>
+        <item>CO Colorado</item>
+        <item>CT Conneticut</item>
+        <item>DE Delaware</item>
+        <item>DC District of Columbia</item>
+        <item>FL Florida</item>
+        <item>GA Georgia</item>
+        <item>GU Guam</item>
+        <item>HI Hawaii</item>
+        <item>ID Idaho</item>
+        <item>IL Illinois</item>
+        <item>IN Indiana</item>
+        <item>IA Iowa</item>
+        <item>KS Kansas</item>
+        <item>KY Kentuchy</item>
+        <item>LA Louisiana</item>
+        <item>ME Maine</item>
+        <item>MD Maryland</item>
+        <item>MA Massachusetts</item>
+        <item>MI Michigan</item>
+        <item>MN Minnesota</item>
+        <item>MS Mississippi</item>
+        <item>MO Missouri</item>
+        <item>MT Montana</item>
+        <item>NE Nebraska</item>
+        <item>NV Nevada</item>
+        <item>NH New Hampshire</item>
+        <item>NJ New Jersey</item>
+        <item>NM New Mexico</item>
+        <item>NY New York</item>
+        <item>NC North Carolina</item>
+        <item>ND North Dakota</item>
+        <item>OH Ohio</item>
+        <item>OK Oklahoma</item>
+        <item>OR Oregon</item>
+        <item>PA Pennsylvania</item>
+        <item>PR Puerto Rico</item>
+        <item>RI Rhode Island</item>
+        <item>SC South Carolina</item>
+        <item>SD South Dakota</item>
+        <item>TN Tennessee</item>
+        <item>TX Texas</item>
+        <item>UT Utah</item>
+        <item>VT Vermont</item>
+        <item>VI Virgin Islands</item>
+        <item>VA Virginia</item>
+        <item>WA Washington</item>
+        <item>WV West Virginia</item>
+        <item>WI Wisconsin</item>
+        <item>WY Wyoming</item>
+
+
+    </string-array>
 </resources>

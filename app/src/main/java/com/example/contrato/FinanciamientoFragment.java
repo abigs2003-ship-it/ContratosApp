@@ -5,17 +5,22 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -30,16 +35,17 @@ import java.util.Locale;
 public class FinanciamientoFragment extends Fragment {
 
     private FragmentFinanciamientoBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
     private final Calendar fechaPrimerPagoSeleccionada = Calendar.getInstance();
-    
 
     private static final String[] TIPOS_PERIODO_VALORES = {
             "Mensual", "Bimestral", "Trimestral", "Cuatrimestral", "Semestral", "Anual"
     };
 
+    private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
+    private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+
     private final NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     
     private boolean columnasVisibles = false;
 
@@ -47,7 +53,7 @@ public class FinanciamientoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentFinanciamientoBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         return binding.getRoot();
     }
 
@@ -59,6 +65,12 @@ public class FinanciamientoFragment extends Fragment {
         configurarDatePicker();
         loadExistingData();
         setupObservers();
+        
+        binding.textInputLayoutFechaPrimerpago.setEndIconOnClickListener(v -> {
+            muestraDatePicker(binding.etFechaPrimerPago);
+        });
+
+        setupFormatoFecha(binding.etFechaPrimerPago);
 
         binding.btnCalcular.setOnClickListener(v -> calcularAmortizacion());
         binding.btnLimpiar.setOnClickListener(v -> limpiarTodo());
@@ -71,6 +83,149 @@ public class FinanciamientoFragment extends Fragment {
         binding.btnEnviar.setOnClickListener(v -> mostrarConfirmacionEnvio());
         
         actualizarVisibilidadColumnas();
+    }
+
+    private String getCurrentLanguage() {
+        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+        if (!currentLocales.isEmpty()) {
+            return currentLocales.get(0).getLanguage();
+        }
+        return Locale.getDefault().getLanguage();
+    }
+
+    private String getMonthAbbr(int month) {
+        if (month < 1 || month > 12) return "";
+        String lang = getCurrentLanguage();
+        return lang.equals("en") ? MESES_EN[month - 1] : MESES_ES[month - 1];
+    }
+
+    private String formatFecha(Calendar cal) {
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int year = cal.get(Calendar.YEAR);
+        String lang = getCurrentLanguage();
+        
+        String dayStr = String.format(Locale.getDefault(), "%02d", day);
+        String monthAbbr = getMonthAbbr(month);
+        
+        if (lang.equals("en")) {
+            return monthAbbr + "/" + dayStr + "/" + year;
+        } else {
+            return dayStr + "/" + monthAbbr + "/" + year;
+        }
+    }
+
+    private void parseFechaIntoCalendar(String dateStr, Calendar cal) {
+        if (dateStr == null || dateStr.isEmpty()) return;
+        String lang = getCurrentLanguage();
+        String[] parts = dateStr.split("/");
+        if (parts.length != 3) return;
+        
+        try {
+            int day, month, year;
+            if (lang.equals("en")) {
+                month = parseMonthPart(parts[0], lang);
+                day = Integer.parseInt(parts[1]);
+                year = Integer.parseInt(parts[2]);
+            } else {
+                day = Integer.parseInt(parts[0]);
+                month = parseMonthPart(parts[1], lang);
+                year = Integer.parseInt(parts[2]);
+            }
+            if (month != -1) {
+                cal.set(year, month - 1, day);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private int parseMonthPart(String monthPart, String lang) {
+        try {
+            return Integer.parseInt(monthPart);
+        } catch (NumberFormatException e) {
+            String[] meses = lang.equals("en") ? MESES_EN : MESES_ES;
+            for (int i = 0; i < meses.length; i++) {
+                if (meses[i].equalsIgnoreCase(monthPart)) return i + 1;
+            }
+        }
+        return -1;
+    }
+
+    private void muestraDatePicker(EditText editText) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    fechaPrimerPagoSeleccionada.set(year, monthOfYear, dayOfMonth);
+                    editText.setText(formatFecha(fechaPrimerPagoSeleccionada));
+                }, 
+                fechaPrimerPagoSeleccionada.get(Calendar.YEAR),
+                fechaPrimerPagoSeleccionada.get(Calendar.MONTH),
+                fechaPrimerPagoSeleccionada.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    private void setupFormatoFecha(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            private String prev = "";
+            private boolean isInternalUpdate = false;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (isInternalUpdate) return;
+                prev = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (isInternalUpdate) return;
+                String str = s.toString();
+                if (str.length() < prev.length()) return;
+
+                isInternalUpdate = true;
+                String lang = getCurrentLanguage();
+                
+                if (lang.equals("en")) {
+                    if (str.length() == 2) {
+                        try {
+                            int m = Integer.parseInt(str);
+                            if (m >= 1 && m <= 12) {
+                                String abbr = getMonthAbbr(m);
+                                s.replace(0, 2, abbr);
+                                s.append("/");
+                            } else {
+                                s.append("/");
+                            }
+                        } catch (Exception e) {
+                            s.append("/");
+                        }
+                    } else if (str.length() == 6) {
+                        s.append("/");
+                    }
+                } else {
+                    if (str.length() == 2) {
+                        s.append("/");
+                    } else if (str.length() == 5) {
+                        try {
+                            String monthStr = str.substring(3, 5);
+                            int m = Integer.parseInt(monthStr);
+                            if (m >= 1 && m <= 12) {
+                                String abbr = getMonthAbbr(m);
+                                s.replace(3, 5, abbr);
+                                s.append("/");
+                            } else {
+                                s.append("/");
+                            }
+                        } catch (Exception e) {
+                            s.append("/");
+                        }
+                    } else if (str.length() == 7 && str.substring(3, 6).matches("[a-zA-Z]{3}")) {
+                        // Correct format after month abbreviation
+                    }
+                }
+                isInternalUpdate = false;
+            }
+        });
     }
 
     private void setupObservers() {
@@ -89,16 +244,20 @@ public class FinanciamientoFragment extends Fragment {
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            if (contract.getMontoFinanciar() != null) binding.etMontoFinanciar.setText(contract.getMontoFinanciar());
-            if (contract.getNumPagos() != null) binding.etNumeroPagos.setText(contract.getNumPagos());
-            if (contract.getTasaInteres() != null) binding.etTasaInteres.setText(contract.getTasaInteres());
-            if (contract.getFechaPrimerPago() != null) binding.etFechaPrimerPago.setText(contract.getFechaPrimerPago());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            if (Contrato.getMontoFinanciar() != null) binding.etMontoFinanciar.setText(Contrato.getMontoFinanciar());
+            if (Contrato.getNumPagos() != null) binding.etNumeroPagos.setText(Contrato.getNumPagos());
+            if (Contrato.getTasaInteres() != null) binding.etTasaInteres.setText(Contrato.getTasaInteres());
             
-            if (contract.getTipoPeriodo() != null) {
+            if (Contrato.getFechaPrimerPago() != null) {
+                parseFechaIntoCalendar(Contrato.getFechaPrimerPago(), fechaPrimerPagoSeleccionada);
+                binding.etFechaPrimerPago.setText(formatFecha(fechaPrimerPagoSeleccionada));
+            }
+            
+            if (Contrato.getTipoPeriodo() != null) {
                 for (int i = 0; i < TIPOS_PERIODO_VALORES.length; i++) {
-                    if (TIPOS_PERIODO_VALORES[i].equals(contract.getTipoPeriodo())) {
+                    if (TIPOS_PERIODO_VALORES[i].equals(Contrato.getTipoPeriodo())) {
                         binding.spinnerTipoPeriodo.setSelection(i);
                         break;
                     }
@@ -110,24 +269,24 @@ public class FinanciamientoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        saveDataToViewModel();
+        guardaDatosViewModel();
     }
 
-    private void saveDataToViewModel() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+    private void guardaDatosViewModel() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
 
         int pos = binding.spinnerTipoPeriodo.getSelectedItemPosition();
         if (pos >= 0 && pos < TIPOS_PERIODO_VALORES.length) {
-            contract.setTipoPeriodo(TIPOS_PERIODO_VALORES[pos]);
+            Contrato.setTipoPeriodo(TIPOS_PERIODO_VALORES[pos]);
         }
         
-        contract.setFechaPrimerPago(binding.etFechaPrimerPago.getText().toString());
-        contract.setNumPagos(binding.etNumeroPagos.getText().toString());
-        contract.setTasaInteres(binding.etTasaInteres.getText().toString());
-        contract.setMontoFinanciar(binding.etMontoFinanciar.getText().toString());
+        Contrato.setFechaPrimerPago(binding.etFechaPrimerPago.getText().toString());
+        Contrato.setNumPagos(binding.etNumeroPagos.getText().toString());
+        Contrato.setTasaInteres(binding.etTasaInteres.getText().toString());
+        Contrato.setMontoFinanciar(binding.etMontoFinanciar.getText().toString());
 
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     private void mostrarConfirmacionEnvio() {
@@ -140,31 +299,30 @@ public class FinanciamientoFragment extends Fragment {
     }
 
     private void finalizarContrato() {
-        saveDataToViewModel();
-        ContratoModelo contract = viewModel.getContractValue();
+        guardaDatosViewModel();
+        ContratoModelo Contrato = viewModel.getContratoValue();
 
-        // Prepare metadata for local history as well
-        if (contract.getId() == null) {
-            contract.setId(String.valueOf(System.currentTimeMillis()));
+        if (Contrato.getId() == null) {
+            Contrato.setId(String.valueOf(System.currentTimeMillis()));
         }
         
         SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String now = metaSdf.format(new Date());
-        if (contract.getCreationDate() == null) {
-            contract.setCreationDate(now);
+        if (Contrato.getCreationDate() == null) {
+            Contrato.setCreationDate(now);
         }
-        contract.setModifiedDate(now);
+        Contrato.setModifiedDate(now);
 
-        if (!contract.getTitulares().isEmpty()) {
-            ContratoModelo.Persona p = contract.getTitulares().get(0);
-            contract.setClientName(p.nombre + " " + (p.paterno != null ? p.paterno : ""));
+        if (!Contrato.getTitulares().isEmpty()) {
+            ContratoModelo.Persona p = Contrato.getTitulares().get(0);
+            Contrato.setClientName(p.nombre + " " + (p.paterno != null ? p.paterno : ""));
         } else {
-            contract.setClientName("Sin nombre");
+            Contrato.setClientName("Sin nombre");
         }
 
-        ContratoManager.getInstance().actualizaContrato(contract);
+        ContratoManager.getInstance().actualizaContrato(Contrato);
         
-        viewModel.saveToDatabase();
+        viewModel.guardaBaseDatos();
     }
 
     private void irAlMenu() {
@@ -214,17 +372,7 @@ public class FinanciamientoFragment extends Fragment {
     }
 
     private void configurarDatePicker() {
-        DatePickerDialog.OnDateSetListener dateSetListener = (view, year, month, dayOfMonth) -> {
-            fechaPrimerPagoSeleccionada.set(Calendar.YEAR, year);
-            fechaPrimerPagoSeleccionada.set(Calendar.MONTH, month);
-            fechaPrimerPagoSeleccionada.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            binding.etFechaPrimerPago.setText(sdf.format(fechaPrimerPagoSeleccionada.getTime()));
-        };
-
-        binding.etFechaPrimerPago.setOnClickListener(v -> new DatePickerDialog(requireContext(), dateSetListener,
-                fechaPrimerPagoSeleccionada.get(Calendar.YEAR),
-                fechaPrimerPagoSeleccionada.get(Calendar.MONTH),
-                fechaPrimerPagoSeleccionada.get(Calendar.DAY_OF_MONTH)).show());
+        binding.etFechaPrimerPago.setOnClickListener(v -> muestraDatePicker(binding.etFechaPrimerPago));
     }
 
     private void calcularAmortizacion() {
@@ -237,6 +385,8 @@ public class FinanciamientoFragment extends Fragment {
             Toast.makeText(requireContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        parseFechaIntoCalendar(textoFecha, fechaPrimerPagoSeleccionada);
 
         double montoFinanciar;
         int numeroPagos;
@@ -288,7 +438,7 @@ public class FinanciamientoFragment extends Fragment {
             capitalAcumulado += capital;
             totalIntereses += interes;
 
-            agregarFilaTabla(i, sdf.format(calPago.getTime()), montoFila,
+            agregarFilaTabla(i, formatFecha(calPago), montoFila,
                     capital, interes, capitalAcumulado, saldo, i % 2 == 0);
 
             avanzarFecha(calPago, periodoSeleccionado);
@@ -328,53 +478,49 @@ public class FinanciamientoFragment extends Fragment {
         }
     }
 
-    private void agregarFilaTabla(int numero, String fecha, double monto, double capital,
-                                  double interes, double capitalAcumulado, double saldo, boolean paridad) {
+    private void agregarFilaTabla(int num, String fecha, double monto, double capital, double interes, double acumulado, double saldo, boolean esPar) {
         LinearLayout fila = new LinearLayout(requireContext());
         fila.setOrientation(LinearLayout.HORIZONTAL);
-        fila.setLayoutParams(new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, dpAPx(36)));
-        fila.setBackgroundColor(paridad ? Color.parseColor("#F2F2F2") : Color.WHITE);
-        fila.setGravity(Gravity.CENTER_VERTICAL);
+        fila.setPadding(0, 10, 0, 10);
+        if (esPar) fila.setBackgroundColor(Color.parseColor("#F5F5F5"));
 
-        agregarCeldaFila(fila, String.valueOf(numero), 44, 0);
-        agregarCeldaFila(fila, fecha, 100, 0);
-        agregarCeldaFila(fila, formatoMoneda.format(monto), 100, 0);
+        fila.addView(crearTextViewFila(String.valueOf(num), 0.5f));
+        fila.addView(crearTextViewFila(fecha, 1.2f));
+        fila.addView(crearTextViewFila(formatoMoneda.format(monto), 1.2f));
         
-        agregarCeldaFila(fila, formatoMoneda.format(capital), 100, 0);
-        agregarCeldaFila(fila, formatoMoneda.format(interes), 100, 0);
-        agregarCeldaFila(fila, formatoMoneda.format(capitalAcumulado), 120, 0);
+        TextView tvCapital = crearTextViewFila(formatoMoneda.format(capital), 1.2f);
+        TextView tvInteres = crearTextViewFila(formatoMoneda.format(interes), 1.2f);
+        TextView tvAcumulado = crearTextViewFila(formatoMoneda.format(acumulado), 1.2f);
         
-        agregarCeldaFila(fila, formatoMoneda.format(saldo), 100, 0);
+        tvCapital.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
+        tvInteres.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
+        tvAcumulado.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
+        
+        fila.addView(tvCapital);
+        fila.addView(tvInteres);
+        fila.addView(tvAcumulado);
+        
+        fila.addView(crearTextViewFila(formatoMoneda.format(saldo), 1.2f));
 
         binding.contenedorFilasTabla.addView(fila);
     }
 
-    private void agregarCeldaFila(LinearLayout fila, String texto, int widthDp, float peso) {
-        TextView celda = new TextView(requireContext());
-        int widthPx = widthDp > 0 ? dpAPx(widthDp) : 0;
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(widthPx, ViewGroup.LayoutParams.WRAP_CONTENT, peso);
-        celda.setLayoutParams(params);
-        celda.setText(texto);
-        celda.setTextSize(10f);
-        celda.setTextColor(Color.parseColor("#333333"));
-        celda.setGravity(Gravity.CENTER);
-        celda.setPadding(dpAPx(2), dpAPx(8), dpAPx(2), dpAPx(8));
-        fila.addView(celda);
+    private TextView crearTextViewFila(String texto, float weight) {
+        TextView tv = new TextView(requireContext());
+        tv.setText(texto);
+        tv.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, weight));
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(12);
+        tv.setTextColor(Color.BLACK);
+        return tv;
     }
 
-    private void actualizarResumen(int numeroPagos, double pagoFijo, double totalPagar, double totalIntereses, double ultimoPago) {
-        if (numeroPagos > 1) {
-            binding.tvResumenPagos1Cantidad.setText(String.format(Locale.getDefault(), "%d pagos de", numeroPagos - 1));
-            binding.tvResumenPagos1Monto.setText(formatoMoneda.format(pagoFijo));
-            binding.tvResumenPagos2Cantidad.setText("1 pago de");
-            binding.tvResumenPagos2Monto.setText(formatoMoneda.format(ultimoPago));
-        } else {
-            binding.tvResumenPagos1Cantidad.setText("1 pago de");
-            binding.tvResumenPagos1Monto.setText(formatoMoneda.format(ultimoPago));
-            binding.tvResumenPagos2Cantidad.setText("");
-            binding.tvResumenPagos2Monto.setText("");
-        }
+    private void actualizarResumen(int pagos, double mensualidad, double total, double intereses, double ultimo) {
+        binding.etResumenPagos.setText(String.valueOf(pagos));
+        binding.etResumenMensualidad.setText(formatoMoneda.format(mensualidad));
+        binding.tvResumenTotal.setText(formatoMoneda.format(total));
+        binding.tvResumenIntereses.setText(formatoMoneda.format(intereses));
+        binding.tvResumenUltimoPago.setText(formatoMoneda.format(ultimo));
     }
 
     private void limpiarTodo() {
@@ -382,26 +528,14 @@ public class FinanciamientoFragment extends Fragment {
         binding.etNumeroPagos.setText("");
         binding.etTasaInteres.setText("");
         binding.etFechaPrimerPago.setText("");
-        binding.tvResumenPagos1Cantidad.setText("— pagos de");
-        binding.tvResumenPagos1Monto.setText("$0.00");
-        binding.tvResumenPagos2Cantidad.setText("");
-        binding.tvResumenPagos2Monto.setText("");
-        binding.tvSaldoInicial.setText("$0.00");
-        binding.contenedorFilasTabla.removeAllViews();
         binding.spinnerTipoPeriodo.setSelection(0);
-        
-        columnasVisibles = false;
-        actualizarVisibilidadColumnas();
-    }
-
-    private int dpAPx(int dp) {
-        float densidad = requireContext().getResources().getDisplayMetrics().density;
-        return Math.round(dp * densidad);
+        binding.contenedorFilasTabla.removeAllViews();
+        binding.tvSaldoInicial.setText("$0.00");
+        actualizarResumen(0, 0, 0, 0, 0);
     }
 
     @Override
     public void onDestroyView() {
-        saveDataToViewModel();
         super.onDestroyView();
         binding = null;
     }

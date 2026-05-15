@@ -212,18 +212,28 @@
                         android:layout_weight="1"
                         app:boxStrokeColor="#080C24" />
 
-                    <EditText
-                        android:id="@+id/editFechaCumpleanos"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutFechaCumpleanos"
                         android:layout_width="0dp"
-                        android:layout_height="46dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_input"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="@string/fechaformato"
-                        android:inputType="none"
-                        android:paddingHorizontal="14dp"
-                        android:textSize="15sp" />
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/ic_calendario">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editFechaCumpleanos"
+                            android:layout_width="match_parent"
+                            android:background="@drawable/bg_input"
+                            android:maxLength="10"
+                            android:layout_height="46dp"
+                            android:hint="@string/fechaformato"
+                            android:inputType="date"
+                            android:paddingHorizontal="14dp"
+                            android:textSize="13sp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -370,7 +380,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="75dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
                     android:layout_marginStart="5dp"
@@ -529,18 +539,26 @@
                         android:layout_weight="1"
                         app:boxStrokeColor="#080C24" />
 
-                    <EditText
-                        android:id="@+id/editCumpleBene"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textInputLayoutFechaCumpleanosBene"
                         android:layout_width="0dp"
-                        android:layout_height="46dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/bg_input"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="@string/fechaformato"
-                        android:inputType="none"
-                        android:paddingHorizontal="14dp"
-                        android:textSize="15sp" />
+                        app:endIconMode="custom"
+                        app:endIconDrawable="@drawable/ic_calendario">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editFechaCumpleanosBene"
+                            android:layout_width="match_parent"
+                            android:layout_height="46dp"
+                            android:background="@drawable/bg_input"
+                            android:maxLength="10"
+                            android:hint="@string/fechaformato"
+                            android:inputType="date"
+                            android:paddingHorizontal="14dp"
+                            android:textSize="13sp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout

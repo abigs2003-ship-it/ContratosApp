@@ -6,6 +6,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,42 +17,51 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
-import com.example.contrato.SharedContractViewModel;
+import com.example.contrato.R;
+import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentDomiciliomexicoBinding;
 
 public class DomicilioFragmentMexico extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
     private FragmentDomiciliomexicoBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDomiciliomexicoBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         
-        loadExistingData();
-        setupAutoSave();
+        cargaDatosExistentes();
+        setupAutoGuardado();
+        setupEstadosSpinner();
         
         return binding.getRoot();
     }
 
-    private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            binding.editCalle.setText(contract.getMexCalle());
-            binding.editNext.setText(contract.getMexNumExt());
-            binding.cp.setText(contract.getMexCP());
-            binding.editColonia.setText(contract.getMexColonia());
-            binding.editMunicipio.setText(contract.getMexMunicipio());
-            binding.editCiudad.setText(contract.getMexCiudad());
-            binding.editEstado.setText(contract.getMexEstado());
+
+    private void cargaDatosExistentes() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            binding.editCalle.setText(Contrato.getMexCalle());
+            binding.editNext.setText(Contrato.getMexNumExt());
+            binding.cp.setText(Contrato.getMexCP());
+            binding.editColonia.setText(Contrato.getMexColonia());
+            binding.editMunicipio.setText(Contrato.getMexMunicipio());
+            binding.editCiudad.setText(Contrato.getMexCiudad());
+            if (Contrato.getEstado() != null) {
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) binding.spinnerEstado.getAdapter();
+                if (adapter != null) {
+                    int pos = adapter.getPosition(Contrato.getEstado());
+                    if (pos >= 0) binding.spinnerEstado.setSelection(pos);
+                }
+            }
         }
     }
 
-    private void setupAutoSave() {
+    private void setupAutoGuardado() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { saveData(); }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { guardaDatosViewModel(); }
             @Override public void afterTextChanged(Editable s) {}
         };
         binding.editCalle.addTextChangedListener(watcher);
@@ -58,43 +70,66 @@ public class DomicilioFragmentMexico extends Fragment implements PestañaDirecci
         binding.editColonia.addTextChangedListener(watcher);
         binding.editMunicipio.addTextChangedListener(watcher);
         binding.editCiudad.addTextChangedListener(watcher);
-        binding.editEstado.addTextChangedListener(watcher);
+        binding.spinnerEstado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                guardaDatosViewModel();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
-    private void saveData() {
+    private void guardaDatosViewModel() {
         if (binding == null) return;
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setMexCalle(binding.editCalle.getText().toString());
-        contract.setMexNumExt(binding.editNext.getText().toString());
-        contract.setMexCP(binding.cp.getText().toString());
-        contract.setMexColonia(binding.editColonia.getText().toString());
-        contract.setMexMunicipio(binding.editMunicipio.getText().toString());
-        contract.setMexCiudad(binding.editCiudad.getText().toString());
-        contract.setMexEstado(binding.editEstado.getText().toString());
-        
+        Contrato.setMexCalle(binding.editCalle.getText().toString());
+        Contrato.setMexNumExt(binding.editNext.getText().toString());
+        Contrato.setMexCP(binding.cp.getText().toString());
+        Contrato.setMexColonia(binding.editColonia.getText().toString());
+        Contrato.setMexMunicipio(binding.editMunicipio.getText().toString());
+        Contrato.setMexCiudad(binding.editCiudad.getText().toString());
+        if (binding.spinnerEstado.getSelectedItem() != null) {
+            Contrato.setEstado(binding.spinnerEstado.getSelectedItem().toString());
+        }
 
-        contract.setPais("México");
-        contract.setCalle(contract.getMexCalle());
-        contract.setColonia(contract.getMexColonia());
-        contract.setCp(contract.getMexCP());
-        contract.setCiudad(contract.getMexCiudad());
-        contract.setEstado(contract.getMexEstado());
+        Contrato.setPais("México");
+        Contrato.setCalle(Contrato.getMexCalle());
+        Contrato.setColonia(Contrato.getMexColonia());
+        Contrato.setCp(Contrato.getMexCP());
+        Contrato.setCiudad(Contrato.getMexCiudad());
+        Contrato.setEstado(Contrato.getMexEstado());
         
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     @Override
     public boolean isValid() {
         if (binding == null) return false;
+        if (binding.editCalle.getText().toString().trim().length() < 3) { //si es menor a 3 caracteres no pasa
+            Toast.makeText(requireContext(), "La calle debe tener al menos 3 caracteres", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (binding.cp.getText().toString().trim().length() < 5) { //si es menor a 3 caracteres no pasa
+            Toast.makeText(requireContext(), "El C.P. debe ser de 5 dígitos", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (binding.spinnerEstado.getSelectedItemPosition() == 0) {
+            Toast.makeText(requireContext(), "Seleccione un Estado", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return !binding.editCalle.getText().toString().trim().isEmpty() &&
                !binding.editNext.getText().toString().trim().isEmpty() &&
-               !binding.cp.getText().toString().trim().isEmpty() &&
-               !binding.editColonia.getText().toString().trim().isEmpty() &&
-               !binding.editMunicipio.getText().toString().trim().isEmpty() &&
+               !binding.editNext.getText().toString().trim().isEmpty() &&
                !binding.editCiudad.getText().toString().trim().isEmpty() &&
-               !binding.editEstado.getText().toString().trim().isEmpty();
+                !binding.editMunicipio.getText().toString().trim().isEmpty() &&
+                !binding.editColonia.getText().toString().trim().isEmpty();
+
     }
 
     @Override
@@ -106,15 +141,21 @@ public class DomicilioFragmentMexico extends Fragment implements PestañaDirecci
             binding.editColonia.setText("");
             binding.editMunicipio.setText("");
             binding.editCiudad.setText("");
-            binding.editEstado.setText("");
-            saveData();
+            binding.spinnerEstado.setSelection(0);
+            guardaDatosViewModel();
         }
     }
 
     @Override
     public void onDestroyView() {
-        saveData();
+        guardaDatosViewModel();
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupEstadosSpinner() {
+        String[] estados = getResources().getStringArray(R.array.Estados);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, estados);
+        binding.spinnerEstado.setAdapter(adapter);
     }
 }

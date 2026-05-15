@@ -26,7 +26,7 @@ public class RedesSocialesFragment extends Fragment {
 
     private CuentasSocialesAdapter adapter;
     private final List<CuentaSocial> cuentas = new ArrayList<>();
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
     private CheckBox cbNoRedes;
 
     @Nullable
@@ -34,7 +34,7 @@ public class RedesSocialesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         return inflater.inflate(R.layout.fragment_redes, container, false);
     }
 
@@ -43,7 +43,7 @@ public class RedesSocialesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         adapter = new CuentasSocialesAdapter(cuentas, position -> {
-            saveDataToViewModel();
+            guardaDatosViewModel();
         });
 
         RecyclerView rv = view.findViewById(R.id.rvCuentasSociales);
@@ -59,7 +59,7 @@ public class RedesSocialesFragment extends Fragment {
             if (isChecked) {
                 cuentas.clear();
                 adapter.notifyDataSetChanged();
-                saveDataToViewModel();
+                guardaDatosViewModel();
                 //no se va a condiciones
 
             }
@@ -74,7 +74,7 @@ public class RedesSocialesFragment extends Fragment {
             }
             cbNoRedes.setChecked(false);
             adapter.agregarCuenta(new CuentaSocial(usuario, Plataforma.FACEBOOK));
-            saveDataToViewModel();
+            guardaDatosViewModel();
             etFbUsuario.setText("");
         });
 
@@ -87,7 +87,7 @@ public class RedesSocialesFragment extends Fragment {
             }
             cbNoRedes.setChecked(false);
             adapter.agregarCuenta(new CuentaSocial(usuario, Plataforma.INSTAGRAM));
-            saveDataToViewModel();
+            guardaDatosViewModel();
             etIgUsuario.setText("");
         });
 
@@ -100,12 +100,12 @@ public class RedesSocialesFragment extends Fragment {
             }
             cbNoRedes.setChecked(false);
             adapter.agregarCuenta(new CuentaSocial(usuario, Plataforma.TWITTER));
-            saveDataToViewModel();
+            guardaDatosViewModel();
             etTwUsuario.setText("");
         });
 
         view.findViewById(R.id.AceptarTarea).setOnClickListener(v -> {
-            saveDataToViewModel();
+            guardaDatosViewModel();
             irACondiciones();
         });
     }
@@ -119,13 +119,13 @@ public class RedesSocialesFragment extends Fragment {
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            cbNoRedes.setChecked(contract.isNoRedesSociales());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            cbNoRedes.setChecked(Contrato.isNoRedesSociales());
             
-            if (contract.getRedesSociales() != null) {
+            if (Contrato.getRedesSociales() != null) {
                 cuentas.clear();
-                for (ContratoModelo.SocialAccount sa : contract.getRedesSociales()) {
+                for (ContratoModelo.CuentaRed sa : Contrato.getRedesSociales()) {
                     Plataforma p = Plataforma.FACEBOOK;
                     if (sa.red.equalsIgnoreCase("Instagram")) p = Plataforma.INSTAGRAM;
                     if (sa.red.equalsIgnoreCase("Twitter") || sa.red.equalsIgnoreCase("X")) p = Plataforma.TWITTER;
@@ -139,23 +139,23 @@ public class RedesSocialesFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        saveDataToViewModel();
+        guardaDatosViewModel();
     }
 
-    private void saveDataToViewModel() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+    private void guardaDatosViewModel() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
 
-        contract.setNoRedesSociales(cbNoRedes.isChecked());
+        Contrato.setNoRedesSociales(cbNoRedes.isChecked());
 
-        List<ContratoModelo.SocialAccount> socialList = new ArrayList<>();
+        List<ContratoModelo.CuentaRed> socialList = new ArrayList<>();
         for (CuentaSocial cs : cuentas) {
             String platform = "Facebook";
             if (cs.getPlataforma() == Plataforma.INSTAGRAM) platform = "Instagram";
             if (cs.getPlataforma() == Plataforma.TWITTER) platform = "Twitter";
-            socialList.add(new ContratoModelo.SocialAccount(platform, cs.getNombre()));
+            socialList.add(new ContratoModelo.CuentaRed(platform, cs.getNombre()));
         }
-        contract.setRedesSociales(socialList);
-        viewModel.setContract(contract);
+        Contrato.setRedesSociales(socialList);
+        viewModel.setContrato(Contrato);
     }
 }

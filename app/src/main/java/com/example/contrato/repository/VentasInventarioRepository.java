@@ -22,7 +22,7 @@ public class VentasInventarioRepository {
 
     public List<String> getUnidades() throws SQLException {
         List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT Unidad FROM PMC_VentasTipoContrato WHERE Estatus = 'A'";
+        String sql = "SELECT DISTINCT Unidad FROM PMC_App_VentasTipoContrato WHERE Estatus = 'A'";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {

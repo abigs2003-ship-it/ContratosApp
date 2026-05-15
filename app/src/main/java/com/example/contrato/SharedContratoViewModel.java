@@ -4,19 +4,37 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.contrato.model.*;
-import com.example.contrato.repository.*;
+import com.example.contrato.model.VentasContrato;
+import com.example.contrato.model.VentasDescuentos;
+import com.example.contrato.model.VentasEngancheDiferido;
+import com.example.contrato.model.VentasFinanciamientos;
+import com.example.contrato.model.VentasInformacionGeneral;
+import com.example.contrato.model.VentasInventario;
+import com.example.contrato.model.VentasMontoCta;
+import com.example.contrato.model.VentasRedesSociales;
+import com.example.contrato.model.VentasRegalos;
+import com.example.contrato.model.VentasTitulares;
+import com.example.contrato.repository.VentasContratoRepository;
+import com.example.contrato.repository.VentasDescuentosRepository;
+import com.example.contrato.repository.VentasEngancheDiferidoRepository;
+import com.example.contrato.repository.VentasFinanciamientosRepository;
+import com.example.contrato.repository.VentasInformacionGeneralRepository;
+import com.example.contrato.repository.VentasInventarioRepository;
+import com.example.contrato.repository.VentasMontoCtaRepository;
+import com.example.contrato.repository.VentasRedesSocialesRepository;
+import com.example.contrato.repository.VentasRegalosRepository;
+import com.example.contrato.repository.VentasTitularesRepository;
 
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-public class SharedContractViewModel extends ViewModel {
-    private final MutableLiveData<ContratoModelo> contract = new MutableLiveData<>(new ContratoModelo());
+public class SharedContratoViewModel extends ViewModel {
+    private final MutableLiveData<ContratoModelo> Contrato = new MutableLiveData<>(new ContratoModelo());
     private final MutableLiveData<List<ContratoModelo>> history = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<String>> unidades = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> saveSuccess = new MutableLiveData<>();
@@ -37,16 +55,16 @@ public class SharedContractViewModel extends ViewModel {
     private final VentasRegalosRepository regalosRepo = new VentasRegalosRepository();
     private final VentasRedesSocialesRepository redesSocialesRepo = new VentasRedesSocialesRepository();
 
-    public LiveData<ContratoModelo> getContract() {
-        return contract;
+    public LiveData<ContratoModelo> getContrato() {
+        return Contrato;
     }
 
-    public void setContract(ContratoModelo contractModel) {
-        contract.setValue(contractModel);
+    public void setContrato(ContratoModelo ContratoModel) {
+        Contrato.setValue(ContratoModel);
     }
     
-    public ContratoModelo getContractValue() {
-        return contract.getValue();
+    public ContratoModelo getContratoValue() {
+        return Contrato.getValue();
     }
 
     public LiveData<List<ContratoModelo>> getHistory() {
@@ -80,13 +98,63 @@ public class SharedContractViewModel extends ViewModel {
         }).start();
     }
 
-    public void loadHistoryFromDatabase() {
+    public void fetchContratoPorId(long idContrato) {
         new Thread(() -> {
             try {
-                List<VentasContrato> list = contratoRepo.getAll();
+                VentasContrato vc = contratoRepo.getById(idContrato);
+                if (vc != null) {
+                    ContratoModelo m = new ContratoModelo();
+                    m.setId(String.valueOf(vc.idContrato));
+                    m.setIdioma(mapIdiomaFromDb(vc.idioma));
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+                    if (vc.fechaAlta != null) m.setCreationDate(sdf.format(vc.fechaAlta));
+                    if (vc.fechaModificacion != null) m.setModifiedDate(sdf.format(vc.fechaModificacion));
+
+                    cargaDetallesTitulares(m, vc.idContrato);
+                    cargaDetallesContrato(m, vc.idContrato);
+                    Contrato.postValue(m);
+                } else {
+                    errorMessage.postValue("Contrato no encontrado");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                errorMessage.postValue("Error al cargar contrato: " + e.getMessage());
+            }
+        }).start();
+    }
+
+    private void cargaDetallesTitulares(ContratoModelo m, long idContrato) throws SQLException {
+        SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        List<VentasTitulares> tList = titularesRepo.getByContratoId(idContrato);
+        if (!tList.isEmpty()) {
+            VentasTitulares mainTitular = null;
+            for (VentasTitulares vt : tList) {
+                ContratoModelo.Persona p = new ContratoModelo.Persona(
+                    vt.nombre, vt.paterno, vt.materno, vt.ocupacion, 
+                    String.valueOf(vt.parentesco),
+                    vt.fechaCumpleaños != null ? dateOnlySdf.format(vt.fechaCumpleaños) : ""
+                );
+                if ("T".equalsIgnoreCase(vt.tipoTitular)) {
+                    m.getTitulares().add(p);
+                    if (mainTitular == null) mainTitular = vt;
+                } else {
+                    m.getBeneficiarios().add(p);
+                }
+            }
+            if (mainTitular != null) {
+                m.setClientName((mainTitular.nombre + " " + (mainTitular.paterno != null ? mainTitular.paterno : "")).trim());
+            }
+        } else {
+            m.setClientName("Contrato #" + idContrato);
+        }
+    }
+
+    public void cargaHistorialBaseDatos(long UsuarioId) {
+        new Thread(() -> {
+            try {
+                List<VentasContrato> list = contratoRepo.getByUserId(UsuarioId);
                 List<ContratoModelo> models = new ArrayList<>();
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-                SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                 
                 for (VentasContrato vc : list) {
                     ContratoModelo m = new ContratoModelo();
@@ -95,31 +163,8 @@ public class SharedContractViewModel extends ViewModel {
                     if (vc.fechaAlta != null) m.setCreationDate(sdf.format(vc.fechaAlta));
                     if (vc.fechaModificacion != null) m.setModifiedDate(sdf.format(vc.fechaModificacion));
 
-                    // 1. Titulares & Beneficiarios
-                    List<VentasTitulares> tList = titularesRepo.getByContratoId(vc.idContrato);
-                    if (!tList.isEmpty()) {
-                        VentasTitulares mainTitular = null;
-                        for (VentasTitulares vt : tList) {
-                            ContratoModelo.Persona p = new ContratoModelo.Persona(
-                                vt.nombre, vt.paterno, vt.materno, vt.ocupacion, 
-                                String.valueOf(vt.parentesco),
-                                vt.fechaCumpleaños != null ? dateOnlySdf.format(vt.fechaCumpleaños) : ""
-                            );
-                            if ("T".equalsIgnoreCase(vt.tipoTitular)) {
-                                m.getTitulares().add(p);
-                                if (mainTitular == null) mainTitular = vt;
-                            } else {
-                                m.getBeneficiarios().add(p);
-                            }
-                        }
-                        if (mainTitular != null) {
-                            m.setClientName((mainTitular.nombre + " " + (mainTitular.paterno != null ? mainTitular.paterno : "")).trim());
-                        }
-                    } else {
-                        m.setClientName("Contrato #" + vc.idContrato);
-                    }
-                    
-                    loadContractDetails(m, vc.idContrato);
+                    cargaDetallesTitulares(m, vc.idContrato);
+                    cargaDetallesContrato(m, vc.idContrato);
                     models.add(m);
                 }
                 history.postValue(models);
@@ -130,13 +175,13 @@ public class SharedContractViewModel extends ViewModel {
         }).start();
     }
 
-    private void loadContractDetails(ContratoModelo m, long idContrato) throws SQLException {
+    private void cargaDetallesContrato(ContratoModelo m, long idContrato) throws SQLException {
         SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         VentasInformacionGeneral vig = infoGralRepo.getByContratoId(idContrato);
         if (vig != null) {
             m.setPais(vig.pais);
-            m.setProvince(vig.nacionalidad);
+            m.setNacionalidad(vig.nacionalidad);
             m.setNoCorreo(vig.email1 == null && vig.email2 == null);
 
             if ("México".equalsIgnoreCase(vig.pais)) {
@@ -196,6 +241,11 @@ public class SharedContractViewModel extends ViewModel {
             m.getPagosDiferidos().add(new ContratoModelo.PagoDiferido(String.valueOf(vp.cantidadPago), vp.fechaPago != null ? dateOnlySdf.format(vp.fechaPago) : ""));
         }
 
+        List<VentasMontoCta> montosCta = montoCtaRepo.getByContratoId(idContrato);
+        for (VentasMontoCta vmc : montosCta) {
+            m.getContratosMontoCuenta().add(vmc.xref);
+        }
+
         VentasFinanciamientos vf = financiamientoRepo.getByContratoId(idContrato);
         if (vf != null) {
             m.setTipoPeriodo(vf.tipoPeriodo);
@@ -211,33 +261,13 @@ public class SharedContractViewModel extends ViewModel {
 
         VentasRedesSociales vrs = redesSocialesRepo.getByContratoId(idContrato);
         if (vrs != null) {
-            if (vrs.usuarioFacebook != null) m.getRedesSociales().add(new ContratoModelo.SocialAccount("Facebook", vrs.usuarioFacebook));
-            if (vrs.usuarioInstagram != null) m.getRedesSociales().add(new ContratoModelo.SocialAccount("Instagram", vrs.usuarioInstagram));
-            if (vrs.usuarioTwitter != null) m.getRedesSociales().add(new ContratoModelo.SocialAccount("Twitter", vrs.usuarioTwitter));
+            if (vrs.usuarioFacebook != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Facebook", vrs.usuarioFacebook));
+            if (vrs.usuarioInstagram != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Instagram", vrs.usuarioInstagram));
+            if (vrs.usuarioTwitter != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Twitter", vrs.usuarioTwitter));
         }
     }
 
-    public void deleteContrato(ContratoModelo model) {
-        new Thread(() -> {
-            try {
-                long idContrato = Long.parseLong(model.getId());
-                infoGralRepo.deleteByContratoId(idContrato);
-                titularesRepo.deleteByContratoId(idContrato);
-                inventarioRepo.deleteByContratoId(idContrato);
-                descuentosRepo.deleteByContratoId(idContrato);
-                regalosRepo.deleteByContratoId(idContrato);
-                montoCtaRepo.deleteByContratoId(idContrato);
-                engancheDiferidoRepo.deleteByContratoId(idContrato);
-                financiamientoRepo.deleteByContratoId(idContrato);
-                redesSocialesRepo.deleteByContratoId(idContrato);
-                contratoRepo.delete(idContrato);
-                loadHistoryFromDatabase();
-            } catch (Exception e) {
-                e.printStackTrace();
-                errorMessage.postValue("Error al eliminar contrato: " + e.getMessage());
-            }
-        }).start();
-    }
+
 
     public void actualizaContratoInDatabase(ContratoModelo model) {
         new Thread(() -> {
@@ -262,7 +292,7 @@ public class SharedContractViewModel extends ViewModel {
                 if (vig == null) vig = new VentasInformacionGeneral();
                 vig.idContrato = idContrato;
                 vig.pais = truncate(model.getPais(), 50);
-                vig.nacionalidad = truncate(model.getProvince(), 50);
+                vig.nacionalidad = truncate(model.getNacionalidad(), 50);
                 vig.tipoDir = mapTipoDir(model.getPais());
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
@@ -298,7 +328,7 @@ public class SharedContractViewModel extends ViewModel {
                     vig.pais = truncate(model.getOtroPais(), 50);
                 }
 
-                clearVigPhones(vig);
+                limpiaTelefonos(vig);
                 for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
@@ -348,8 +378,8 @@ public class SharedContractViewModel extends ViewModel {
                 infoGralRepo.update(vig);
 
                 titularesRepo.deleteByContratoId(idContrato);
-                saveTitulares(model.getTitulares(), idContrato, "T", originalIdUsuarioAlta, originalFechaAlta);
-                saveTitulares(model.getBeneficiarios(), idContrato, "B", originalIdUsuarioAlta, originalFechaAlta);
+                guardaTitulares(model.getTitulares(), idContrato, "T", originalIdUsuarioAlta, originalFechaAlta);
+                guardaTitulares(model.getBeneficiarios(), idContrato, "B", originalIdUsuarioAlta, originalFechaAlta);
 
                 VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
                 if (vi != null) {
@@ -430,7 +460,7 @@ public class SharedContractViewModel extends ViewModel {
                     VentasRedesSociales vrs = new VentasRedesSociales();
                     vrs.idRedSocial = redesSocialesRepo.getNextId();
                     vrs.idContrato = idContrato;
-                    for (ContratoModelo.SocialAccount sa : model.getRedesSociales()) {
+                    for (ContratoModelo.CuentaRed sa : model.getRedesSociales()) {
                         if ("Instagram".equalsIgnoreCase(sa.red)) vrs.usuarioInstagram = sa.usuario;
                         else if ("Facebook".equalsIgnoreCase(sa.red)) vrs.usuarioFacebook = sa.usuario;
                         else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrs.usuarioTwitter = sa.usuario;
@@ -448,7 +478,7 @@ public class SharedContractViewModel extends ViewModel {
         }).start();
     }
 
-    private void clearVigPhones(VentasInformacionGeneral vig) {
+    private void limpiaTelefonos(VentasInformacionGeneral vig) {
         vig.telefonoCasa1 = vig.ladaCasa1 = null; vig.whatsAppCasa1 = false;
         vig.telefonoCasa2 = vig.ladaCasa2 = null; vig.whatsAppCasa2 = false;
         vig.telefonoCelular1 = vig.ladaCelular1 = null; vig.whatsAppCelular1 = false;
@@ -458,8 +488,8 @@ public class SharedContractViewModel extends ViewModel {
         vig.telefonoMensajes = vig.ladaMensajes = null; vig.whatsAppMensajes = false;
     }
 
-    public void saveToDatabase() {
-        ContratoModelo model = getContractValue();
+    public void guardaBaseDatos() {
+        ContratoModelo model = getContratoValue();
         if (model == null) return;
 
         new Thread(() -> {
@@ -482,7 +512,7 @@ public class SharedContractViewModel extends ViewModel {
                 vig.idContrato = idContrato;
                 vig.pais = truncate(model.getPais(), 50);
                 vig.tipoDir = mapTipoDir(model.getPais()); 
-                vig.nacionalidad = truncate(model.getProvince(), 50);
+                vig.nacionalidad = truncate(model.getNacionalidad(), 50);
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
                     vig.calle = truncate(model.getMexCalle(), 150); 
@@ -568,8 +598,8 @@ public class SharedContractViewModel extends ViewModel {
                 vig.idUsuarioAlta = idUsuario;
                 infoGralRepo.insert(vig);
 
-                saveTitulares(model.getTitulares(), idContrato, "T", idUsuario, now);
-                saveTitulares(model.getBeneficiarios(), idContrato, "B", idUsuario, now);
+                guardaTitulares(model.getTitulares(), idContrato, "T", idUsuario, now);
+                guardaTitulares(model.getBeneficiarios(), idContrato, "B", idUsuario, now);
 
                 VentasInventario vi = new VentasInventario();
                 vi.idCondicionesVenta = inventarioRepo.getNextId();
@@ -662,7 +692,7 @@ public class SharedContractViewModel extends ViewModel {
                     VentasRedesSociales vrs = new VentasRedesSociales();
                     vrs.idRedSocial = redesSocialesRepo.getNextId();
                     vrs.idContrato = idContrato;
-                    for (ContratoModelo.SocialAccount sa : model.getRedesSociales()) {
+                    for (ContratoModelo.CuentaRed sa : model.getRedesSociales()) {
                         if ("Instagram".equalsIgnoreCase(sa.red)) vrs.usuarioInstagram = sa.usuario;
                         else if ("Facebook".equalsIgnoreCase(sa.red)) vrs.usuarioFacebook = sa.usuario;
                         else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrs.usuarioTwitter = sa.usuario;
@@ -681,7 +711,7 @@ public class SharedContractViewModel extends ViewModel {
         }).start();
     }
 
-    private void saveTitulares(List<ContratoModelo.Persona> Personas, long idContrato, String tipo, long idUsuario, Timestamp now) throws SQLException {
+    private void guardaTitulares(List<ContratoModelo.Persona> Personas, long idContrato, String tipo, long idUsuario, Timestamp now) throws SQLException {
         for (ContratoModelo.Persona p : Personas) {
             VentasTitulares vt = new VentasTitulares();
             vt.idTitular = titularesRepo.getNextId();
@@ -706,12 +736,12 @@ public class SharedContractViewModel extends ViewModel {
     }
 
     private String mapTipoDir(String pais) {
-        if (pais == null) return "OTH";
+        if (pais == null) return "Otr";
         String p = pais.toUpperCase();
         if (p.contains("MÉXICO") || p.contains("MEXICO")) return "MEX";
         if (p.contains("USA") || p.contains("EEUU") || p.contains("ESTADOS UNIDOS")) return "USA";
         if (p.contains("CANADÁ") || p.contains("CANADA")) return "CAN";
-        return "OTH";
+        return "Otr";
     }
 
     private String mapIdiomaToDb(String idioma) {

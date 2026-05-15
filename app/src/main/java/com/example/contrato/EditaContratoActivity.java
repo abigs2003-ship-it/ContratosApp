@@ -24,6 +24,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import com.example.contrato.databinding.ActivityHistorialContratoBinding;
 import java.text.SimpleDateFormat;
@@ -38,7 +39,7 @@ public class EditaContratoActivity extends AppCompatActivity {
     private ActivityHistorialContratoBinding binding;
     private ContratoModelo contrato;
     private boolean estaEditando = false;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +47,13 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding = ActivityHistorialContratoBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        viewModel = new ViewModelProvider(this).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
         
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
         long userId = prefs.getLong("userId", -1);
         viewModel.setCurrentUserId(userId);
 
-        contrato = (ContratoModelo) getIntent().getSerializableExtra("contract");
+        contrato = (ContratoModelo) getIntent().getSerializableExtra("Contrato");
 
         configurarSpinners();
         setupDynamicWatchers();
@@ -138,6 +139,7 @@ public class EditaContratoActivity extends AppCompatActivity {
             ContratoModelo.Persona p = new ContratoModelo.Persona("", "", "", "", "0", "");
             mostrarDialogoEditarPersonaa(p, null, false, binding.containerBeneficiarios, contrato.getBeneficiarios());
         });
+
     }
 
     private void setupDynamicWatchers() {
@@ -166,7 +168,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         int currentCount = container.getChildCount();
         if (num > currentCount) {
             for (int i = 0; i < num - currentCount; i++) {
-                if (type == 1) container.addView(createContractRow(""));
+                if (type == 1) container.addView(createContratoRow(""));
                 else if (type == 2) container.addView(createPagoDiferidoRow(null));
                 else if (type == 3) container.addView(createDescuentoRow(null));
             }
@@ -177,7 +179,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         }
     }
 
-    private View createContractRow(String text) {
+    private View createContratoRow(String text) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -406,7 +408,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         setSpinnerSelection(binding.spinnerIdioma, contrato.getIdioma());
         String paisContrato = contrato.getPais() != null ? contrato.getPais() : "México";
         setSpinnerSelection(binding.spinnerPais, paisContrato);
-        setSpinnerSelection(binding.spinnerNacionalidad, contrato.getProvince());
+        setSpinnerSelection(binding.spinnerNacionalidad, contrato.getNacionalidad());
 
         llenarContenedorPersonaas(binding.containerTitulares, contrato.getTitulares(), true);
         llenarContenedorPersonaas(binding.containerBeneficiarios, contrato.getBeneficiarios(), false);
@@ -424,7 +426,11 @@ public class EditaContratoActivity extends AppCompatActivity {
 
         binding.checkNoRedes.setChecked(contrato.isNoRedesSociales());
         binding.containerRedes.removeAllViews();
-
+        if (contrato.getRedesSociales() != null) {
+            for (ContratoModelo.CuentaRed sa : contrato.getRedesSociales()) {
+                binding.containerRedes.addView(createCuentaRedView(sa));
+            }
+        }
 
         setSpinnerSelection(binding.spinnerTipoVenta, contrato.getTipoVenta());
         setSpinnerSelection(binding.spinnerUnidad, contrato.getUnidad());
@@ -438,7 +444,7 @@ public class EditaContratoActivity extends AppCompatActivity {
 
         binding.editNoContratosMontoCta.setText(String.valueOf(contrato.getContratosMontoCuenta().size()));
         binding.containerContratosMontoCuenta.removeAllViews();
-        for (String c : contrato.getContratosMontoCuenta()) binding.containerContratosMontoCuenta.addView(createContractRow(c));
+        for (String c : contrato.getContratosMontoCuenta()) binding.containerContratosMontoCuenta.addView(createContratoRow(c));
 
         binding.editEngancheTotal.setText(contrato.getEngancheTotal());
         binding.editEngancheMonto.setText(contrato.getEngancheMonto());
@@ -513,6 +519,51 @@ public class EditaContratoActivity extends AppCompatActivity {
         btnEliminar.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
         btnEliminar.setOnClickListener(v -> binding.containerEmails.removeView(item));
         return item;
+    }
+
+    private View createCuentaRedView(ContratoModelo.CuentaRed sa) {
+        View item = getLayoutInflater().inflate(R.layout.item_cuenta_social_historial, binding.containerRedes, false);
+        ImageView ivIcon = item.findViewById(R.id.ivPlatformIcon);
+        TextView tvNombre = item.findViewById(R.id.tvNombre);
+        TextView tvTag = item.findViewById(R.id.tvPlatformTag);
+        ImageButton btnEliminar = item.findViewById(R.id.btnEliminar);
+
+        tvNombre.setText(sa.usuario);
+        setupSocialIcons(ivIcon, tvTag, sa.red);
+
+        btnEliminar.setVisibility(estaEditando ? View.VISIBLE : View.GONE);
+        btnEliminar.setOnClickListener(v -> binding.containerRedes.removeView(item));
+
+
+
+        return item;
+    }
+
+    private void setupSocialIcons(ImageView iv, TextView tag, String platform) {
+        if (platform == null) return;
+        switch (platform.toLowerCase()) {
+            case "facebook":
+                iv.setImageResource(R.drawable.ic_facebook);
+                iv.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_facebook));
+                tag.setText("Facebook");
+                tag.setTextColor(0xFF1877F2);
+                tag.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tag_facebook));
+                break;
+            case "instagram":
+                iv.setImageResource(R.drawable.ic_instagram);
+                iv.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_instagram));
+                tag.setText("Instagram");
+                tag.setTextColor(0xFFC13584);
+                tag.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tag_instagram));
+                break;
+            case "x":
+                iv.setImageResource(R.drawable.ic_x_twitter);
+                iv.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_circle_twitter));
+                tag.setText("X");
+                tag.setTextColor(0xFF1DA1F2);
+                tag.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_tag_twitter));
+                break;
+        }
     }
 
 
@@ -619,7 +670,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         if (contrato == null) return;
         contrato.setIdioma(binding.spinnerIdioma.getSelectedItem().toString());
         contrato.setPais(binding.spinnerPais.getSelectedItem().toString());
-        contrato.setProvince(binding.spinnerNacionalidad.getSelectedItem().toString());
+        contrato.setNacionalidad(binding.spinnerNacionalidad.getSelectedItem().toString());
         contrato.setModifiedDate(new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(new Date()));
         guardarDatosDireccion();
         contrato.setNoCorreo(binding.checkNoCorreo.isChecked());
@@ -644,11 +695,12 @@ public class EditaContratoActivity extends AppCompatActivity {
         }
         contrato.setEmails(emails);
 
-        List<ContratoModelo.SocialAccount> socials = new ArrayList<>();
+        List<ContratoModelo.CuentaRed> socials = new ArrayList<>();
         for (int i = 0; i < binding.containerRedes.getChildCount(); i++) {
             View v = binding.containerRedes.getChildAt(i);
-            ContratoModelo.SocialAccount sa = new ContratoModelo.SocialAccount();
-            sa.usuario = ((EditText)v.findViewById(R.id.editUsuario)).getText().toString();
+            ContratoModelo.CuentaRed sa = new ContratoModelo.CuentaRed();
+            sa.usuario = ((TextView)v.findViewById(R.id.tvNombre)).getText().toString();
+            sa.red = ((TextView)v.findViewById(R.id.tvPlatformTag)).getText().toString();
             socials.add(sa);
         }
         contrato.setRedesSociales(socials);
@@ -663,12 +715,12 @@ public class EditaContratoActivity extends AppCompatActivity {
         contrato.setMontoCuenta(binding.editMontoCuenta.getText().toString());
         contrato.setTipoPago(binding.spinnerTipoPago.getSelectedItem().toString());
 
-        List<String> contracts = new ArrayList<>();
+        List<String> Contratos = new ArrayList<>();
         for (int i = 0; i < binding.containerContratosMontoCuenta.getChildCount(); i++) {
             View v = binding.containerContratosMontoCuenta.getChildAt(i);
-            if (v instanceof LinearLayout) contracts.add(((EditText)((LinearLayout)v).getChildAt(0)).getText().toString());
+            if (v instanceof LinearLayout) Contratos.add(((EditText)((LinearLayout)v).getChildAt(0)).getText().toString());
         }
-        contrato.setContratosMontoCuenta(contracts);
+        contrato.setContratosMontoCuenta(Contratos);
 
         contrato.setEngancheTotal(binding.editEngancheTotal.getText().toString());
         contrato.setEngancheMonto(binding.editEngancheMonto.getText().toString());

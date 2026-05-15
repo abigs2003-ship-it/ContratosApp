@@ -208,11 +208,12 @@
                         android:fontFamily="serif"
                         android:textSize="15sp"
                         android:inputType=""
-                        android:nextFocusForward="@id/etNumeroCasa1"
                         android:textColor="@color/pacificagris"/>
                     <EditText 
                         android:id="@+id/etLadaCasa1"
                         android:inputType="phone"
+                        android:nextFocusForward="@id/etNumeroCasa1"
+                        android:imeOptions="actionNext"
                         android:maxLength="5"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText
@@ -245,6 +246,7 @@
                     <EditText
                         android:id="@+id/etLadaCasa2"
                         android:inputType="phone"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroCasa2"
                         android:maxLength="5"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
@@ -279,6 +281,7 @@
                         android:inputType="phone"
                         android:maxLength="5"
                         android:layout_width="0dp"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroOficina1"
                         android:layout_height="36dp"
                         android:layout_weight="0.6"
@@ -315,6 +318,7 @@
                     <EditText android:id="@+id/etLadaOficina2"
                         android:inputType="phone"
                         android:maxLength="5"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroOficina2"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroOficina2"
@@ -346,6 +350,7 @@
                     <EditText android:id="@+id/etLadaCel1"
                         android:inputType="phone"
                         android:maxLength="5"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroCel1"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroCel1"
@@ -377,6 +382,7 @@
                     <EditText android:id="@+id/etLadaCel2"
                         android:inputType="phone"
                         android:maxLength="5"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroCel2"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroCel2"
@@ -408,6 +414,7 @@
                         android:textColor="@color/pacificagris" />
                     <EditText android:id="@+id/etLadaMensajes"
                         android:inputType="phone"
+                        android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etNumeroMensajes"
                         android:maxLength="5"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
@@ -600,9 +607,9 @@
                         android:background="@android:color/transparent"
                         android:paddingStart="12dp" />
                     <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@android:drawable/arrow_down_float"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_abajo"
                         android:layout_gravity="end|center_vertical"
                         android:layout_marginEnd="12dp"
                         app:tint="#64748B" />

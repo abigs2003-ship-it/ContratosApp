@@ -14,37 +14,38 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
-import com.example.contrato.SharedContractViewModel;
+import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentDomiciliocanadaBinding;
 
 public class DomicilioFragmentCanada extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
     private FragmentDomiciliocanadaBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDomiciliocanadaBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
-        loadExistingData();
-        setupAutoSave();
+        cargaDatosExistentes();
+        setupAutoGuardado();
 
         return binding.getRoot();
     }
 
-    private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            binding.editStreetCanada.setText(contract.getCanCalle());
-            binding.editCityCanada.setText(contract.getCanCity());
-            binding.editProvinceCanada.setText(contract.getCanProvince());
-            binding.editCPCanada.setText(contract.getCanPostalCode());
-            binding.editPaisCanada.setText(contract.getPais() != null ? contract.getPais() : "Canadá");
+    private void cargaDatosExistentes() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            binding.editStreetCanada.setText(Contrato.getCanCalle());
+            binding.editCityCanada.setText(Contrato.getCanCity());
+            binding.editProvinceCanada.setText(Contrato.getCanProvince());
+            binding.editCPCanada.setText(Contrato.getCanPostalCode());
+            binding.editPaisCanada.setText(Contrato.getPais() != null ? Contrato.getPais() : "Canadá");
+
         }
     }
 
-    private void setupAutoSave() {
+    private void setupAutoGuardado() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { saveData(); }
@@ -58,22 +59,22 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
 
     private void saveData() {
         if (binding == null) return;
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setCanCalle(binding.editStreetCanada.getText().toString());
-        contract.setCanCity(binding.editCityCanada.getText().toString());
-        contract.setCanProvince(binding.editProvinceCanada.getText().toString());
-        contract.setCanPostalCode(binding.editCPCanada.getText().toString());
+        Contrato.setCanCalle(binding.editStreetCanada.getText().toString());
+        Contrato.setCanCity(binding.editCityCanada.getText().toString());
+        Contrato.setCanProvince(binding.editProvinceCanada.getText().toString());
+        Contrato.setCanPostalCode(binding.editCPCanada.getText().toString());
         
 
-        contract.setPais("Canadá");
-        contract.setCalle(contract.getCanCalle());
-        contract.setCiudad(contract.getCanCity());
-        contract.setEstado(contract.getCanProvince());
-        contract.setCp(contract.getCanPostalCode());
+        Contrato.setPais("Canadá");
+        Contrato.setCalle(Contrato.getCanCalle());
+        Contrato.setCiudad(Contrato.getCanCity());
+        Contrato.setEstado(Contrato.getCanProvince());
+        Contrato.setCp(Contrato.getCanPostalCode());
         
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     @Override

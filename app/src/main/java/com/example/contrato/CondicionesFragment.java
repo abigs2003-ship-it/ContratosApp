@@ -23,7 +23,7 @@ public class CondicionesFragment extends Fragment {
 
     private FragmentCondicionesBinding binding;
     private NavController navController;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
@@ -31,7 +31,7 @@ public class CondicionesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         binding = FragmentCondicionesBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.nav_condiciones_container);

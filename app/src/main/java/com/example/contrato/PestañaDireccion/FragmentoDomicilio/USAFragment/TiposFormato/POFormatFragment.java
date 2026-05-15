@@ -6,6 +6,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,69 +16,84 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
-import com.example.contrato.SharedContractViewModel;
+import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentPoboxFormatBinding;
 
 public class POFormatFragment extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
 
     private FragmentPoboxFormatBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPoboxFormatBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
-        loadExistingData();
-        setupAutoSave();
+        setupEstadosUSASpinner();
+        cargaDatosExistentes();
+        setupAutoGuardado();
 
         return binding.getRoot();
     }
 
-    private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            binding.editStreetPO.setText(contract.getUsaCalle());
-            binding.editPO.setText(contract.getPoBox());
-            binding.editCity.setText(contract.getUsaCity());
-            binding.editState.setText(contract.getUsaState());
-            binding.editZipCode2.setText(contract.getUsaZip());
+    private void cargaDatosExistentes() {
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            binding.editStreetPO.setText(Contrato.getUsaCalle());
+            binding.editPO.setText(Contrato.getPoBox());
+            binding.editCity.setText(Contrato.getUsaCity());
+            if (Contrato.getUsaState() != null) {
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) binding.spinnerEstadoUSA.getAdapter();
+                if (adapter != null) {
+                    int pos = adapter.getPosition(Contrato.getUsaState());
+                    if (pos >= 0) binding.spinnerEstadoUSA.setSelection(pos);
+                }
+            }
+            binding.editZipCode2.setText(Contrato.getUsaZip());
         }
     }
 
-    private void setupAutoSave() {
+    private void setupAutoGuardado() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { saveData(); }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { guardaDatosViewModel(); }
             @Override public void afterTextChanged(Editable s) {}
         };
         binding.editStreetPO.addTextChangedListener(watcher);
         binding.editPO.addTextChangedListener(watcher);
         binding.editCity.addTextChangedListener(watcher);
-        binding.editState.addTextChangedListener(watcher);
+        binding.spinnerEstadoUSA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                guardaDatosViewModel();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         binding.editZipCode2.addTextChangedListener(watcher);
     }
 
-    private void saveData() {
+    private void guardaDatosViewModel() {
         if (binding == null) return;
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setUsaCalle(binding.editStreetPO.getText().toString());
-        contract.setPoBox(binding.editPO.getText().toString());
-        contract.setUsaCity(binding.editCity.getText().toString());
-        contract.setUsaState(binding.editState.getText().toString());
-        contract.setUsaZip(binding.editZipCode2.getText().toString());
+        Contrato.setUsaCalle(binding.editStreetPO.getText().toString());
+        Contrato.setPoBox(binding.editPO.getText().toString());
+        Contrato.setUsaCity(binding.editCity.getText().toString());
+        Contrato.setUsaState(binding.spinnerEstadoUSA.getSelectedItem().toString());
+        Contrato.setUsaZip(binding.editZipCode2.getText().toString());
         
-        // Update general fields for compatibility
-        contract.setPais("EEUU");
-        contract.setCalle(contract.getUsaCalle());
-        contract.setCiudad(contract.getUsaCity());
-        contract.setEstado(contract.getUsaState());
-        contract.setCp(contract.getUsaZip());
+        Contrato.setPais("EEUU");
+        Contrato.setCalle(Contrato.getUsaCalle());
+        Contrato.setCiudad(Contrato.getUsaCity());
+        Contrato.setEstado(Contrato.getUsaState());
+        Contrato.setCp(Contrato.getUsaZip());
         
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     @Override
@@ -97,13 +114,13 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
             binding.editCity.setText("");
             binding.editState.setText("");
             binding.editZipCode2.setText("");
-            saveData();
+            guardaDatosViewModel();
         }
     }
 
     @Override
     public void onDestroyView() {
-        saveData();
+        guardaDatosViewModel();
         super.onDestroyView();
         binding = null;
     }

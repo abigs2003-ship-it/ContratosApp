@@ -14,18 +14,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
-import com.example.contrato.SharedContractViewModel;
+import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentDomiciliootroBinding;
 
 public class DomicilioFragmentOtro extends Fragment implements PestañaDireccionFragment.ValidatableFragment, PestañaDireccionFragment.ClearableFragment {
     private FragmentDomiciliootroBinding binding;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentDomiciliootroBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
         loadExistingData();
         setupAutoSave();
@@ -34,14 +34,14 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
     }
 
     private void loadExistingData() {
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract != null) {
-            binding.editLinea1.setText(contract.getOtroLinea1());
-            binding.editLinea2.setText(contract.getOtroLinea2());
-            binding.editLinea3.setText(contract.getOtroLinea3());
-            binding.editLinea4.setText(contract.getOtroLinea4());
-            binding.edit5.setText(contract.getOtroLinea5());
-            binding.editPaisOtro.setText(contract.getOtroPais());
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato != null) {
+            binding.editLinea1.setText(Contrato.getOtroLinea1());
+            binding.editLinea2.setText(Contrato.getOtroLinea2());
+            binding.editLinea3.setText(Contrato.getOtroLinea3());
+            binding.editLinea4.setText(Contrato.getOtroLinea4());
+            binding.edit5.setText(Contrato.getOtroLinea5());
+            binding.editPaisOtro.setText(Contrato.getOtroPais());
         }
     }
 
@@ -61,20 +61,20 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
 
     private void saveData() {
         if (binding == null) return;
-        ContratoModelo contract = viewModel.getContractValue();
-        if (contract == null) contract = new ContratoModelo();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+        if (Contrato == null) Contrato = new ContratoModelo();
         
-        contract.setOtroLinea1(binding.editLinea1.getText().toString());
-        contract.setOtroLinea2(binding.editLinea2.getText().toString());
-        contract.setOtroLinea3(binding.editLinea3.getText().toString());
-        contract.setOtroLinea4(binding.editLinea4.getText().toString());
-        contract.setOtroLinea5(binding.edit5.getText().toString());
-        contract.setOtroPais(binding.editPaisOtro.getText().toString());
+        Contrato.setOtroLinea1(binding.editLinea1.getText().toString());
+        Contrato.setOtroLinea2(binding.editLinea2.getText().toString());
+        Contrato.setOtroLinea3(binding.editLinea3.getText().toString());
+        Contrato.setOtroLinea4(binding.editLinea4.getText().toString());
+        Contrato.setOtroLinea5(binding.edit5.getText().toString());
+        Contrato.setOtroPais(binding.editPaisOtro.getText().toString());
         
         // Also keep general 'pais' as "Otro" for navigation logic if needed
-        contract.setPais("Otro");
+        Contrato.setPais("Otro");
         
-        viewModel.setContract(contract);
+        viewModel.setContrato(Contrato);
     }
 
     @Override

@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 public class DbConnection {
 //cambio
-    private static final String IP = "10.0.2.2";
+    private static final String IP = "187.243.243.220";
     private static final String PORT = "1433";
-    private static final String DB_NAME = "Contratos";
-    private static final String USER = "Test";
-    private static final String PASSWORD = "test123";
+    private static final String DB_NAME = "Cintas";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "APPpac126$597";
 
     private static final String URL = "jdbc:jtds:sqlserver://" + IP + ":" + PORT + "/" + DB_NAME;
 

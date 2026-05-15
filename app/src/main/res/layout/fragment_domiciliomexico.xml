@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -7,11 +8,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/calleform"
         android:fontFamily="serif"
-        android:textSize="15sp"
+        android:text="@string/calleform"
         android:textColor="@color/pacificagris"
+        android:textSize="15sp"
         android:textStyle="bold" />
+
     <EditText
         android:id="@+id/editCalle"
         android:layout_width="match_parent"
@@ -27,6 +29,7 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/next" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
             <EditText android:id="@+id/edit_next"
                 android:inputType="number"
+                android:imeOptions="actionNext"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:nextFocusForward="@id/edit_nint"
@@ -39,24 +42,26 @@
                 android:id="@+id/edit_nint"
                 android:layout_width="match_parent"
                 android:nextFocusForward="@id/cp"
+                android:imeOptions="actionNext"
                 android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" />
         </LinearLayout>
         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="C.P." android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
             <EditText android:id="@+id/cp"
                 android:nextFocusForward="@string/colonia"
+                android:imeOptions="actionNext"
                 android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:inputType="number" android:maxLength="5" />
         </LinearLayout>
     </LinearLayout>
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Colonia" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/colonia" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
     <EditText
         android:id="@+id/editColonia"
         android:inputType="textCapWords"
         android:nextFocusForward="@id/editMunicipio"
         android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:layout_marginBottom="12dp" />
 
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Delegación / Municipio" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/municipio" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
     <EditText android:id="@+id/editMunicipio"
         android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" android:layout_marginBottom="12dp" android:inputType="textCapWords" />
 
@@ -65,18 +70,35 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ciudad" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
             <EditText
                 android:inputType="textCapWords"
-                android:nextFocusForward="@id/editEstado"
+                android:nextFocusForward="@id/spinnerEstado"
                 android:id="@+id/editCiudad" android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp" />
         </LinearLayout>
         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Estado" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
-            <EditText
-                android:inputType="textCapWords"
-                android:id="@+id/editEstado"
-                android:imeOptions="actionDone"
-                android:layout_width="match_parent" android:layout_height="40dp" android:textSize="15sp" android:background="@drawable/bg_input" android:paddingStart="12dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/estado" android:fontFamily="serif" android:textSize="15sp" android:textColor="@color/pacificagris" android:textStyle="bold" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_input">
+                <Spinner
+                    android:id="@+id/spinnerEstado"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="12dp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_abajo"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    app:tint="#64748B" />
+            </FrameLayout>
+
+
         </LinearLayout>
     </LinearLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -86,6 +108,7 @@
         android:textSize="15sp"
         android:textColor="@color/pacificagris"
         android:textStyle="bold" />
+
     <EditText
         android:id="@+id/editPaisMexico"
         android:layout_width="match_parent"

@@ -15,20 +15,20 @@
     <string name="condicionesbot">Condiciones de Venta</string>
     <string name="direccionpestaña">DIRECCIÓN/TELEFONOS/EMAIL</string>
     <string name="saludobarra">"Bienvenido, "</string>
-    <string name="apellidoform">A. Paterno</string>
-    <string name="maternoform">A. Materno</string>
+    <string name="apellidoform">Apellido Paterno</string>
+    <string name="maternoform">Apellido Materno</string>
     <string name="fechaformato">DD/MM/AAAA</string>
     <string name="financiamiento">Financiamiento</string>
-    <string name="selecciona">Selecciona</string>
+    <string name="selecciona">Seleccionar</string>
     <string name="domicilioform">Domicilio</string>
     <string name="aceptarbot">Aceptar</string>
     <string name="formatodir">Formato de Dirección</string>
-    <string name="calleform">Calle</string>
-    <string name="next">No. Exterior</string>
+    <string name="calleform">Calle *</string>
+    <string name="next">No. Exterior *</string>
     <string name="nint">No. Int</string>
     <string name="CP">CP</string>
-    <string name="colonia">Colonia</string>
-    <string name="municipio">Delegación o Municipio</string>
+    <string name="colonia">Colonia *</string>
+    <string name="municipio">Delegación o Municipio *</string>
     <string name="ciudad">Ciudad</string>
     <string name="pais">País</string>
     <string name="telefonoform">Teléfonos</string>
@@ -54,7 +54,7 @@
     <string name="proyecto">Project</string>
     <string name="noaños">No. Años</string>
     <string name="datosventa">Datos de la Venta</string>
-    <string name="estado">Estado</string>
+    <string name="estado">Estado *</string>
 
     <string-array name="tipos_periodo">
         <item>Mensual</item>

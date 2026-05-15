@@ -21,6 +21,18 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // --- INICIO VALIDACIÓN DE SESIÓN ---
+        SharedPreferences pref1 = getSharedPreferences("sesion", MODE_PRIVATE);
+        boolean loggeado = pref1.getBoolean("loggeado", false);
+        long expira = pref1.getLong("sesion_expira", 0);
+
+        // Si ya está loggeado y la sesión no ha expirado, saltar al Menu
+        if (loggeado && System.currentTimeMillis() < expira) {
+            irAMenu();
+            return;
+        }
+        // --- FIN VALIDACIÓN DE SESIÓN ---
+
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -41,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void realizarLogin(String usuario, String contrasena) {
         binding.btnEntrar.setEnabled(false);
-        // Show progress if you have one, e.g., binding.progressBar.setVisibility(View.VISIBLE);
 
         new Thread(() -> {
             try {
@@ -50,16 +61,22 @@ public class LoginActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     binding.btnEntrar.setEnabled(true);
                     if (result != null) {
-                        // Save user info
-                        SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
-                        prefs.edit()
+                        // Guardar datos del usuario
+                        SharedPreferences prefsApp = getSharedPreferences("app", MODE_PRIVATE);
+                        prefsApp.edit()
                                 .putLong("userId", result.empleadoId)
                                 .putString("userName", result.nombreCompleto)
                                 .apply();
 
-                        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                        startActivity(intent);
-                        finish();
+                        // --- GUARDAR SESIÓN ACTIVA (Ejemplo: 24 horas) ---
+                        SharedPreferences prefSesion = getSharedPreferences("sesion", MODE_PRIVATE);
+                        long tiempoExpiracion = System.currentTimeMillis() + (8 * 60 * 60 * 1000); // 8h
+                        prefSesion.edit()
+                                .putBoolean("loggeado", true)
+                                .putLong("sesion_expira", tiempoExpiracion)
+                                .apply();
+
+                        irAMenu();
                     } else {
                         Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                     }
@@ -72,6 +89,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+
+    private void irAMenu() {
+        Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.contrato.Login.LoginActivity;
 import com.example.contrato.databinding.ActivityHomepageBinding;
 import com.example.contrato.repository.VentasContratoRepository;
 
@@ -16,6 +18,15 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences pref1 = getSharedPreferences("sesion", MODE_PRIVATE);
+        boolean loggeado = pref1.getBoolean("loggeado", false);
+        long expira = pref1.getLong("sesion_expira", 0);
+
+        if (!loggeado || System.currentTimeMillis() >= expira) {
+            cerrarSesion();
+            return;
+        }
+
         binding = ActivityHomepageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -54,9 +65,23 @@ public class MenuActivity extends AppCompatActivity {
 
         binding.historial.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, HistorialActivity.class);
+            // Pasar el ID de usuario al historial
+            intent.putExtra("ID_USUARIO", currentUserId);
             startActivity(intent);
         });
+
     }
+
+    private void cerrarSesion() {
+        SharedPreferences pref1 = getSharedPreferences("sesion", MODE_PRIVATE);
+        pref1.edit().clear().apply();
+
+        Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 
     @Override
     protected void onDestroy() {

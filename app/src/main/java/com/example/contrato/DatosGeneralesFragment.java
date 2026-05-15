@@ -23,7 +23,7 @@ public class DatosGeneralesFragment extends Fragment {
 
     private FragmentDatosgeneralesBinding binding;
     private NavController navController;
-    private SharedContractViewModel viewModel;
+    private SharedContratoViewModel viewModel;
 
     @Nullable
     @Override
@@ -31,7 +31,7 @@ public class DatosGeneralesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         binding = FragmentDatosgeneralesBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(requireActivity()).get(SharedContractViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
         NavHostFragment navHostFragment =
                 (NavHostFragment) getChildFragmentManager().findFragmentById(R.id.nav_dg_container);

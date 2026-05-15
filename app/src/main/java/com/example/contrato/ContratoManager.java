@@ -5,10 +5,10 @@ import java.util.List;
 
 public class ContratoManager {
     private static ContratoManager instance;
-    private List<ContratoModelo> contracts;
+    private List<ContratoModelo> Contratos;
 
     private ContratoManager() {
-        contracts = new ArrayList<>();
+        Contratos = new ArrayList<>();
     }
 
     public static synchronized ContratoManager getInstance() {
@@ -18,25 +18,25 @@ public class ContratoManager {
         return instance;
     }
 
-    public List<ContratoModelo> getContracts() {
-        return contracts;
+    public List<ContratoModelo> getContratos() {
+        return Contratos;
     }
 
-    public void anadeContrato(ContratoModelo contract) {
-        contracts.add(0, contract);
+    public void anadeContrato(ContratoModelo Contrato) {
+        Contratos.add(0, Contrato);
     }
 
-    public void actualizaContrato(ContratoModelo updatedContract) {
+    public void actualizaContrato(ContratoModelo updatedContrato) {
         boolean found = false;
-        for (int i = 0; i < contracts.size(); i++) {
-            if (contracts.get(i).getId().equals(updatedContract.getId())) {
-                contracts.set(i, updatedContract);
+        for (int i = 0; i < Contratos.size(); i++) {
+            if (Contratos.get(i).getId().equals(updatedContrato.getId())) {
+                Contratos.set(i, updatedContrato);
                 found = true;
                 break;
             }
         }
         if (!found) {
-            anadeContrato(updatedContract);
+            anadeContrato(updatedContrato);
         }
     }
 }
