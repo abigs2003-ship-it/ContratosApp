@@ -12,6 +12,8 @@ public class VentasInventario {
     public long primerAnioUso;
     public String monedaVenta;
     public Double tipoCambioVenta;
+
+    public String tipoOcupacion;
     public Double precioBruto;
     public Double montoCta;
     public long noContratosMontoCta;

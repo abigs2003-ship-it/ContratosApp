@@ -7,8 +7,10 @@ import java.util.List;
 public class ContratoModelo implements Serializable {
     private String id;
     private String clientName;
-    private String creationDate;
-    private String modifiedDate;
+    private String fechaCreacion;
+    private String fechaModificacion;
+
+    private String estatus;
     private String idioma = "Español";
     
     // Titulares y Beneficiarios
@@ -16,25 +18,37 @@ public class ContratoModelo implements Serializable {
     private List<Persona> beneficiarios = new ArrayList<>();
 
     // Dirección
+
+    private String paisOtro;
+    private String tipoDir;
     private String pais;
-    private String calle;
+    private String mexCalle;
+    private String USACalle;
+    private String CanCalle;
 
-    private String numExt;
+    private String MexnumExt;
+    private String MexnumInt;
+    private String MexCiudad;
+    private String USACity;
+    private String CanCity;
+    private String MexEstado;
+    private String USAState;
 
-    private String numInt;
-    private String ciudad;
-    private String estado;
-    private String cp;
-    private String colonia;
-    private String municipio;
+    private String MexCP;
+    private String USACP;
+    private String CanCP;
+    private String Mexcolonia;
+    private String USANeighborhood;
+
+    private String delegacion;
     private String nacionalidad;
     private String poBox;
+    private String Box;
+    private String cmr;
+    private String apo;
+    private String province;
+    private String Linea1, Linea2, Linea3, Linea4, Linea5;
 
-    // Dirección específica por país
-    private String usaCalle, usaCity, usaState, usaZip, usaNeighborhood, usaPoBox, usaBox, usaCmr, usaApo;
-    private String canCalle, canCity, canProvince, canPostalCode;
-    private String otroLinea1, otroLinea2, otroLinea3, otroLinea4, otroLinea5, otroPais;
-    
     // Contacto
     private List<InfoTelefono> telefonos = new ArrayList<>();
     private List<String> emails = new ArrayList<>();
@@ -54,6 +68,8 @@ public class ContratoModelo implements Serializable {
     private String tipoCambio;
     private String precioBruto;
     private String montoCuenta;
+
+    private String noContratosMC;
     private String precioNeto;
     private String tipoPago;
     private String engancheTotal;
@@ -71,17 +87,20 @@ public class ContratoModelo implements Serializable {
     private String pagoSala;
     private String costoMembresia;
     private String comentarios;
-    
+
     private List<PagoDiferido> pagosDiferidos = new ArrayList<>();
     private List<DescuentoDetalle> descuentosDetalle = new ArrayList<>();
     private List<String> contratosMontoCuenta = new ArrayList<>();
-
+    private String ultimaFechaEnganche;
     // Financiamiento
     private String tipoPeriodo;
     private String fechaPrimerPago;
     private String numPagos;
     private String tasaInteres;
-    
+
+    //tipo ocupacion
+    private String tipoOcupación;
+
     private List<String> regalos = new ArrayList<>();
 
     public ContratoModelo() {
@@ -99,14 +118,14 @@ public class ContratoModelo implements Serializable {
 
     public static class InfoTelefono implements Serializable {
         public String etiqueta, lada, numero;
-        public boolean isWhatsApp, isPrincipal;
+        public boolean isWhatsApp, esPrincipal;
         public InfoTelefono() {}
         public InfoTelefono(String etiqueta, String lada, String numero, boolean isWhatsApp, boolean isPrincipal) {
             this.etiqueta = etiqueta;
             this.lada = lada;
             this.numero = numero;
             this.isWhatsApp = isWhatsApp;
-            this.isPrincipal = isPrincipal;
+            this.esPrincipal = isPrincipal;
         }
     }
 
@@ -129,14 +148,18 @@ public class ContratoModelo implements Serializable {
     }
 
     // Getters y Setters
+
+    public String getEstatus(){return estatus;}
+    public void setEstatus(String estatus){this.estatus = estatus;}
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getClientName() { return clientName; }
     public void setClientName(String clientName) { this.clientName = clientName; }
-    public String getCreationDate() { return creationDate; }
-    public void setCreationDate(String creationDate) { this.creationDate = creationDate; }
-    public String getModifiedDate() { return modifiedDate; }
-    public void setModifiedDate(String modifiedDate) { this.modifiedDate = modifiedDate; }
+    public String getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(String fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public String getFechaModificacion() { return fechaModificacion; }
+    public void setFechaModificacion(String fechaModificacion) { this.fechaModificacion = fechaModificacion; }
     public String getIdioma() { return idioma; }
     public void setIdioma(String idioma) { this.idioma = idioma; }
     public List<Persona> getTitulares() { return titulares; }
@@ -145,80 +168,78 @@ public class ContratoModelo implements Serializable {
     public void setBeneficiarios(List<Persona> beneficiarios) { this.beneficiarios = beneficiarios; }
     public String getPais() { return pais; }
     public void setPais(String pais) { this.pais = pais; }
-    public String getCalle() { return calle; }
-    public void setCalle(String calle) { this.calle = calle; }
-    public String getCiudad() { return ciudad; }
-    public void setCiudad(String ciudad) { this.ciudad = ciudad; }
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
-    public String getCp() { return cp; }
-    public void setCp(String cp) { this.cp = cp; }
-    public String getColonia() { return colonia; }
-    public void setColonia(String colonia) { this.colonia = colonia; }
-    public String getMunicipio() { return municipio; }
-    public void setMunicipio(String municipio) { this.municipio = municipio; }
-    public String getNacionalidad() { return nacionalidad; }
-    public void setNacionalidad(String nacionalidad) { this.nacionalidad = nacionalidad; }
-    public String getPoBox() { return poBox; }
-    public void setPoBox(String poBox) { this.poBox = poBox; }
-    
+
+
+    public void setPaisOtro(String paisOtro) { this.paisOtro = paisOtro; }
+    public String getPaisOtro() { return paisOtro; }
+    public void setTipoDir(String tipoDir) { this.tipoDir = tipoDir; }
+    public String getTipoDir() { return tipoDir; }
+
+    public void setMexNumExt(String MexnumExt) { this.MexnumExt = MexnumExt; }
+    public String getMexNumExt() { return MexnumExt; }
+    public void setMexNumInt(String MexnumInt) { this.MexnumInt = MexnumInt; }
+    public String getMexNumInt() { return MexnumInt; }
     public String getMexCalle() { return mexCalle; }
     public void setMexCalle(String mexCalle) { this.mexCalle = mexCalle; }
-    public String getMexNumExt() { return mexNumExt; }
-    public void setMexNumExt(String mexNumExt) { this.mexNumExt = mexNumExt; }
-    public String getMexNumInt() { return mexNumInt; }
-    public void setMexNumInt(String mexNumInt) { this.mexNumInt = mexNumInt; }
-    public String getMexColonia() { return mexColonia; }
-    public void setMexColonia(String mexColonia) { this.mexColonia = mexColonia; }
-    public String getMexMunicipio() { return mexMunicipio; }
-    public void setMexMunicipio(String mexMunicipio) { this.mexMunicipio = mexMunicipio; }
-    public String getMexCiudad() { return mexCiudad; }
-    public void setMexCiudad(String mexCiudad) { this.mexCiudad = mexCiudad; }
-    public String getMexEstado() { return mexEstado; }
-    public void setMexEstado(String mexEstado) { this.mexEstado = mexEstado; }
-    public String getMexCP() { return mexCP; }
-    public void setMexCP(String mexCP) { this.mexCP = mexCP; }
+    public String getUsaCalle() { return USACalle; }
+    public void setUsaCalle(String USACalle) { this.USACalle = USACalle; }
+    public String getCanCalle() { return CanCalle; }
+    public void setCanCalle(String CanCalle) { this.CanCalle = CanCalle; }
+    //ciudades
+    public String getUsaCity() { return USACity; }
+    public void setUsaCity(String USACity) { this.USACity = USACity; }
+    public String getMexCiudad() { return MexCiudad; }
+    public void setMexCiudad(String MexCiudad) { this.MexCiudad = MexCiudad; }
+    public String getCanCity() { return CanCity; }
+    public void setCanCity(String CanCity) { this.CanCity = CanCity; }
+    //estados
+    public String getMexEstado() { return MexEstado; }
+    public void setMexEstado(String MexEstado) { this.MexEstado = MexEstado; }
+    public String getUsaState() { return USAState; }
+    public void setUsaState(String USAState) { this.USAState = USAState; }
+    //CPs
+    public String getMexCP() { return MexCP; }
+    public void setMexCP(String MexCP) { this.MexCP= MexCP; }
 
-    public String getUsaCalle() { return usaCalle; }
-    public void setUsaCalle(String usaCalle) { this.usaCalle = usaCalle; }
-    public String getUsaCity() { return usaCity; }
-    public void setUsaCity(String usaCity) { this.usaCity = usaCity; }
-    public String getUsaState() { return usaState; }
-    public void setUsaState(String usaState) { this.usaState = usaState; }
-    public String getUsaZip() { return usaZip; }
-    public void setUsaZip(String usaZip) { this.usaZip = usaZip; }
-    public String getUsaNeighborhood() { return usaNeighborhood; }
-    public void setUsaNeighborhood(String usaNeighborhood) { this.usaNeighborhood = usaNeighborhood; }
-    public String getUsaPoBox() { return usaPoBox; }
-    public void setUsaPoBox(String usaPoBox) { this.usaPoBox = usaPoBox; }
-    public String getUsaBox() { return usaBox; }
-    public void setUsaBox(String usaBox) { this.usaBox = usaBox; }
-    public String getUsaCmr() { return usaCmr; }
-    public void setUsaCmr(String usaCmr) { this.usaCmr = usaCmr; }
-    public String getUsaApo() { return usaApo; }
-    public void setUsaApo(String usaApo) { this.usaApo = usaApo; }
+    public String getUsaZip() { return USACP; }
+    public void setUsaZip(String USACP) { this.USACP = USACP; }
 
-    public String getCanCalle() { return canCalle; }
-    public void setCanCalle(String canCalle) { this.canCalle = canCalle; }
-    public String getCanCity() { return canCity; }
-    public void setCanCity(String canCity) { this.canCity = canCity; }
-    public String getCanProvince() { return canProvince; }
-    public void setCanProvince(String canProvince) { this.canProvince = canProvince; }
-    public String getCanPostalCode() { return canPostalCode; }
-    public void setCanPostalCode(String canPostalCode) { this.canPostalCode = canPostalCode; }
+    public String getCanPostalCode() { return CanCP; }
+    public void setCanPostalCode(String CanCP) { this.CanCP = CanCP; }
+    //colonias
+    public String getMexColonia() { return Mexcolonia; }
+    public void setMexColonia(String Mexcolonia) { this.Mexcolonia = Mexcolonia; }
+    public String getUsaNeighborhood() { return USANeighborhood; }
+    public void setUsaNeighborhood(String USANeighborhood) { this.USANeighborhood = USANeighborhood; }
+    public String getDelegacion() { return delegacion; }
+    public void setDelegacion(String delegacion) { this.delegacion = delegacion; }
+    public String getNacionalidad() { return nacionalidad; }
+    public void setNacionalidad(String nacionalidad) { this.nacionalidad = nacionalidad; }
 
-    public String getOtroLinea1() { return otroLinea1; }
-    public void setOtroLinea1(String otroLinea1) { this.otroLinea1 = otroLinea1; }
-    public String getOtroLinea2() { return otroLinea2; }
-    public void setOtroLinea2(String otroLinea2) { this.otroLinea2 = otroLinea2; }
-    public String getOtroLinea3() { return otroLinea3; }
-    public void setOtroLinea3(String otroLinea3) { this.otroLinea3 = otroLinea3; }
-    public String getOtroLinea4() { return otroLinea4; }
-    public void setOtroLinea4(String otroLinea4) { this.otroLinea4 = otroLinea4; }
-    public String getOtroLinea5() { return otroLinea5; }
-    public void setOtroLinea5(String otroLinea5) { this.otroLinea5 = otroLinea5; }
-    public String getOtroPais() { return otroPais; }
-    public void setOtroPais(String otroPais) { this.otroPais = otroPais; }
+
+    public String getPoBox() { return poBox; }
+    public void setPoBox(String poBox) { this.poBox = poBox; }
+    public String getBox() { return Box; }
+    public void setBox(String Box) { this.Box = Box; }
+    public String getCmr() { return cmr; }
+    public void setCmr(String cmr) { this.cmr = cmr; }
+    public String getApo() { return apo; }
+    public void setApo(String usaApo) { this.apo = apo; }
+
+
+    public String getCanProvince() { return province; }
+    public void setCanProvince(String canProvince) { this.province = canProvince; }
+
+    public String getLinea1() { return Linea1; }
+    public void setLinea1(String otroLinea1) { this.Linea1 = otroLinea1; }
+    public String getLinea2() { return Linea2; }
+    public void setLinea2(String otroLinea2) { this.Linea2 = otroLinea2; }
+    public String getLinea3() { return Linea3; }
+    public void setLinea3(String otroLinea3) { this.Linea3 = otroLinea3; }
+    public String getLinea4() { return Linea4; }
+    public void setLinea4(String otroLinea4) { this.Linea4 = otroLinea4; }
+    public String getLinea5() { return Linea5; }
+    public void setLinea5(String otroLinea5) { this.Linea5 = otroLinea5; }
 
     public List<InfoTelefono> getTelefonos() { return telefonos; }
     public void setTelefonos(List<InfoTelefono> telefonos) { this.telefonos = telefonos; }
@@ -241,6 +262,8 @@ public class ContratoModelo implements Serializable {
     public void setAnioUso(String anioUso) { this.anioUso = anioUso; }
     public String getNoAnios() { return noAnios; }
     public void setNoAnios(String noAnios) { this.noAnios = noAnios; }
+    public String getTipoOcupacion() { return tipoOcupación; }
+    public void setTipoOcupacion(String tipoOcupación) { this.tipoOcupación = tipoOcupación; }
     public String getMoneda() { return moneda; }
     public void setMoneda(String moneda) { this.moneda = moneda; }
     public String getTipoCambio() { return tipoCambio; }
@@ -249,6 +272,10 @@ public class ContratoModelo implements Serializable {
     public void setPrecioBruto(String precioBruto) { this.precioBruto = precioBruto; }
     public String getMontoCuenta() { return montoCuenta; }
     public void setMontoCuenta(String montoCuenta) { this.montoCuenta = montoCuenta; }
+
+    public String getNoContratosMC() { return noContratosMC; }
+
+    public void setNoContratosMC(String noContratosMC) { this.noContratosMC = noContratosMC; }
     public String getPrecioNeto() { return precioNeto; }
     public void setPrecioNeto(String precioNeto) { this.precioNeto = precioNeto; }
     public String getTipoPago() { return tipoPago; }
@@ -257,8 +284,7 @@ public class ContratoModelo implements Serializable {
     public void setEngancheTotal(String engancheTotal) { this.engancheTotal = engancheTotal; }
     public String getEnganchePorcentaje() { return enganchePorcentaje; }
     public void setEnganchePorcentaje(String enganchePorcentaje) { this.enganchePorcentaje = enganchePorcentaje; }
-    public String getEngancheMonto() { return engancheMonto; }
-    public void setEngancheMonto(String engancheMonto) { this.engancheMonto = engancheMonto; }
+
     public String getEngancheSalaMonto() { return engancheSalaMonto; }
     public void setEngancheSalaMonto(String engancheSalaMonto) { this.engancheSalaMonto = engancheSalaMonto; }
     public String getEngancheSalaPorcentaje() { return engancheSalaPorcentaje; }
@@ -281,13 +307,22 @@ public class ContratoModelo implements Serializable {
     public void setPagoSala(String pagoSala) { this.pagoSala = pagoSala; }
     public String getCostoMembresia() { return costoMembresia; }
     public void setCostoMembresia(String costoMembresia) { this.costoMembresia = costoMembresia; }
-    
+
+    public String getUltimaFechaEnganche() {
+        return ultimaFechaEnganche;
+    }
+
+    public void setUltimaFechaEnganche(String ultimaFechaEnganche) {
+        this.ultimaFechaEnganche = ultimaFechaEnganche;
+    }
+
+
     public List<PagoDiferido> getPagosDiferidos() { return pagosDiferidos; }
     public void setPagosDiferidos(List<PagoDiferido> pagosDiferidos) { this.pagosDiferidos = pagosDiferidos; }
-    
+
     public List<DescuentoDetalle> getDescuentosDetalle() { return descuentosDetalle; }
     public void setDescuentosDetalle(List<DescuentoDetalle> descuentosDetalle) { this.descuentosDetalle = descuentosDetalle; }
-    
+
     public List<String> getContratosMontoCuenta() { return contratosMontoCuenta; }
     public void setContratosMontoCuenta(List<String> contratosMontoCuenta) { this.contratosMontoCuenta = contratosMontoCuenta; }
 
@@ -303,4 +338,6 @@ public class ContratoModelo implements Serializable {
     public void setComentarios(String comentarios) { this.comentarios = comentarios; }
     public List<String> getRegalos() { return regalos; }
     public void setRegalos(List<String> regalos) { this.regalos = regalos; }
+
+
 }

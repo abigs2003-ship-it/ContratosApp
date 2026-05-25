@@ -185,7 +185,19 @@
     <string name="saldo">Saldo</string>
     <string name="resumen">Resumen de Pagos</string>
     <string name="total">Total a Pagar</string>
-    <string name="pagosde">- pagos de</string>
+    <string name="pagosde">pagos de</string>
     <string name="interes">Interés</string>
     <string name="capacumulado">Cap. Acumulado</string>
+    <string name="ultimo">1 pago de</string>
+    <string name="tipoocupacion">Tipo Ocupación</string>
+    <string name="corridos">Corridos</string>
+    <string name="alternospares">Alternados pares</string>
+    <string name="alternosnones">Alternados nones</string>
+    <string-array name="tiposOcupacion">
+        <item>Seleccionar</item>
+        <item>Corridos</item>
+        <item>Alternados Pares</item>
+        <item>Alternados Nones</item>
+
+    </string-array>
 </resources>

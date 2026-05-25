@@ -1,8 +1,14 @@
 package com.example.contrato;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -13,13 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.contrato.databinding.ActivityHistoryBinding;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class HistorialActivity extends AppCompatActivity {
 
     private ActivityHistoryBinding binding;
     private ContratoAdapter adapter;
     private SharedContratoViewModel viewModel;
-    private boolean isEditMode = false;
+    private boolean esModoEdicion = false;
+
 
 
     @Override
@@ -36,9 +44,9 @@ public class HistorialActivity extends AppCompatActivity {
         binding.btnBack.setOnClickListener(v -> finish());
         
         binding.btnEditMode.setOnClickListener(v -> {
-            isEditMode = !isEditMode;
-            adapter.setEditMode(isEditMode);
-            binding.btnEditMode.setText(isEditMode ? "CANCELAR" : "EDITAR");
+            esModoEdicion = !esModoEdicion;
+            adapter.setEsModoEdicion(esModoEdicion);
+            binding.btnEditMode.setText(esModoEdicion ? "CANCELAR" : "EDITAR");
         });
 
         setupRecyclerView();
@@ -67,19 +75,61 @@ public class HistorialActivity extends AppCompatActivity {
             }
         });
     }
-
     private void setupRecyclerView() {
+
         adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
             Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
             intent.putExtra("contrato", contrato);
             startActivity(intent);
         });
 
+        adapter.setOnContratoEstatusListener(
+                this::mostrarConfirmacionEstatus
+        );
 
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewHistory.setAdapter(adapter);
         
         binding.progressBar.setVisibility(View.VISIBLE);
+    }
+    private void mostrarConfirmacionEstatus(
+            ContratoModelo contrato
+    ) {
+        boolean activo =
+                "A".equalsIgnoreCase(
+                        contrato.getEstatus()
+                );
+
+        String nuevoEstatus =
+                activo ? "C" : "A";
+
+        String mensaje =
+                activo
+                        ? "¿Está seguro que desea cancelar el contrato?"
+                        : "¿Está seguro que desea reactivar el contrato?";
+
+        new AlertDialog.Builder(this)
+                .setTitle("Confirmar Estatus")
+                .setMessage(mensaje)
+                .setPositiveButton(
+                        "Aceptar",
+                        (dialog, which) -> {
+                            contrato.setEstatus(
+                                    nuevoEstatus
+                            );
+
+                            viewModel.actualizaContratoBaseDatos(contrato);
+                            Toast.makeText(this, "Estatus actualizado", Toast.LENGTH_LONG).show();
+                            adapter.setEsModoEdicion(false);
+                            binding.btnEditMode.setText( "EDITAR");
+
+                        }
+                )
+                .setNegativeButton(
+                        "Regresar",
+                        null
+                )
+                .show();
     }
 
     @Override

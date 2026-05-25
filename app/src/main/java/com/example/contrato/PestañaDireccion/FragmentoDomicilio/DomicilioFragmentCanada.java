@@ -6,6 +6,9 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
+import com.example.contrato.R;
 import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentDomiciliocanadaBinding;
 
@@ -27,6 +31,7 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
         binding = FragmentDomiciliocanadaBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
+        setupProvinciasSpinner();
         cargaDatosExistentes();
         setupAutoGuardado();
 
@@ -38,9 +43,14 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
         if (Contrato != null) {
             binding.editStreetCanada.setText(Contrato.getCanCalle());
             binding.editCityCanada.setText(Contrato.getCanCity());
-            binding.editProvinceCanada.setText(Contrato.getCanProvince());
             binding.editCPCanada.setText(Contrato.getCanPostalCode());
-            binding.editPaisCanada.setText(Contrato.getPais() != null ? Contrato.getPais() : "Canadá");
+            if (Contrato.getCanProvince() != null) {
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) binding.spinnerProvincias.getAdapter();
+                if (adapter != null) {
+                    int pos = adapter.getPosition(Contrato.getCanProvince());
+                    if (pos >= 0) binding.spinnerProvincias.setSelection(pos);
+                }
+            }
 
         }
     }
@@ -48,31 +58,37 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
     private void setupAutoGuardado() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { saveData(); }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { guardaDatosViewModel(); }
             @Override public void afterTextChanged(Editable s) {}
         };
         binding.editStreetCanada.addTextChangedListener(watcher);
         binding.editCityCanada.addTextChangedListener(watcher);
-        binding.editProvinceCanada.addTextChangedListener(watcher);
         binding.editCPCanada.addTextChangedListener(watcher);
+        binding.spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                guardaDatosViewModel();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
-    private void saveData() {
+    private void guardaDatosViewModel() {
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
         
         Contrato.setCanCalle(binding.editStreetCanada.getText().toString());
         Contrato.setCanCity(binding.editCityCanada.getText().toString());
-        Contrato.setCanProvince(binding.editProvinceCanada.getText().toString());
+        Contrato.setCanProvince(binding.spinnerProvincias.getSelectedItem().toString());
         Contrato.setCanPostalCode(binding.editCPCanada.getText().toString());
-        
 
-        Contrato.setPais("Canadá");
-        Contrato.setCalle(Contrato.getCanCalle());
-        Contrato.setCiudad(Contrato.getCanCity());
-        Contrato.setEstado(Contrato.getCanProvince());
-        Contrato.setCp(Contrato.getCanPostalCode());
+        Contrato.setTipoDir("CAN");
+
+        Contrato.setPais(binding.editPaisCanada.getText().toString());
         
         viewModel.setContrato(Contrato);
     }
@@ -80,9 +96,12 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
     @Override
     public boolean isValid() {
         if (binding == null) return false;
+        if (binding.spinnerProvincias.getSelectedItemPosition() == 0) {
+            Toast.makeText(requireContext(), "Select a State", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return !binding.editStreetCanada.getText().toString().trim().isEmpty() &&
                !binding.editCityCanada.getText().toString().trim().isEmpty() &&
-               !binding.editProvinceCanada.getText().toString().trim().isEmpty() &&
                !binding.editCPCanada.getText().toString().trim().isEmpty();
     }
 
@@ -91,16 +110,22 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
         if (binding != null) {
             binding.editStreetCanada.setText("");
             binding.editCityCanada.setText("");
-            binding.editProvinceCanada.setText("");
+            binding.spinnerProvincias.setSelection(0);
             binding.editCPCanada.setText("");
-            saveData();
+            guardaDatosViewModel();
         }
     }
 
     @Override
     public void onDestroyView() {
-        saveData();
+        guardaDatosViewModel();
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupProvinciasSpinner() {
+        String[] estados = getResources().getStringArray(R.array.Provincias);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, estados);
+        binding.spinnerProvincias.setAdapter(adapter);
     }
 }

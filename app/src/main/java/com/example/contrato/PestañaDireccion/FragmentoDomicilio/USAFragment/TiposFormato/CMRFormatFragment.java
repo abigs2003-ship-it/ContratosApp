@@ -42,18 +42,18 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
     private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
-            binding.editCMR1.setText(Contrato.getCalle());
-            binding.editBox.setText(Contrato.getPoBox());
-            binding.editAPO.setText(Contrato.getColonia());
-            binding.editCity.setText(Contrato.getCiudad());
-            if (Contrato.getUsaState() != null) {
+            binding.editCMR1.setText(Contrato.getCmr());
+            binding.editBox.setText(Contrato.getBox());
+            binding.editAPO.setText(Contrato.getApo());
+            binding.editCity.setText(Contrato.getUsaCity());
+            if (Contrato.getMexEstado() != null) {
                 ArrayAdapter<String> adapter = (ArrayAdapter<String>) binding.spinnerEstadoUSA.getAdapter();
                 if (adapter != null) {
-                    int pos = adapter.getPosition(Contrato.getUsaState());
+                    int pos = adapter.getPosition(Contrato.getMexEstado());
                     if (pos >= 0) binding.spinnerEstadoUSA.setSelection(pos);
                 }
             }
-            binding.zipcode.setText(Contrato.getCp());
+            binding.zipcode.setText(Contrato.getUsaZip());
         }
     }
 
@@ -84,12 +84,15 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
-        Contrato.setCalle(binding.editCMR1.getText().toString());
-        Contrato.setPoBox(binding.editBox.getText().toString());
-        Contrato.setColonia(binding.editAPO.getText().toString());
-        Contrato.setCiudad(binding.editCity.getText().toString());
+        Contrato.setCmr(binding.editCMR1.getText().toString());
+        Contrato.setBox(binding.editBox.getText().toString());
+        Contrato.setApo(binding.editAPO.getText().toString());
+        Contrato.setUsaCity(binding.editCity.getText().toString());
         Contrato.setUsaState(binding.spinnerEstadoUSA.getSelectedItem().toString());
-        Contrato.setCp(binding.zipcode.getText().toString());
+        Contrato.setUsaZip(binding.zipcode.getText().toString());
+        Contrato.setTipoDir("US3");
+        Contrato.setPais(binding.editCMR1.getText().toString());
+
         viewModel.setContrato(Contrato);
     }
 

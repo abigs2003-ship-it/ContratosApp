@@ -31,7 +31,6 @@
             android:layout_weight="1"
             android:layout_marginStart="10dp"
             android:orientation="vertical">
-
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
@@ -41,14 +40,29 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvFechas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#99FFFFFF"
-                android:textSize="14sp"
-                android:text="Creado: ... | Modificado: ..." />
+        <TextView
+            android:id="@+id/tvCreacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#99FFFFFF"
+            android:textSize="14sp"
+            android:text="Creado: ... " />
+        <TextView
+            android:id="@+id/tvModificado"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#99FFFFFF"
+            android:textSize="14sp"
+            android:text="|  Modificado: ..." />
+    </LinearLayout>
+
+
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -112,14 +126,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="8dp">
-                    <Spinner
-                        android:id="@+id/spinnerIdioma"
+
+                    <TextView
+                        android:id="@+id/tvIdioma"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="40dp"
-                        android:background="@drawable/bg_input_selector"
-                        android:backgroundTint="@null"
-                        android:enabled="false"/>
+                        android:text=""
+                        android:textStyle="normal"
+                        style="@style/FieldLabel"
+                        android:textSize="15dp"></TextView>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -203,15 +218,12 @@
 
                     <!-- Selección de País -->
                     <TextView style="@style/FieldLabel" android:text="País" />
-                    <Spinner
-                        android:id="@+id/spinnerPais"
+                    <TextView
+                        android:id="@+id/tvPais"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="40dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@drawable/bg_input_selector"
-                        android:backgroundTint="@null"
-                        android:enabled="false" />
+                        android:text=""
+                        android:textSize="15sp"/>
 
                     <LinearLayout
                         android:id="@+id/containerDireccionDinamica"
@@ -221,14 +233,11 @@
 
                     <!-- Nacionalidad -->
                     <TextView style="@style/FieldLabel" android:text="Nacionalidad" android:layout_marginTop="8dp" />
-                    <Spinner
-                        android:id="@+id/spinnerNacionalidad"
+                    <TextView
+                        android:id="@+id/tvNacionalidad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="40dp"
-                        android:background="@drawable/bg_input_selector"
-                        android:backgroundTint="@null"
-                        android:enabled="false"/>
+                        android:textSize="15sp"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -362,98 +371,144 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="8dp">
 
-                    <TextView style="@style/FieldLabel" android:text="Tipo de Venta" />
-                    <Spinner
-                        android:id="@+id/spinnerTipoVenta"
+                    android:padding="8dp">
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:minHeight="40dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="@drawable/bg_input_selector"
-                        android:backgroundTint="@null"
-                        android:enabled="false"/>
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp"
+                      >
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1">
+                            <TextView style="@style/FieldLabel" android:text="Tipo de Venta" />
+                            <TextView
+                                android:id="@+id/tvTipoVenta"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+
+                            android:layout_weight="1">
+                            <TextView style="@style/FieldLabel" android:text="No. Años Uso" />
+                            <TextView
+                                android:id="@+id/tvAniosUso"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp"
+                        >
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="1">
+                            <TextView style="@style/FieldLabel" android:text="Tipo Ocupación" android:textSize="15sp" />
+                            <TextView
+                                android:id="@+id/tvTipoOcupacion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+                            <TextView style="@style/FieldLabel" android:text="Año Primer Uso" />
+                            <TextView
+                                android:id="@+id/tvAnioPrimerUso"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Unidad" />
-                            <Spinner
-                                android:id="@+id/spinnerUnidad"
+                            <TextView
+                                android:id="@+id/tvUnidad"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:minHeight="40dp"
-                                android:background="@drawable/bg_input_selector"
-                                android:backgroundTint="@null"
-                                android:enabled="false"/>
+                                android:textSize="15sp"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Temporada" />
-                            <Spinner
-                                android:id="@+id/spinnerTemporada"
+                            <TextView
+                                android:id="@+id/tvTemporada"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:minHeight="40dp"
-                                android:background="@drawable/bg_input_selector"
-                                android:backgroundTint="@null"
-                                android:enabled="false"/>
+                                android:textSize="15sp"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Moneda" />
-                            <Spinner
-                                android:id="@+id/spinnerMoneda"
+                            <TextView
+                                android:id="@+id/tvMoneda"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:minHeight="40dp"
-                                android:background="@drawable/bg_input_selector"
-                                android:backgroundTint="@null"
-                                android:enabled="false"/>
+                                android:textSize="15sp"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Tipo de Cambio" />
-                            <EditText android:id="@+id/editTipoCambio" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
-                        </LinearLayout>
+                            <TextView
+                                android:id="@+id/tvTipoCambio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Precio Bruto" />
-                            <EditText android:id="@+id/editPrecioBruto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvPrecioBruto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Precio Neto" />
-                            <EditText android:id="@+id/editPrecioNeto" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvPrecioNeto" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Monto a Cuenta" />
-                            <EditText android:id="@+id/editMontoCuenta" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvMontoCuenta" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Tipo de Pago" />
-                            <Spinner
-                                android:id="@+id/spinnerTipoPago"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:minHeight="40dp"
-                                android:background="@drawable/bg_input_selector"
-                                android:backgroundTint="@null"
-                                android:enabled="false"/>
+                            <TextView android:id="@+id/tvTipoPago" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+
                         </LinearLayout>
                     </LinearLayout>
 
                     <TextView style="@style/SubsectionLabel" android:text="Contratos Monto a Cuenta" />
-                    <EditText
-                        android:id="@+id/editNoContratosMontoCta"
-                        style="@style/FieldInput"
+                    <TextView
+                        android:id="@+id/tvNoContratosMontoCta"
                         android:layout_width="80dp"
-                        android:hint="Cant."
                         android:inputType="number"
+                        android:textStyle="normal"
+                        style="@style/FieldLabel"
                         android:maxLength="1"
                         android:enabled="false"
                         android:layout_marginBottom="4dp" />
@@ -467,39 +522,37 @@
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
 
-                    <TextView style="@style/FieldLabel" android:text="Enganche Total" />
-                    <EditText android:id="@+id/editEngancheTotal" style="@style/FieldInput" android:inputType="numberDecimal" android:layout_marginBottom="4dp" android:hint="—" android:enabled="false"/>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
-                            <TextView style="@style/FieldLabel" android:text="Enganche ($)" />
-                            <EditText android:id="@+id/editEngancheMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView style="@style/FieldLabel" android:text="Enganche total Monto" />
+                            <TextView android:id="@+id/tvEngancheMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Enganche (%)" />
-                            <EditText android:id="@+id/editEnganchePorcentaje" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvEnganchePorcentaje" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
-                            <TextView style="@style/FieldLabel" android:text="Enganche Sala ($)" />
-                            <EditText android:id="@+id/editEngancheSala" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView style="@style/FieldLabel" android:text="Enganche Sala Monto" />
+                            <TextView android:id="@+id/tvEngancheSala" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Enganche Sala (%)" />
-                            <EditText android:id="@+id/editEngancheSalaPorcentaje" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvEngancheSalaPorcentaje" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Eng. Diferido" />
-                            <EditText android:id="@+id/editEngDiferidoMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvEngDiferidoMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="No. Pagos Eng" />
-                            <EditText android:id="@+id/editNoPagosEng" style="@style/FieldInput" android:inputType="number" android:maxLength="1" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvNoPagosEng" style="@style/FieldInput" android:inputType="number" android:maxLength="1" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -514,17 +567,17 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Varios" />
-                            <EditText android:id="@+id/editVariosMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvVariosMonto" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Saldo Enganche" />
-                            <EditText android:id="@+id/editSaldoEnganche" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvSaldoEnganche" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
                     <TextView style="@style/FieldLabel" android:text="No. Descuentos" />
-                    <EditText android:id="@+id/editNoDesc" style="@style/FieldInput" android:inputType="number" android:maxLength="1" android:hint="—" android:enabled="false" android:layout_marginBottom="4dp"/>
+                    <TextView android:id="@+id/tvNoDesc" style="@style/FieldInput" android:inputType="number" android:maxLength="1" android:hint="—" android:enabled="false" android:layout_marginBottom="4dp"/>
 
                     <LinearLayout
                         android:id="@+id/containerDescuentos"
@@ -538,16 +591,16 @@
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="4dp">
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginEnd="4dp">
                             <TextView style="@style/FieldLabel" android:text="Costo Contrato" />
-                            <EditText android:id="@+id/editCostoContrato" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvCostoContrato" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                         <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                             <TextView style="@style/FieldLabel" android:text="Pago Sala" />
-                            <EditText android:id="@+id/editPagoSala" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
+                            <TextView android:id="@+id/tvPagoSala" style="@style/FieldInput" android:inputType="numberDecimal" android:focusable="false" android:hint="—" android:enabled="false"/>
                         </LinearLayout>
                     </LinearLayout>
 
                     <TextView style="@style/FieldLabel" android:text="Costo Membresía" />
-                    <EditText android:id="@+id/editCostoMembresia" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
+                    <TextView android:id="@+id/tvCostoMembresia" style="@style/FieldInput" android:inputType="numberDecimal" android:hint="—" android:enabled="false"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -583,8 +636,8 @@
                         android:orientation="vertical" />
                     <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="6dp" />
                     <TextView style="@style/SubsectionLabel" android:text="Comentarios " />
-                    <EditText
-                        android:id="@+id/editComentarios"
+                    <TextView
+                        android:id="@+id/tvComentarios"
                         style="@style/FieldInput"
                         android:layout_height="wrap_content"
                         android:minHeight="80dp"
@@ -639,8 +692,8 @@
                                 style="@style/FieldLabel"
                                 android:text="Monto a Financiar" />
 
-                            <EditText
-                                android:id="@+id/editMontoFinanciar"
+                            <TextView
+                                android:id="@+id/tvMontoFinanciar"
                                 style="@style/FieldInput"
                                 android:inputType="numberDecimal"
                                 android:enabled="false"
@@ -657,8 +710,8 @@
                                 style="@style/FieldLabel"
                                 android:text="Número de Pagos" />
 
-                            <EditText
-                                android:id="@+id/editNumPagos"
+                            <TextView
+                                android:id="@+id/tvNumPagos"
                                 style="@style/FieldInput"
                                 android:inputType="number"
                                 android:enabled="false"
@@ -683,8 +736,8 @@
                                 style="@style/FieldLabel"
                                 android:text="Tasa de Interés (%)" />
 
-                            <EditText
-                                android:id="@+id/editTasa"
+                            <TextView
+                                android:id="@+id/tvTasa"
                                 style="@style/FieldInput"
                                 android:inputType="numberDecimal"
                                 android:enabled="false"
@@ -701,30 +754,19 @@
                                 style="@style/FieldLabel"
                                 android:text="Tipo de Periodo" />
 
-                            <Spinner
-                                android:id="@+id/spinnerTipoPeriodo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_input_selector"
-                                android:backgroundTint="@null"
+                            <TextView
+                                android:id="@+id/tvTipoPeriodo"
+                                style="@style/FieldInput"
+                                android:inputType="numberDecimal"
                                 android:enabled="false"
-                                android:minHeight="40dp" />
+                                android:hint="—" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:orientation="horizontal">
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="4dp" android:layout_weight="1" android:orientation="vertical">
-                            <TextView style="@style/FieldLabel" android:text="Año 1er Uso" />
-                            <EditText android:id="@+id/editAnioUso" style="@style/FieldInput" android:inputType="number" android:enabled="false" android:hint="—" />
-                        </LinearLayout>
-                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-                            <TextView style="@style/FieldLabel" android:text="No. de Años" />
-                            <EditText android:id="@+id/editNoAnios" style="@style/FieldInput" android:inputType="number" android:enabled="false" android:hint="—" />
-                        </LinearLayout>
-                    </LinearLayout>
+
 
                     <TextView style="@style/FieldLabel" android:text="Fecha Primer Pago" />
-                    <EditText android:id="@+id/editFechaPrimerPago" style="@style/FieldInput" android:focusable="false" android:enabled="false" android:hint="—" />
+                    <TextView android:id="@+id/tvFechaPrimerPago" style="@style/FieldInput" android:focusable="false" android:enabled="false" android:hint="—" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

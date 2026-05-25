@@ -49,7 +49,7 @@ public class MenuActivity extends AppCompatActivity {
                         v.setEnabled(true);
                         Intent intent = new Intent(MenuActivity.this, MainActivity.class);
                         intent.putExtra("ID_CONTRATO", nextId);
-                        // Pass userId to MainActivity so it can be used for the DB inserts
+                        // pasar userid a main activity
                         intent.putExtra("ID_USUARIO", currentUserId);
                         startActivity(intent);
                     });

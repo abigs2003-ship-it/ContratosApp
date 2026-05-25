@@ -107,8 +107,8 @@ public class SharedContratoViewModel extends ViewModel {
                     m.setId(String.valueOf(vc.idContrato));
                     m.setIdioma(mapIdiomaFromDb(vc.idioma));
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-                    if (vc.fechaAlta != null) m.setCreationDate(sdf.format(vc.fechaAlta));
-                    if (vc.fechaModificacion != null) m.setModifiedDate(sdf.format(vc.fechaModificacion));
+                    if (vc.fechaAlta != null) m.setFechaCreacion(sdf.format(vc.fechaAlta));
+                    if (vc.fechaModificacion != null) m.setFechaModificacion(sdf.format(vc.fechaModificacion));
 
                     cargaDetallesTitulares(m, vc.idContrato);
                     cargaDetallesContrato(m, vc.idContrato);
@@ -158,10 +158,11 @@ public class SharedContratoViewModel extends ViewModel {
                 
                 for (VentasContrato vc : list) {
                     ContratoModelo m = new ContratoModelo();
+                    m.setEstatus(vc.estatus);
                     m.setId(String.valueOf(vc.idContrato));
                     m.setIdioma(mapIdiomaFromDb(vc.idioma));
-                    if (vc.fechaAlta != null) m.setCreationDate(sdf.format(vc.fechaAlta));
-                    if (vc.fechaModificacion != null) m.setModifiedDate(sdf.format(vc.fechaModificacion));
+                    if (vc.fechaAlta != null) m.setFechaCreacion(sdf.format(vc.fechaAlta));
+                    if (vc.fechaModificacion != null) m.setFechaModificacion(sdf.format(vc.fechaModificacion));
 
                     cargaDetallesTitulares(m, vc.idContrato);
                     cargaDetallesContrato(m, vc.idContrato);
@@ -182,21 +183,22 @@ public class SharedContratoViewModel extends ViewModel {
         if (vig != null) {
             m.setPais(vig.pais);
             m.setNacionalidad(vig.nacionalidad);
+            m.setTipoDir(vig.tipoDir);
             m.setNoCorreo(vig.email1 == null && vig.email2 == null);
 
             if ("México".equalsIgnoreCase(vig.pais)) {
                 m.setMexCalle(vig.calle); m.setMexNumExt(vig.noExt); m.setMexNumInt(vig.noInt);
-                m.setMexColonia(vig.colonia); m.setMexMunicipio(vig.delegacion);
+                m.setMexColonia(vig.colonia); m.setDelegacion(vig.delegacion);
                 m.setMexCiudad(vig.ciudad); m.setMexEstado(vig.estado); m.setMexCP(vig.cp);
             } else if ("EEUU".equalsIgnoreCase(vig.pais) || "USA".equalsIgnoreCase(vig.pais) || (vig.pais != null && vig.pais.contains("USA"))) {
                 m.setUsaCalle(vig.calle); m.setUsaCity(vig.ciudad); m.setUsaState(vig.estado);
-                m.setUsaZip(vig.cp); m.setUsaNeighborhood(vig.colonia); m.setUsaPoBox(vig.poBox);
-                m.setUsaBox(vig.box); m.setUsaCmr(vig.cmr); m.setUsaApo(vig.apo);
+                m.setUsaZip(vig.cp); m.setUsaNeighborhood(vig.colonia); m.setPoBox(vig.poBox);
+                m.setBox(vig.box); m.setCmr(vig.cmr); m.setApo(vig.apo);
             } else if ("Canadá".equalsIgnoreCase(vig.pais)) {
-                m.setCanCalle(vig.calle); m.setCanCity(vig.ciudad); m.setCanProvince(vig.estado); m.setCanPostalCode(vig.cp);
+                m.setCanCalle(vig.calle); m.setCanCity(vig.ciudad); m.setCanProvince(vig.estado); m.setCanPostalCode(vig.cp); m.setPais(vig.pais);
             } else {
-                m.setOtroLinea1(vig.linea1); m.setOtroLinea2(vig.linea2); m.setOtroLinea3(vig.linea3);
-                m.setOtroLinea4(vig.linea4); m.setOtroLinea5(vig.linea5); m.setOtroPais(vig.pais);
+                m.setLinea1(vig.linea1); m.setLinea2(vig.linea2); m.setLinea3(vig.linea3);
+                m.setLinea4(vig.linea4); m.setLinea5(vig.linea5); m.setPaisOtro(vig.pais);
             }
 
             if (vig.telefonoCasa1 != null && !vig.telefonoCasa1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 1", vig.ladaCasa1, vig.telefonoCasa1, vig.whatsAppCasa1, "Casa 1".equals(vig.telefonoDefault)));
@@ -216,10 +218,12 @@ public class SharedContratoViewModel extends ViewModel {
         VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
         if (vi != null) {
             m.setUnidad(vi.unidad); m.setTemporada(vi.temporada); m.setAnioUso(String.valueOf(vi.primerAnioUso));
+            m.setTipoOcupacion(vi.tipoOcupacion);
             m.setNoAnios(String.valueOf(vi.aniosComprados)); m.setMoneda(vi.monedaVenta);
             m.setTipoCambio(String.valueOf(vi.tipoCambioVenta)); m.setPrecioBruto(String.valueOf(vi.precioBruto));
             m.setMontoCuenta(String.valueOf(vi.montoCta)); m.setPrecioNeto(String.valueOf(vi.precioNeto));
-            m.setTipoPago(vi.tipoPago); m.setEngancheMonto(String.valueOf(vi.engancheTotal));
+            m.setNoContratosMC(String.valueOf(vi.noContratosMontoCta));
+            m.setTipoPago(vi.tipoPago); m.setEngancheTotal(String.valueOf(vi.engancheTotal));
             m.setEnganchePorcentaje(String.valueOf(vi.engancheTotalPorcentaje));
             m.setEngancheSalaMonto(String.valueOf(vi.enganchePagarSala));
             m.setEngancheSalaPorcentaje(String.valueOf(vi.enganchePagarSalaPorcentaje));
@@ -269,7 +273,7 @@ public class SharedContratoViewModel extends ViewModel {
 
 
 
-    public void actualizaContratoInDatabase(ContratoModelo model) {
+    public void actualizaContratoBaseDatos(ContratoModelo model) {
         new Thread(() -> {
             try {
                 long idContrato = Long.parseLong(model.getId());
@@ -284,7 +288,7 @@ public class SharedContratoViewModel extends ViewModel {
                     originalIdUsuarioAlta = vc.idUsuarioAlta;
                     vc.fechaModificacion = now;
                     vc.idioma = mapIdiomaToDb(model.getIdioma());
-                    vc.estatus = "A";
+                    vc.estatus = model.getEstatus();
                     contratoRepo.update(vc);
                 }
 
@@ -293,14 +297,14 @@ public class SharedContratoViewModel extends ViewModel {
                 vig.idContrato = idContrato;
                 vig.pais = truncate(model.getPais(), 50);
                 vig.nacionalidad = truncate(model.getNacionalidad(), 50);
-                vig.tipoDir = mapTipoDir(model.getPais());
+                vig.tipoDir = model.getTipoDir();
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
                     vig.calle = truncate(model.getMexCalle(), 150); 
                     vig.noExt = truncate(model.getMexNumExt(), 10); 
                     vig.noInt = truncate(model.getMexNumInt(), 10);
                     vig.colonia = truncate(model.getMexColonia(), 50); 
-                    vig.delegacion = truncate(model.getMexMunicipio(), 50);
+                    vig.delegacion = truncate(model.getDelegacion(), 50);
                     vig.ciudad = truncate(model.getMexCiudad(), 50); 
                     vig.estado = truncate(model.getMexEstado(), 50); 
                     vig.cp = truncate(model.getMexCP(), 15);
@@ -310,22 +314,22 @@ public class SharedContratoViewModel extends ViewModel {
                     vig.estado = truncate(model.getUsaState(), 50);
                     vig.cp = truncate(model.getUsaZip(), 15); 
                     vig.colonia = truncate(model.getUsaNeighborhood(), 50); 
-                    vig.poBox = truncate(model.getUsaPoBox(), 10);
-                    vig.box = truncate(model.getUsaBox(), 10); 
-                    vig.cmr = truncate(model.getUsaCmr(), 10); 
-                    vig.apo = truncate(model.getUsaApo(), 10);
+                    vig.poBox = truncate(model.getPoBox(), 10);
+                    vig.box = truncate(model.getBox(), 10);
+                    vig.cmr = truncate(model.getCmr(), 10);
+                    vig.apo = truncate(model.getApo(), 10);
                 } else if ("Canadá".equalsIgnoreCase(model.getPais())) {
                     vig.calle = truncate(model.getCanCalle(), 150); 
                     vig.ciudad = truncate(model.getCanCity(), 50); 
-                    vig.estado = truncate(model.getCanProvince(), 50); 
+                    vig.estado = truncate(model.getCanProvince(), 50);
                     vig.cp = truncate(model.getCanPostalCode(), 15);
                 } else {
-                    vig.linea1 = truncate(model.getOtroLinea1(), 150); 
-                    vig.linea2 = truncate(model.getOtroLinea2(), 150); 
-                    vig.linea3 = truncate(model.getOtroLinea3(), 150);
-                    vig.linea4 = truncate(model.getOtroLinea4(), 150); 
-                    vig.linea5 = truncate(model.getOtroLinea5(), 150); 
-                    vig.pais = truncate(model.getOtroPais(), 50);
+                    vig.linea1 = truncate(model.getLinea1(), 150);
+                    vig.linea2 = truncate(model.getLinea2(), 150);
+                    vig.linea3 = truncate(model.getLinea3(), 150);
+                    vig.linea4 = truncate(model.getLinea4(), 150);
+                    vig.linea5 = truncate(model.getLinea5(), 150);
+                    vig.pais = truncate(model.getPaisOtro(), 50);
                 }
 
                 limpiaTelefonos(vig);
@@ -367,7 +371,7 @@ public class SharedContratoViewModel extends ViewModel {
                         vig.telefonoMensajes = truncate(cleanNum, 15); 
                         vig.whatsAppMensajes = p.isWhatsApp; 
                     }
-                    if (p.isPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
+                    if (p.esPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
                 }
 
                 vig.email1 = (model.getEmails().size() > 0) ? truncate(model.getEmails().get(0), 60) : null;
@@ -383,19 +387,21 @@ public class SharedContratoViewModel extends ViewModel {
 
                 VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
                 if (vi != null) {
+
                     vi.unidad = model.getUnidad(); vi.temporada = model.getTemporada(); vi.tipoVenta = model.getTipoVenta();
+                    vi.tipoOcupacion = model.getTipoOcupacion();
                     vi.aniosComprados = parseInt(model.getNoAnios()); vi.primerAnioUso = parseLong(model.getAnioUso());
                     vi.monedaVenta = model.getMoneda(); vi.tipoCambioVenta = parseDouble(model.getTipoCambio());
                     vi.precioBruto = parseDouble(model.getPrecioBruto()); vi.montoCta = parseDouble(model.getMontoCuenta());
+                    vi.noContratosMontoCta = parseLong(model.getNoContratosMC());
                     vi.precioNeto = parseDouble(model.getPrecioNeto()); vi.tipoPago = model.getTipoPago();
-                    vi.engancheTotal = parseDouble(model.getEngancheMonto()); vi.engancheTotalPorcentaje = parseDouble(model.getEnganchePorcentaje());
+                    vi.engancheTotal = parseDouble(model.getEngancheTotal()); vi.engancheTotalPorcentaje = parseDouble(model.getEnganchePorcentaje());
                     vi.enganchePagarSala = parseDouble(model.getEngancheSalaMonto()); vi.enganchePagarSalaPorcentaje = parseDouble(model.getEngancheSalaPorcentaje());
                     vi.descuentos = parseDouble(model.getVariosMonto()); vi.noDescuentos = parseInt(model.getNoDesc());
                     vi.engancheDiferido = parseDouble(model.getEngDiferidoMonto()); vi.noPagosEngancheDiferido = parseLong(model.getNoPagosEng());
                     vi.saldoEnganche = parseDouble(model.getSaldoEnganche()); vi.montoFinanciar = parseDouble(model.getMontoFinanciar());
                     vi.costoContrato = parseDouble(model.getCostoContrato()); vi.totalPagoSala = parseDouble(model.getPagoSala());
                     vi.costoMembresia = parseDouble(model.getCostoMembresia()); vi.comentariosRegalos = model.getComentarios();
-                    vi.noContratosMontoCta = model.getContratosMontoCuenta().size();
                     inventarioRepo.update(vi);
                 }
 
@@ -488,7 +494,7 @@ public class SharedContratoViewModel extends ViewModel {
         vig.telefonoMensajes = vig.ladaMensajes = null; vig.whatsAppMensajes = false;
     }
 
-    public void guardaBaseDatos() {
+    public void guardaContratoBaseDatos() {
         ContratoModelo model = getContratoValue();
         if (model == null) return;
 
@@ -511,7 +517,7 @@ public class SharedContratoViewModel extends ViewModel {
                 vig.idDatosVenta = infoGralRepo.getNextId();
                 vig.idContrato = idContrato;
                 vig.pais = truncate(model.getPais(), 50);
-                vig.tipoDir = mapTipoDir(model.getPais()); 
+                vig.tipoDir = model.getTipoDir();
                 vig.nacionalidad = truncate(model.getNacionalidad(), 50);
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
@@ -519,7 +525,7 @@ public class SharedContratoViewModel extends ViewModel {
                     vig.noExt = truncate(model.getMexNumExt(), 10); 
                     vig.noInt = truncate(model.getMexNumInt(), 10);
                     vig.colonia = truncate(model.getMexColonia(), 50); 
-                    vig.delegacion = truncate(model.getMexMunicipio(), 50);
+                    vig.delegacion = truncate(model.getDelegacion(), 50);
                     vig.ciudad = truncate(model.getMexCiudad(), 50); 
                     vig.estado = truncate(model.getMexEstado(), 50); 
                     vig.cp = truncate(model.getMexCP(), 15);
@@ -529,22 +535,22 @@ public class SharedContratoViewModel extends ViewModel {
                     vig.estado = truncate(model.getUsaState(), 50);
                     vig.cp = truncate(model.getUsaZip(), 15); 
                     vig.colonia = truncate(model.getUsaNeighborhood(), 50); 
-                    vig.poBox = truncate(model.getUsaPoBox(), 10);
-                    vig.box = truncate(model.getUsaBox(), 10); 
-                    vig.cmr = truncate(model.getUsaCmr(), 10); 
-                    vig.apo = truncate(model.getUsaApo(), 10);
+                    vig.poBox = truncate(model.getPoBox(), 10);
+                    vig.box = truncate(model.getBox(), 10);
+                    vig.cmr = truncate(model.getCmr(), 10);
+                    vig.apo = truncate(model.getApo(), 10);
                 } else if ("Canadá".equalsIgnoreCase(model.getPais())) {
                     vig.calle = truncate(model.getCanCalle(), 150); 
                     vig.ciudad = truncate(model.getCanCity(), 50); 
                     vig.estado = truncate(model.getCanProvince(), 50); 
                     vig.cp = truncate(model.getCanPostalCode(), 15);
                 } else {
-                    vig.linea1 = truncate(model.getOtroLinea1(), 150); 
-                    vig.linea2 = truncate(model.getOtroLinea2(), 150); 
-                    vig.linea3 = truncate(model.getOtroLinea3(), 150);
-                    vig.linea4 = truncate(model.getOtroLinea4(), 150); 
-                    vig.linea5 = truncate(model.getOtroLinea5(), 150); 
-                    vig.pais = truncate(model.getOtroPais(), 50);
+                    vig.linea1 = truncate(model.getLinea1(), 150);
+                    vig.linea2 = truncate(model.getLinea2(), 150);
+                    vig.linea3 = truncate(model.getLinea3(), 150);
+                    vig.linea4 = truncate(model.getLinea4(), 150);
+                    vig.linea5 = truncate(model.getLinea5(), 150);
+                    vig.pais = truncate(model.getPaisOtro(), 50);
                 }
 
                 for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
@@ -585,7 +591,7 @@ public class SharedContratoViewModel extends ViewModel {
                         vig.telefonoMensajes = truncate(cleanNum, 15); 
                         vig.whatsAppMensajes = p.isWhatsApp; 
                     }
-                    if (p.isPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
+                    if (p.esPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
                 }
 
                 List<String> emails = model.getEmails();
@@ -607,16 +613,17 @@ public class SharedContratoViewModel extends ViewModel {
                 vi.unidad = model.getUnidad();
                 vi.temporada = model.getTemporada();
                 vi.tipoVenta = model.getTipoVenta();
+                vi.tipoOcupacion = model.getTipoOcupacion();
                 vi.aniosComprados = parseInt(model.getNoAnios());
                 vi.primerAnioUso = parseLong(model.getAnioUso());
                 vi.monedaVenta = model.getMoneda();
                 vi.tipoCambioVenta = parseDouble(model.getTipoCambio());
                 vi.precioBruto = parseDouble(model.getPrecioBruto());
                 vi.montoCta = parseDouble(model.getMontoCuenta());
-                vi.noContratosMontoCta = model.getContratosMontoCuenta().size();
+                vi.noContratosMontoCta = parseLong(model.getNoContratosMC());
                 vi.precioNeto = parseDouble(model.getPrecioNeto());
                 vi.tipoPago = model.getTipoPago();
-                vi.engancheTotal = parseDouble(model.getEngancheMonto());
+                vi.engancheTotal = parseDouble(model.getEngancheTotal());
                 vi.engancheTotalPorcentaje = parseDouble(model.getEnganchePorcentaje());
                 vi.enganchePagarSala = parseDouble(model.getEngancheSalaMonto());
                 vi.enganchePagarSalaPorcentaje = parseDouble(model.getEngancheSalaPorcentaje());
@@ -735,14 +742,7 @@ public class SharedContratoViewModel extends ViewModel {
         return value.substring(0, length);
     }
 
-    private String mapTipoDir(String pais) {
-        if (pais == null) return "Otr";
-        String p = pais.toUpperCase();
-        if (p.contains("MÉXICO") || p.contains("MEXICO")) return "MEX";
-        if (p.contains("USA") || p.contains("EEUU") || p.contains("ESTADOS UNIDOS")) return "USA";
-        if (p.contains("CANADÁ") || p.contains("CANADA")) return "CAN";
-        return "Otr";
-    }
+
 
     private String mapIdiomaToDb(String idioma) {
         if (idioma == null) return "es";

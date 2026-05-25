@@ -27,28 +27,27 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
         binding = FragmentDomiciliootroBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
 
-        loadExistingData();
-        setupAutoSave();
+        cargaDatosExistentes();
+        setupAutoGuardado();
 
         return binding.getRoot();
     }
 
-    private void loadExistingData() {
+    private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
-            binding.editLinea1.setText(Contrato.getOtroLinea1());
-            binding.editLinea2.setText(Contrato.getOtroLinea2());
-            binding.editLinea3.setText(Contrato.getOtroLinea3());
-            binding.editLinea4.setText(Contrato.getOtroLinea4());
-            binding.edit5.setText(Contrato.getOtroLinea5());
-            binding.editPaisOtro.setText(Contrato.getOtroPais());
+            binding.editLinea1.setText(Contrato.getLinea1());
+            binding.editLinea2.setText(Contrato.getLinea2());
+            binding.editLinea3.setText(Contrato.getLinea3());
+            binding.editLinea4.setText(Contrato.getLinea4());
+            binding.edit5.setText(Contrato.getLinea5());
         }
     }
 
-    private void setupAutoSave() {
+    private void setupAutoGuardado() {
         TextWatcher watcher = new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { saveData(); }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { guardaDatosViewModel(); }
             @Override public void afterTextChanged(Editable s) {}
         };
         binding.editLinea1.addTextChangedListener(watcher);
@@ -59,20 +58,20 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
         binding.editPaisOtro.addTextChangedListener(watcher);
     }
 
-    private void saveData() {
+    private void guardaDatosViewModel() {
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
         
-        Contrato.setOtroLinea1(binding.editLinea1.getText().toString());
-        Contrato.setOtroLinea2(binding.editLinea2.getText().toString());
-        Contrato.setOtroLinea3(binding.editLinea3.getText().toString());
-        Contrato.setOtroLinea4(binding.editLinea4.getText().toString());
-        Contrato.setOtroLinea5(binding.edit5.getText().toString());
-        Contrato.setOtroPais(binding.editPaisOtro.getText().toString());
-        
-        // Also keep general 'pais' as "Otro" for navigation logic if needed
-        Contrato.setPais("Otro");
+        Contrato.setLinea1(binding.editLinea1.getText().toString());
+        Contrato.setLinea2(binding.editLinea2.getText().toString());
+        Contrato.setLinea3(binding.editLinea3.getText().toString());
+        Contrato.setLinea4(binding.editLinea4.getText().toString());
+        Contrato.setLinea5(binding.edit5.getText().toString());
+        Contrato.setPaisOtro(binding.editPaisOtro.getText().toString());
+
+        Contrato.setTipoDir("OTR");
+
         
         viewModel.setContrato(Contrato);
     }
@@ -93,13 +92,13 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
             binding.editLinea4.setText("");
             binding.edit5.setText("");
             binding.editPaisOtro.setText("");
-            saveData();
+            guardaDatosViewModel();
         }
     }
 
     @Override
     public void onDestroyView() {
-        saveData();
+        guardaDatosViewModel();
         super.onDestroyView();
         binding = null;
     }

@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                                 .putString("userName", result.nombreCompleto)
                                 .apply();
 
-                        // --- GUARDAR SESIÓN ACTIVA (Ejemplo: 24 horas) ---
+                        // guardar sesión activa
                         SharedPreferences prefSesion = getSharedPreferences("sesion", MODE_PRIVATE);
                         long tiempoExpiracion = System.currentTimeMillis() + (8 * 60 * 60 * 1000); // 8h
                         prefSesion.edit()

@@ -19,6 +19,7 @@ public class VentasInformacionGeneral {
     public String estado;
     public String pais;
     public String cp;
+    public String province;
     public String linea1;
     public String linea2;
     public String linea3;

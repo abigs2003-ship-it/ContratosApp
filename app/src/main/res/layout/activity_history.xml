@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerHistory"
         app:layout_constraintVertical_bias="0.0"
-        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteX="0dp"
         tools:listitem="@layout/item_contrato_historial" />
 
     <ProgressBar

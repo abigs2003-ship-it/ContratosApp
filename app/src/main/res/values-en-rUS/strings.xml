@@ -47,9 +47,9 @@
     <string name="temporada">Season</string>
     <string-array name="temporadas">
         <item>Select</item>
-        <item>Platinum</item>
-        <item>Gold</item>
-        <item>Silver</item>
+        <item>Platino</item>
+        <item>Oro</item>
+        <item>Plata</item>
     </string-array>
     <string name="proyecto">Project</string>
     <string name="noaños">No. of Years</string>
@@ -66,19 +66,20 @@
     </string-array>
 
     <string-array name="parentescos">
+        <item>Contact</item>
         <item>Sibling</item>
-        <item>Wife</item>
-        <item>Husband</item>
-        <item>Child</item>
+        <item>Husband/Wife</item>
         <item>Employee</item>
-        <item>Partner</item>
-        <item>Cousin</item>
+        <item>Child</item>
         <item>Father</item>
         <item>Mother</item>
+        <item>Cousin</item>
         <item>Uncle/Aunt</item>
+        <item>Partner</item>
         <item>Other</item>
         <item>Select</item>
     </string-array>
+
     <string name="mexico">🇲🇽 Mexico</string>
     <string name="usa">🇺🇸 USA</string>
     <string name="canada">🇨🇦 Canada</string>
@@ -176,7 +177,7 @@
     </string-array>
     <string name="costocontrato">Contract Cost</string>
     <string name="financiado">Financed</string>
-    <string name="contado">In cash (not financed)</string>
+    <string name="contado">"In cash "</string>
     <string name="calcular">Calculate</string>
     <string name="enviar">"Send "</string>
     <string name="fechapago">Payment Date</string>
@@ -184,7 +185,20 @@
     <string name="saldo">Balance</string>
     <string name="resumen">Payment Summary</string>
     <string name="total">Total to pay</string>
-    <string name="pagosde">_ payments of</string>
+    <string name="pagosde">" payments of"</string>
     <string name="interes">Interest</string>
     <string name="capacumulado">Acc. Campital</string>
+    <string name="ultimo">1 payment of</string>
+    <string name="tipoocupacion">Occupancy type</string>
+    <string name="corridos">Consecutive</string>
+    <string name="alternospares">Even years</string>
+    <string name="alternosnones">Odd years</string>
+
+    <string-array name="tiposOcupacion">
+        <item>Select</item>
+        <item>Corridos</item>
+        <item>Alternados Pares</item>
+        <item>Alternados Nones</item>
+
+    </string-array>
 </resources>

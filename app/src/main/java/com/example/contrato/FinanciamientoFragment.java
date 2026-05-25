@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -41,12 +42,13 @@ public class FinanciamientoFragment extends Fragment {
     private static final String[] TIPOS_PERIODO_VALORES = {
             "Mensual", "Bimestral", "Trimestral", "Cuatrimestral", "Semestral", "Anual"
     };
-
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
-    private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"};
+    private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
+
+
 
     private final NumberFormat formatoMoneda = NumberFormat.getCurrencyInstance(new Locale("es", "MX"));
-    
+
     private boolean columnasVisibles = false;
 
     @Nullable
@@ -62,10 +64,9 @@ public class FinanciamientoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         configurarSpinnerTipoPeriodo();
-        configurarDatePicker();
-        loadExistingData();
+        cargaDatosExistentes();
         setupObservers();
-        
+
         binding.textInputLayoutFechaPrimerpago.setEndIconOnClickListener(v -> {
             muestraDatePicker(binding.etFechaPrimerPago);
         });
@@ -74,164 +75,241 @@ public class FinanciamientoFragment extends Fragment {
 
         binding.btnCalcular.setOnClickListener(v -> calcularAmortizacion());
         binding.btnLimpiar.setOnClickListener(v -> limpiarTodo());
-        
+
         binding.mostrar.setOnClickListener(v -> {
             columnasVisibles = !columnasVisibles;
             actualizarVisibilidadColumnas();
         });
 
         binding.btnEnviar.setOnClickListener(v -> mostrarConfirmacionEnvio());
-        
+
         actualizarVisibilidadColumnas();
     }
 
-    private String getCurrentLanguage() {
-        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-        if (!currentLocales.isEmpty()) {
-            return currentLocales.get(0).getLanguage();
+    private String getIdiomaActual() {
+        LocaleListCompat localeActual = AppCompatDelegate.getApplicationLocales();
+        if (!localeActual.isEmpty()) {
+            return localeActual.get(0).getLanguage();
         }
         return Locale.getDefault().getLanguage();
     }
 
-    private String getMonthAbbr(int month) {
-        if (month < 1 || month > 12) return "";
-        String lang = getCurrentLanguage();
-        return lang.equals("en") ? MESES_EN[month - 1] : MESES_ES[month - 1];
-    }
-
-    private String formatFecha(Calendar cal) {
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-        String lang = getCurrentLanguage();
-        
-        String dayStr = String.format(Locale.getDefault(), "%02d", day);
-        String monthAbbr = getMonthAbbr(month);
-        
-        if (lang.equals("en")) {
-            return monthAbbr + "/" + dayStr + "/" + year;
-        } else {
-            return dayStr + "/" + monthAbbr + "/" + year;
-        }
-    }
-
-    private void parseFechaIntoCalendar(String dateStr, Calendar cal) {
-        if (dateStr == null || dateStr.isEmpty()) return;
-        String lang = getCurrentLanguage();
-        String[] parts = dateStr.split("/");
-        if (parts.length != 3) return;
-        
-        try {
-            int day, month, year;
-            if (lang.equals("en")) {
-                month = parseMonthPart(parts[0], lang);
-                day = Integer.parseInt(parts[1]);
-                year = Integer.parseInt(parts[2]);
-            } else {
-                day = Integer.parseInt(parts[0]);
-                month = parseMonthPart(parts[1], lang);
-                year = Integer.parseInt(parts[2]);
-            }
-            if (month != -1) {
-                cal.set(year, month - 1, day);
-            }
-        } catch (Exception ignored) {}
-    }
-
-    private int parseMonthPart(String monthPart, String lang) {
-        try {
-            return Integer.parseInt(monthPart);
-        } catch (NumberFormatException e) {
-            String[] meses = lang.equals("en") ? MESES_EN : MESES_ES;
-            for (int i = 0; i < meses.length; i++) {
-                if (meses[i].equalsIgnoreCase(monthPart)) return i + 1;
-            }
-        }
-        return -1;
-    }
 
     private void muestraDatePicker(EditText editText) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    fechaPrimerPagoSeleccionada.set(year, monthOfYear, dayOfMonth);
-                    editText.setText(formatFecha(fechaPrimerPagoSeleccionada));
-                }, 
-                fechaPrimerPagoSeleccionada.get(Calendar.YEAR),
-                fechaPrimerPagoSeleccionada.get(Calendar.MONTH),
-                fechaPrimerPagoSeleccionada.get(Calendar.DAY_OF_MONTH));
-        datePickerDialog.show();
+        final Calendar c = Calendar.getInstance();
+        int anio  = c.get(Calendar.YEAR);
+        int mes = c.get(Calendar.MONTH);
+        int dia   = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(),
+                (view, anio1, mesAnio, diaMes) -> {
+                    String lang = getIdiomaActual();
+                    String d = String.format(Locale.US, "%02d", diaMes);
+                    String m = String.format(Locale.US, "%02d", mesAnio + 1);
+                    String y = String.valueOf(anio1);
+
+                    String fechaSeleccionada = lang.equals("en")
+                            ? m + "/" + d + "/" + y   // MM/DD/YYYY
+                            : d + "/" + m + "/" + y;  // DD/MM/YYYY
+
+                    if (fechaSeleccionada.length() == 10) {
+                        try {
+
+                            if (esIngles()) {
+                                String mesStr = fechaSeleccionada.substring(0, 2);
+                                int me = Integer.parseInt(mesStr);
+                                if (me >= 1 && me <= 12) {
+                                    String mesPalabra = MESES_EN[me - 1];
+                                    String fechaFinal = mesPalabra + fechaSeleccionada.substring(2); // "Mar/15/2025"
+                                    editText.setText(fechaFinal);
+                                }
+                            } else {
+                                String mesStr = fechaSeleccionada.substring(3, 5);
+                                int me = Integer.parseInt(mesStr);
+                                if (me >= 1 && me <= 12) {
+                                    String mesPalabra = MESES_ES[me - 1];
+                                    String fechaFinal = fechaSeleccionada.substring(0, 3) + mesPalabra + fechaSeleccionada.substring(5);
+                                    editText.setText(fechaFinal); // "15/mar/2025"
+                                }
+                            }
+                        } catch (NumberFormatException e) {
+                        }
+                    }
+                }, anio, mes, dia);
+
+        dialog.show();
     }
 
+
+    private boolean esIngles() {
+        return Locale.getDefault().getLanguage().equals("en");
+    }
+
+    //si español DD/MM/AAAA, si ingles MM/DD/YYYY
     private void setupFormatoFecha(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
-            private String prev = "";
-            private boolean isInternalUpdate = false;
 
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if (isInternalUpdate) return;
-                prev = s.toString();
-            }
+            private boolean actualizandose = false;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (isInternalUpdate) return;
-                String str = s.toString();
-                if (str.length() < prev.length()) return;
+                if (actualizandose) return;
+                if (s.toString().matches(".*[a-zA-ZáéíóúÁÉÍÓÚ]+.*")) return;
 
-                isInternalUpdate = true;
-                String lang = getCurrentLanguage();
-                
-                if (lang.equals("en")) {
-                    if (str.length() == 2) {
-                        try {
-                            int m = Integer.parseInt(str);
-                            if (m >= 1 && m <= 12) {
-                                String abbr = getMonthAbbr(m);
-                                s.replace(0, 2, abbr);
-                                s.append("/");
-                            } else {
-                                s.append("/");
-                            }
-                        } catch (Exception e) {
-                            s.append("/");
+                actualizandose = true;
+
+                String digitos = s.toString().replaceAll("[^\\d]", "");
+                if (digitos.length() > 8) digitos = digitos.substring(0, 8);
+
+                if (digitos.length() >= 4) {
+                    if (esIngles()) {
+                        // valida mes ingles
+                        String mesStr = digitos.substring(0, 2);
+                        int mes = Integer.parseInt(mesStr);
+                        if (mes > 12) {
+                            digitos = "12" + digitos.substring(2);
+                            Toast.makeText(requireContext(), "Month must be 12 or less", Toast.LENGTH_SHORT).show();
                         }
-                    } else if (str.length() == 6) {
-                        s.append("/");
-                    }
-                } else {
-                    if (str.length() == 2) {
-                        s.append("/");
-                    } else if (str.length() == 5) {
-                        try {
-                            String monthStr = str.substring(3, 5);
-                            int m = Integer.parseInt(monthStr);
-                            if (m >= 1 && m <= 12) {
-                                String abbr = getMonthAbbr(m);
-                                s.replace(3, 5, abbr);
-                                s.append("/");
-                            } else {
-                                s.append("/");
-                            }
-                        } catch (Exception e) {
-                            s.append("/");
+                        if (mes == 0) {
+                            digitos = "01" + digitos.substring(2);
                         }
-                    } else if (str.length() == 7 && str.substring(3, 6).matches("[a-zA-Z]{3}")) {
-                        // Correct format after month abbreviation
+                    } else {
+                        // valida mes español
+                        String mesStr = digitos.substring(2, 4);
+                        int mes = Integer.parseInt(mesStr);
+                        if (mes > 12) {
+                            digitos = digitos.substring(0, 2) + "12" + digitos.substring(4);
+                            Toast.makeText(requireContext(), "El mes debe ser menor a 12", Toast.LENGTH_SHORT).show();
+                        }
+                        if (mes == 0) {
+                            digitos = digitos.substring(0, 2) + "01" + digitos.substring(4);
+                        }
                     }
                 }
-                isInternalUpdate = false;
+
+                // se agregan los /
+                StringBuilder formateado = new StringBuilder();
+                for (int i = 0; i < digitos.length(); i++) {
+                    formateado.append(digitos.charAt(i));
+                    if ((i == 1 || i == 3) && i != digitos.length() - 1) {
+                        formateado.append("/");
+                    }
+                }
+
+                s.replace(0, s.length(), formateado.toString());
+                actualizandose = false;
             }
+        });
+
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) convertirMesANombre(editText);
+        });
+
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) convertirMesANombre(editText);
+            return false;
         });
     }
 
+    //cambia de 01/02/2000 a 01/feb/2000
+    private void convertirMesANombre(EditText editText) {
+        String texto = editText.getText().toString();
+
+        if (texto.length() == 10) {
+            try {
+
+                if (esIngles()) {
+                    String mesStr = texto.substring(0, 2);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_EN[mes - 1];
+                        String fechaFinal = mesPalabra + texto.substring(2); // "Mar/15/2025"
+                        editText.setText(fechaFinal);
+                    }
+                } else {
+                    String mesStr = texto.substring(3, 5);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_ES[mes - 1];
+                        String fechaFinal = texto.substring(0, 3) + mesPalabra + texto.substring(5);
+                        editText.setText(fechaFinal); // "15/mar/2025"
+                    }
+                }
+            } catch (NumberFormatException e) {
+            }
+        }
+    }
+
+
+    private String convertirMesANombreString(String s) {
+
+        String resultado = "";
+        if (s.length() == 10) {
+            try {
+
+                if (esIngles()) {
+                    String mesStr = s.substring(0, 2);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_EN[mes - 1];
+                        String fechaFinal = mesPalabra + s.substring(2); // "Mar/15/2025"
+                        resultado = fechaFinal;
+                    }
+                } else {
+                    String mesStr = s.substring(3, 5);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_ES[mes - 1];
+                        String fechaFinal = s.substring(0, 3) + mesPalabra + s.substring(5);
+                        resultado = fechaFinal; // "15/mar/2025"
+                    }
+                }
+            } catch (NumberFormatException e) {
+            }
+        }
+        return resultado;
+    }
+
+    private String convertirMesANumero(String s) {
+        if (s == null || s.length() != 11) return "";
+
+        try {
+            if (esIngles()) {
+                String mesPalabra = s.substring(0, 3);
+
+                for (int i = 0; i < MESES_EN.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_EN[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+
+                        // jan/15/2025 → 01/15/2025
+                        return mesNumero + s.substring(3);
+                    }
+                }
+
+            } else {
+                String mesPalabra = s.substring(3, 6);
+
+                for (int i = 0; i < MESES_ES.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_ES[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+
+                        // 15/may/2025 → 15/05/2025
+                        return s.substring(0, 3) + mesNumero + s.substring(6);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+
+        return "";
+    }
     private void setupObservers() {
         viewModel.getSaveSuccess().observe(getViewLifecycleOwner(), success -> {
             if (Boolean.TRUE.equals(success)) {
-                Toast.makeText(requireContext(), "Contrato guardado exitosamente en la base de datos", Toast.LENGTH_LONG).show();
+                Toast.makeText(requireContext(), "Datos cargados", Toast.LENGTH_LONG).show();
                 irAlMenu();
             }
         });
@@ -243,18 +321,20 @@ public class FinanciamientoFragment extends Fragment {
         });
     }
 
-    private void loadExistingData() {
+    private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
             if (Contrato.getMontoFinanciar() != null) binding.etMontoFinanciar.setText(Contrato.getMontoFinanciar());
             if (Contrato.getNumPagos() != null) binding.etNumeroPagos.setText(Contrato.getNumPagos());
             if (Contrato.getTasaInteres() != null) binding.etTasaInteres.setText(Contrato.getTasaInteres());
-            
-            if (Contrato.getFechaPrimerPago() != null) {
-                parseFechaIntoCalendar(Contrato.getFechaPrimerPago(), fechaPrimerPagoSeleccionada);
+
+            if (Contrato.getFechaPrimerPago() != null && !Contrato.getFechaPrimerPago().isEmpty()) {
+                parseFechaEnCalendario(Contrato.getFechaPrimerPago(), fechaPrimerPagoSeleccionada);
                 binding.etFechaPrimerPago.setText(formatFecha(fechaPrimerPagoSeleccionada));
+            } else {
+                binding.etFechaPrimerPago.setText(""); // Asegura que esté vacío para que autollenar funcione
             }
-            
+
             if (Contrato.getTipoPeriodo() != null) {
                 for (int i = 0; i < TIPOS_PERIODO_VALORES.length; i++) {
                     if (TIPOS_PERIODO_VALORES[i].equals(Contrato.getTipoPeriodo())) {
@@ -277,10 +357,30 @@ public class FinanciamientoFragment extends Fragment {
         if (Contrato == null) Contrato = new ContratoModelo();
 
         int pos = binding.spinnerTipoPeriodo.getSelectedItemPosition();
-        if (pos >= 0 && pos < TIPOS_PERIODO_VALORES.length) {
-            Contrato.setTipoPeriodo(TIPOS_PERIODO_VALORES[pos]);
+        String tipoPeriodo = "";
+        switch (pos) {
+            case 0:
+                tipoPeriodo = "Mensual";
+                break;
+            case 1:
+                tipoPeriodo = "Bimestral";
+                break;
+            case 2:
+                tipoPeriodo = "Trimestral";
+                break;
+            case 3:
+                tipoPeriodo = "Cuatrimestral";
+                break;
+            case 4:
+                tipoPeriodo = "Semestral";
+                break;
+            case 5:
+                tipoPeriodo = "Anual";
+                break;
         }
-        
+
+        Contrato.setTipoPeriodo(tipoPeriodo);
+
         Contrato.setFechaPrimerPago(binding.etFechaPrimerPago.getText().toString());
         Contrato.setNumPagos(binding.etNumeroPagos.getText().toString());
         Contrato.setTasaInteres(binding.etTasaInteres.getText().toString());
@@ -292,10 +392,53 @@ public class FinanciamientoFragment extends Fragment {
     private void mostrarConfirmacionEnvio() {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Confirmar Envío")
-                .setMessage("¿Estás seguro de que deseas enviar el contrato?")
+                .setMessage("¿Está seguro que desea enviar el contrato?")
                 .setPositiveButton("Enviar", (dialog, which) -> finalizarContrato())
                 .setNegativeButton("Regresar", null)
                 .show();
+    }
+    private void parseFechaEnCalendario(String fecha, Calendar cal) {
+        try {
+            String[] partes = fecha.split("/");
+
+            String lang = getIdiomaActual();
+
+            int day;
+            int month;
+            int year;
+
+            if (lang.equals("en")) {
+                // MM/DD/YYYY
+                month = Integer.parseInt(partes[0]) - 1;
+                day = Integer.parseInt(partes[1]);
+                year = Integer.parseInt(partes[2]);
+            } else {
+                // DD/MM/YYYY
+                day = Integer.parseInt(partes[0]);
+                month = Integer.parseInt(partes[1]) - 1;
+                year = Integer.parseInt(partes[2]);
+            }
+
+            cal.set(year, month, day);
+
+        } catch (Exception e) {
+            cal.setTime(new Date());
+        }
+    }
+    private String formatFecha(Calendar cal) {
+        String lang = getIdiomaActual();
+
+        String d = String.format(Locale.US, "%02d",
+                cal.get(Calendar.DAY_OF_MONTH));
+
+        String m = String.format(Locale.US, "%02d",
+                cal.get(Calendar.MONTH) + 1);
+
+        String y = String.valueOf(cal.get(Calendar.YEAR));
+
+        return lang.equals("en")
+                ? m + "/" + d + "/" + y
+                : d + "/" + m + "/" + y;
     }
 
     private void finalizarContrato() {
@@ -305,13 +448,13 @@ public class FinanciamientoFragment extends Fragment {
         if (Contrato.getId() == null) {
             Contrato.setId(String.valueOf(System.currentTimeMillis()));
         }
-        
+
         SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String now = metaSdf.format(new Date());
-        if (Contrato.getCreationDate() == null) {
-            Contrato.setCreationDate(now);
+        if (Contrato.getFechaCreacion() == null) {
+            Contrato.setFechaCreacion(now);
         }
-        Contrato.setModifiedDate(now);
+        Contrato.setFechaModificacion(now);
 
         if (!Contrato.getTitulares().isEmpty()) {
             ContratoModelo.Persona p = Contrato.getTitulares().get(0);
@@ -321,8 +464,8 @@ public class FinanciamientoFragment extends Fragment {
         }
 
         ContratoManager.getInstance().actualizaContrato(Contrato);
-        
-        viewModel.guardaBaseDatos();
+
+        viewModel.guardaContratoBaseDatos();
     }
 
     private void irAlMenu() {
@@ -343,14 +486,14 @@ public class FinanciamientoFragment extends Fragment {
             header.getChildAt(4).setVisibility(visibilidad);
             header.getChildAt(5).setVisibility(visibilidad);
         }
-        
+
         ViewGroup fila0 = (ViewGroup) tableContainer.getChildAt(1);
         if (fila0 != null && fila0.getChildCount() > 5) {
             fila0.getChildAt(3).setVisibility(visibilidad);
             fila0.getChildAt(4).setVisibility(visibilidad);
             fila0.getChildAt(5).setVisibility(visibilidad);
         }
-        
+
         for (int i = 0; i < binding.contenedorFilasTabla.getChildCount(); i++) {
             ViewGroup fila = (ViewGroup) binding.contenedorFilasTabla.getChildAt(i);
             if (fila != null && fila.getChildCount() > 5) {
@@ -371,22 +514,22 @@ public class FinanciamientoFragment extends Fragment {
         binding.spinnerTipoPeriodo.setAdapter(adapterPeriodo);
     }
 
-    private void configurarDatePicker() {
-        binding.etFechaPrimerPago.setOnClickListener(v -> muestraDatePicker(binding.etFechaPrimerPago));
-    }
+
 
     private void calcularAmortizacion() {
         String textoMonto = binding.etMontoFinanciar.getText().toString().trim();
         String textoPagos = binding.etNumeroPagos.getText().toString().trim();
         String textoTasa = binding.etTasaInteres.getText().toString().trim();
-        String textoFecha = binding.etFechaPrimerPago.getText().toString().trim();
+        String fecha = binding.etFechaPrimerPago.getText().toString().trim();
+        String textoFecha = convertirMesANumero(fecha);
+
 
         if (textoMonto.isEmpty() || textoPagos.isEmpty() || textoTasa.isEmpty() || textoFecha.isEmpty()) {
             Toast.makeText(requireContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        parseFechaIntoCalendar(textoFecha, fechaPrimerPagoSeleccionada);
+        parseFechaEnCalendario(textoFecha, fechaPrimerPagoSeleccionada);
 
         double montoFinanciar;
         int numeroPagos;
@@ -434,7 +577,7 @@ public class FinanciamientoFragment extends Fragment {
 
             saldo -= capital;
             if (saldo < 0.001) saldo = 0;
-            
+
             capitalAcumulado += capital;
             totalIntereses += interes;
 
@@ -460,6 +603,7 @@ public class FinanciamientoFragment extends Fragment {
             default: return (tasaAnual / 100.0) / 12.0;
         }
     }
+
 
     private double calcularPagoFijo(double monto, double tasaPeriodica, int numPagos) {
         if (tasaPeriodica == 0) return monto / numPagos;
@@ -487,19 +631,19 @@ public class FinanciamientoFragment extends Fragment {
         fila.addView(crearTextViewFila(String.valueOf(num), 0.5f));
         fila.addView(crearTextViewFila(fecha, 1.2f));
         fila.addView(crearTextViewFila(formatoMoneda.format(monto), 1.2f));
-        
+
         TextView tvCapital = crearTextViewFila(formatoMoneda.format(capital), 1.2f);
         TextView tvInteres = crearTextViewFila(formatoMoneda.format(interes), 1.2f);
         TextView tvAcumulado = crearTextViewFila(formatoMoneda.format(acumulado), 1.2f);
-        
+
         tvCapital.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
         tvInteres.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
         tvAcumulado.setVisibility(columnasVisibles ? View.VISIBLE : View.GONE);
-        
+
         fila.addView(tvCapital);
         fila.addView(tvInteres);
         fila.addView(tvAcumulado);
-        
+
         fila.addView(crearTextViewFila(formatoMoneda.format(saldo), 1.2f));
 
         binding.contenedorFilasTabla.addView(fila);
@@ -518,8 +662,6 @@ public class FinanciamientoFragment extends Fragment {
     private void actualizarResumen(int pagos, double mensualidad, double total, double intereses, double ultimo) {
         binding.etResumenPagos.setText(String.valueOf(pagos));
         binding.etResumenMensualidad.setText(formatoMoneda.format(mensualidad));
-        binding.tvResumenTotal.setText(formatoMoneda.format(total));
-        binding.tvResumenIntereses.setText(formatoMoneda.format(intereses));
         binding.tvResumenUltimoPago.setText(formatoMoneda.format(ultimo));
     }
 
@@ -538,5 +680,86 @@ public class FinanciamientoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        actualizarPrimerPagoSiCambioEnganche();
+    }
+
+    private void actualizarPrimerPagoSiCambioEnganche() {
+        ContratoModelo contrato = viewModel.getContratoValue();
+        if (contrato == null) return;
+
+        String ultimaFechaEngancheFormateada = contrato.getUltimaFechaEnganche(); //llega la fecha así 02/may/2025
+        String ultimaFechaEnganche = convertirMesANumero(ultimaFechaEngancheFormateada); //regresamos la fecha a numero
+        if (ultimaFechaEnganche == null || ultimaFechaEnganche.isEmpty()) return;
+
+        Calendar cal = Calendar.getInstance();
+        parseFechaEnCalendario(ultimaFechaEnganche, cal);
+
+        // +1 mes
+        cal.add(Calendar.MONTH, 1);
+
+
+        // si pasa de día 20, dejar en 20
+        if (cal.get(Calendar.DAY_OF_MONTH) > 20) {
+            cal.set(Calendar.DAY_OF_MONTH, 20);
+        }
+
+        String nuevaFecha = formatFecha(cal);
+
+        // solo actualizar si cambió
+        String fechaActual = binding.etFechaPrimerPago.getText().toString();
+
+        if (!nuevaFecha.equals(fechaActual)) {
+            String formateada = convertirMesANombreString(nuevaFecha);
+            binding.etFechaPrimerPago.setText(formateada);
+        }
+    }
+    private void setupComasMontos(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+
+            private boolean actualizando;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (actualizando) return;
+
+                actualizando = true;
+
+                String texto = s.toString();
+
+                // quita comas
+                String limpio = texto.replace(",", "");
+
+                try {
+                    if (!limpio.isEmpty()) {
+
+                        // permite decimales
+                        double numero = Double.parseDouble(limpio);
+
+                        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+                        formatter.setMaximumFractionDigits(2);
+                        formatter.setMinimumFractionDigits(0);
+
+                        String formateado = formatter.format(numero);
+
+                        editText.setText(formateado);
+                        editText.setSelection(formateado.length());
+                    }
+                } catch (NumberFormatException e) {
+                    // ignora inputs invalidas
+                }
+
+                actualizando = false;
+            }
+        });
     }
 }

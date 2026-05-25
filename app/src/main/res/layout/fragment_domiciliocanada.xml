@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -63,21 +65,31 @@
                 android:textSize="15sp"
                 android:textColor="@color/pacificagris"
                 android:textStyle="bold" />
-            <EditText
-                android:id="@+id/editProvinceCanada"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textSize="15sp"
-                android:background="@drawable/bg_input"
-                android:paddingStart="12dp"
-                android:inputType="text" />
+                android:layout_height="44dp"
+                android:background="@drawable/bg_input">
+                <Spinner
+                    android:id="@+id/spinnerProvincias"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="12dp" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_abajo"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="12dp"
+                    app:tint="#64748B" />
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zip Code"
+        android:text="Postal Code"
         android:fontFamily="serif"
         android:textSize="15sp"
         android:textColor="@color/pacificagris"
@@ -87,10 +99,11 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:textSize="15sp"
+        android:maxLength="6"
         android:background="@drawable/bg_input"
         android:paddingStart="12dp"
         android:layout_marginBottom="12dp"
-        android:inputType="text" />
+        android:inputType="number" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -107,6 +120,8 @@
         android:textSize="15sp"
         android:background="@drawable/bg_input"
         android:paddingStart="12dp"
+        android:enabled="false"
+        android:textColor="@color/black"
         android:text="Canada"
         android:inputType="text" />
 

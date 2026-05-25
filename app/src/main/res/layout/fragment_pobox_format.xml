@@ -161,6 +161,7 @@
         android:background="@drawable/bg_input"
         android:paddingStart="12dp"
         android:text="USA"
+        android:textColor="@color/black"
         android:enabled="false"
         android:inputType="text" />
 </LinearLayout>

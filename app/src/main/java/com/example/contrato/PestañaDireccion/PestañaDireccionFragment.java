@@ -36,7 +36,7 @@ public class PestañaDireccionFragment extends Fragment {
     private FragmentDireccionBinding binding;
     private List<RadioButton> phoneRadioButtons;
     private SharedContratoViewModel viewModel;
-    private String selectedCountry = "México";
+    private String PaisSeleccionado;
 
     public interface ValidatableFragment {
         boolean isValid();
@@ -56,14 +56,15 @@ public class PestañaDireccionFragment extends Fragment {
         setupRadioButtons();
         setupWhatsAppCheckboxes();
         setupNacionalidadSpinner();
-        setupPhoneMasks();
+        telefonosMask();
 
-        loadExistingData();
+        cargaDatosExistentes();
 
         return binding.getRoot();
     }
 
-    private void setupPhoneMasks() {
+    //añade parentesis a la lada
+    private void telefonosMask() {
         EditText[] ladaFields = {
                 binding.etLadaCasa1, binding.etLadaCasa2,
                 binding.etLadaOficina1, binding.etLadaOficina2,
@@ -77,33 +78,37 @@ public class PestañaDireccionFragment extends Fragment {
                 binding.etNumeroCel1, binding.etNumeroCel2,
                 binding.etNumeroMensajes
         };
+        for (EditText campo : ladaFields) {
 
-        for (EditText et : ladaFields) {
-            et.addTextChangedListener(new TextWatcher() {
-                private boolean isUpdating = false;
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (isUpdating) return;
-                    isUpdating = true;
-                    String clean = s.toString().replaceAll("[^\\d]", "");
-                    if (clean.length() > 3) clean = clean.substring(0, 3);
-                    
-                    StringBuilder formatted = new StringBuilder();
-                    if (clean.length() > 0) {
-                        formatted.append("(").append(clean);
-                        if (clean.length() == 3) {
-                            formatted.append(")");
-                        }
+
+            campo.setOnFocusChangeListener((vista, tieneFoco) -> {
+                // Cuando el usuario sale del campo
+                if (!tieneFoco) {
+                    String numeroLimpio = campo.getText().toString().replaceAll("[^\\d]", "");
+
+                    if (numeroLimpio.length() > 3) {
+                        numeroLimpio = numeroLimpio.substring(0, 3);
                     }
-                    
-                    et.setText(formatted.toString());
-                    et.setSelection(formatted.length());
-                    isUpdating = false;
+
+                    if (!numeroLimpio.isEmpty()) {
+                        String numeroFormateado = "(" + numeroLimpio + ")";
+                        campo.setText(numeroFormateado);
+                    }
                 }
+            });
+
+            campo.setOnEditorActionListener((vista, accionId, evento) -> {
+                String numeroLimpio = campo.getText().toString().replaceAll("[^\\d]", "");
+
+                if (numeroLimpio.length() > 3) {
+                    numeroLimpio = numeroLimpio.substring(0, 3);
+                }
+
+                if (!numeroLimpio.isEmpty()) {
+                    campo.setText("(" + numeroLimpio + ")");
+                }
+
+                return false;
             });
         }
 
@@ -137,21 +142,22 @@ public class PestañaDireccionFragment extends Fragment {
         }
     }
 
-    private void loadExistingData() {
+    private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) return;
 
         if (Contrato.getPais() != null) {
-            selectedCountry = Contrato.getPais();
-            aplicarSeleccionPais(selectedCountry);
+            PaisSeleccionado = Contrato.getPais();
+            PaisSeleccionado = Contrato.getPais();
+            aplicarSeleccionPais(PaisSeleccionado);
         } else {
             LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
             String lang = currentLocales.isEmpty() ? "es" : currentLocales.get(0).getLanguage();
             if (lang.equals("en")) {
-                selectedCountry = "EEUU";
-                aplicarSeleccionPais("EEUU");
+                PaisSeleccionado = "USA";
+                aplicarSeleccionPais("USA");
             } else {
-                selectedCountry = "México";
+                PaisSeleccionado = "México";
                 aplicarSeleccionPais("México");
             }
         }
@@ -170,44 +176,49 @@ public class PestañaDireccionFragment extends Fragment {
         if (emails.size() > 2) binding.etEmail3.setText(emails.get(2));
         if (emails.size() > 3) binding.etEmail4.setText(emails.get(3));
         binding.cbNoCorreo.setChecked(Contrato.isNoCorreo());
-
         for (ContratoModelo.InfoTelefono p : Contrato.getTelefonos()) {
             if (p.etiqueta.equals("Casa 1")) {
                 binding.etLadaCasa1.setText(p.lada);
                 binding.etNumeroCasa1.setText(p.numero);
                 binding.cbWsCasa1.setChecked(p.isWhatsApp);
-                binding.rbCasa1.setChecked(p.isPrincipal);
+                binding.rbCasa1.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Casa 2")) {
                 binding.etLadaCasa2.setText(p.lada);
                 binding.etNumeroCasa2.setText(p.numero);
                 binding.cbWsCasa2.setChecked(p.isWhatsApp);
-                binding.rbCasa2.setChecked(p.isPrincipal);
+                binding.rbCasa2.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Oficina 1")) {
                 binding.etLadaOficina1.setText(p.lada);
                 binding.etNumeroOficina1.setText(p.numero);
                 binding.cbWsOficina1.setChecked(p.isWhatsApp);
-                binding.rbOficina1.setChecked(p.isPrincipal);
+                binding.rbOficina1.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Oficina 2")) {
                 binding.etLadaOficina2.setText(p.lada);
                 binding.etNumeroOficina2.setText(p.numero);
                 binding.cbWsOficina2.setChecked(p.isWhatsApp);
-                binding.rbOficina2.setChecked(p.isPrincipal);
+                binding.rbOficina2.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Celular 1")) {
                 binding.etLadaCel1.setText(p.lada);
                 binding.etNumeroCel1.setText(p.numero);
                 binding.cbWsCel1.setChecked(p.isWhatsApp);
-                binding.rbCelular1.setChecked(p.isPrincipal);
+                binding.rbCelular1.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Celular 2")) {
                 binding.etLadaCel2.setText(p.lada);
                 binding.etNumeroCel2.setText(p.numero);
                 binding.cbWsCel2.setChecked(p.isWhatsApp);
-                binding.rbCelular2.setChecked(p.isPrincipal);
+                binding.rbCelular2.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Mensajes")) {
                 binding.etLadaMensajes.setText(p.lada);
                 binding.etNumeroMensajes.setText(p.numero);
                 binding.cbWsMensajes.setChecked(p.isWhatsApp);
-                binding.rbMensajes.setChecked(p.isPrincipal);
+                binding.rbMensajes.setChecked(p.esPrincipal);
             }
+        }
+        if(binding.cbNoCorreo.isChecked()){
+            binding.etEmail1.setText("");
+            binding.etEmail2.setText("");
+            binding.etEmail3.setText("");
+            binding.etEmail4.setText("");
         }
     }
 
@@ -217,7 +228,7 @@ public class PestañaDireccionFragment extends Fragment {
                 seleccionaBoton(binding.btnMexico);
                 cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.DomicilioFragmentMexico());
                 break;
-            case "EEUU":
+            case "USA":
                 seleccionaBoton(binding.btnUSA);
                 cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.DomicilioFragmentUSA());
                 break;
@@ -319,7 +330,7 @@ public class PestañaDireccionFragment extends Fragment {
             return false;
         }
 
-        if (!selectedCountry.equals("Otro")) {
+        if (!PaisSeleccionado.equals("Otro")) {
             Fragment currentFragment = getChildFragmentManager().findFragmentById(R.id.addressContainer);
             if (currentFragment instanceof ValidatableFragment) {
                 if (!((ValidatableFragment) currentFragment).isValid()) {
@@ -350,25 +361,25 @@ public class PestañaDireccionFragment extends Fragment {
 
     private void setupBotones() {
         binding.btnMexico.setOnClickListener(v -> {
-            selectedCountry = "México";
+            PaisSeleccionado = "México";
             seleccionaBoton(binding.btnMexico);
             cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.DomicilioFragmentMexico());
         });
 
         binding.btnUSA.setOnClickListener(v -> {
-            selectedCountry = "EEUU";
+            PaisSeleccionado = "USA";
             seleccionaBoton(binding.btnUSA);
             cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.USAFragment.DomicilioFragmentUSA());
         });
 
         binding.btnCanada.setOnClickListener(v -> {
-            selectedCountry = "Canadá";
+            PaisSeleccionado = "Canadá";
             seleccionaBoton(binding.btnCanada);
             cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.DomicilioFragmentCanada());
         });
 
         binding.btnOtro.setOnClickListener(v -> {
-            selectedCountry = "Otro";
+            PaisSeleccionado = "Otro";
             seleccionaBoton(binding.btnOtro);
             cargaFragmentoDireccion(new com.example.contrato.PestañaDireccion.FragmentoDomicilio.DomicilioFragmentOtro());
         });
@@ -431,7 +442,7 @@ public class PestañaDireccionFragment extends Fragment {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
 
-        Contrato.setPais(selectedCountry);
+        Contrato.setPais(PaisSeleccionado);
         
         if (binding.spinnerNacionalidad.getSelectedItem() != null) {
             Contrato.setNacionalidad(binding.spinnerNacionalidad.getSelectedItem().toString());
@@ -446,19 +457,19 @@ public class PestañaDireccionFragment extends Fragment {
         Contrato.setNoCorreo(binding.cbNoCorreo.isChecked());
 
         List<ContratoModelo.InfoTelefono> phones = new ArrayList<>();
-        addPhoneIfNotEmpty(phones, "Casa 1", binding.etLadaCasa1.getText().toString(), binding.etNumeroCasa1.getText().toString(), binding.cbWsCasa1.isChecked(), binding.rbCasa1.isChecked());
-        addPhoneIfNotEmpty(phones, "Casa 2", binding.etLadaCasa2.getText().toString(), binding.etNumeroCasa2.getText().toString(), binding.cbWsCasa2.isChecked(), binding.rbCasa2.isChecked());
-        addPhoneIfNotEmpty(phones, "Oficina 1", binding.etLadaOficina1.getText().toString(), binding.etNumeroOficina1.getText().toString(), binding.cbWsOficina1.isChecked(), binding.rbOficina1.isChecked());
-        addPhoneIfNotEmpty(phones, "Oficina 2", binding.etLadaOficina2.getText().toString(), binding.etNumeroOficina2.getText().toString(), binding.cbWsOficina2.isChecked(), binding.rbOficina2.isChecked());
-        addPhoneIfNotEmpty(phones, "Celular 1", binding.etLadaCel1.getText().toString(), binding.etNumeroCel1.getText().toString(), binding.cbWsCel1.isChecked(), binding.rbCelular1.isChecked());
-        addPhoneIfNotEmpty(phones, "Celular 2", binding.etLadaCel2.getText().toString(), binding.etNumeroCel2.getText().toString(), binding.cbWsCel2.isChecked(), binding.rbCelular2.isChecked());
-        addPhoneIfNotEmpty(phones, "Mensajes", binding.etLadaMensajes.getText().toString(), binding.etNumeroMensajes.getText().toString(), binding.cbWsMensajes.isChecked(), binding.rbMensajes.isChecked());
+        agregaTelefono(phones, "Casa 1", binding.etLadaCasa1.getText().toString(), binding.etNumeroCasa1.getText().toString(), binding.cbWsCasa1.isChecked(), binding.rbCasa1.isChecked());
+        agregaTelefono(phones, "Casa 2", binding.etLadaCasa2.getText().toString(), binding.etNumeroCasa2.getText().toString(), binding.cbWsCasa2.isChecked(), binding.rbCasa2.isChecked());
+        agregaTelefono(phones, "Oficina 1", binding.etLadaOficina1.getText().toString(), binding.etNumeroOficina1.getText().toString(), binding.cbWsOficina1.isChecked(), binding.rbOficina1.isChecked());
+        agregaTelefono(phones, "Oficina 2", binding.etLadaOficina2.getText().toString(), binding.etNumeroOficina2.getText().toString(), binding.cbWsOficina2.isChecked(), binding.rbOficina2.isChecked());
+        agregaTelefono(phones, "Celular 1", binding.etLadaCel1.getText().toString(), binding.etNumeroCel1.getText().toString(), binding.cbWsCel1.isChecked(), binding.rbCelular1.isChecked());
+        agregaTelefono(phones, "Celular 2", binding.etLadaCel2.getText().toString(), binding.etNumeroCel2.getText().toString(), binding.cbWsCel2.isChecked(), binding.rbCelular2.isChecked());
+        agregaTelefono(phones, "Mensajes", binding.etLadaMensajes.getText().toString(), binding.etNumeroMensajes.getText().toString(), binding.cbWsMensajes.isChecked(), binding.rbMensajes.isChecked());
         Contrato.setTelefonos(phones);
 
         viewModel.setContrato(Contrato);
     }
 
-    private void addPhoneIfNotEmpty(List<ContratoModelo.InfoTelefono> list, String tag, String lada, String num, boolean ws, boolean main) {
+    private void agregaTelefono(List<ContratoModelo.InfoTelefono> list, String tag, String lada, String num, boolean ws, boolean main) {
         if (!num.isEmpty()) {
             list.add(new ContratoModelo.InfoTelefono(tag, lada, num, ws, main));
         }

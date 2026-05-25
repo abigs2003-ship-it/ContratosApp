@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.ContratoModelo;
 import com.example.contrato.PestañaDireccion.PestañaDireccionFragment;
+import com.example.contrato.R;
 import com.example.contrato.SharedContratoViewModel;
 import com.example.contrato.databinding.FragmentPoboxFormatBinding;
 
@@ -86,23 +88,24 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
         Contrato.setUsaCity(binding.editCity.getText().toString());
         Contrato.setUsaState(binding.spinnerEstadoUSA.getSelectedItem().toString());
         Contrato.setUsaZip(binding.editZipCode2.getText().toString());
-        
-        Contrato.setPais("EEUU");
-        Contrato.setCalle(Contrato.getUsaCalle());
-        Contrato.setCiudad(Contrato.getUsaCity());
-        Contrato.setEstado(Contrato.getUsaState());
-        Contrato.setCp(Contrato.getUsaZip());
-        
+
+        Contrato.setTipoDir("US2");
+        Contrato.setPais(binding.editCountryUSAPO.getText().toString());
+
+
         viewModel.setContrato(Contrato);
     }
 
     @Override
     public boolean isValid() {
         if (binding == null) return false;
+        if (binding.spinnerEstadoUSA.getSelectedItemPosition() == 0) {
+            Toast.makeText(requireContext(), "Select a State", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return  !binding.editStreetPO.getText().toString().trim().isEmpty() &&
                 !binding.editPO.getText().toString().trim().isEmpty() &&
                !binding.editCity.getText().toString().trim().isEmpty() &&
-               !binding.editState.getText().toString().trim().isEmpty() &&
                !binding.editZipCode2.getText().toString().trim().isEmpty();
     }
 
@@ -112,7 +115,7 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
             binding.editStreetPO.setText("");
             binding.editPO.setText("");
             binding.editCity.setText("");
-            binding.editState.setText("");
+            binding.spinnerEstadoUSA.setSelection(0);
             binding.editZipCode2.setText("");
             guardaDatosViewModel();
         }
@@ -123,5 +126,11 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
         guardaDatosViewModel();
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupEstadosUSASpinner() {
+        String[] estados = getResources().getStringArray(R.array.EstadosUSA);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, estados);
+        binding.spinnerEstadoUSA.setAdapter(adapter);
     }
 }

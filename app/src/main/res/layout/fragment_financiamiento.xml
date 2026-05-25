@@ -126,15 +126,18 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:endIconMode="custom"
+                                android:imeOptions="actionDone"
+
                                 app:endIconDrawable="@drawable/ic_calendario">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etFechaPrimerPago"
                                     android:layout_width="match_parent"
                                     android:background="@drawable/bg_input"
-                                    android:maxLength="10"
                                     android:layout_height="46dp"
                                     android:hint="@string/fechaformato"
+                                    android:imeOptions="actionDone"
+
                                     android:inputType="date"
                                     android:paddingHorizontal="14dp"
                                     android:textSize="13sp"/>
@@ -321,6 +324,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0"
+                                    android:layout_marginEnd="10dp"
                                     android:textColor="#99FFFFFF"
                                     android:textSize="15sp" />
                                 <TextView
@@ -348,7 +352,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Último pago de"
+                                    android:text="@string/ultimo"
                                     android:textColor="#99FFFFFF"
                                     android:textSize="15sp" />
                                 <TextView
@@ -373,48 +377,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:layout_marginBottom="4dp">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/interes"
-                                    android:textColor="#80FFFFFF"
-                                    android:textSize="13sp" />
-                                <TextView
-                                    android:id="@+id/tvResumenIntereses"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="$0.00"
-                                    android:textColor="#FFFFFF"
-                                    android:textSize="13sp" />
-                            </LinearLayout>
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/total"
-                                    android:textColor="#80FFFFFF"
-                                    android:textSize="15sp"
-                                    android:textStyle="bold" />
-                                <TextView
-                                    android:id="@+id/tvResumenTotal"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="$0.00"
-                                    android:textColor="#FFFFFF"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

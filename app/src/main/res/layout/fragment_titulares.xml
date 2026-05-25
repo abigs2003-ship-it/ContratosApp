@@ -212,21 +212,26 @@
                         android:layout_weight="1"
                         app:boxStrokeColor="#080C24" />
 
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayoutFechaCumpleanos"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:imeOptions="actionDone"
                         app:endIconMode="custom"
                         app:endIconDrawable="@drawable/ic_calendario">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editFechaCumpleanos"
                             android:layout_width="match_parent"
-                            android:background="@drawable/bg_input"
-                            android:maxLength="10"
                             android:layout_height="46dp"
+                            android:background="@drawable/bg_input"
+
                             android:hint="@string/fechaformato"
+                            android:nextFocusForward="@id/editFechaCumpleanos"
+                            android:imeOptions="actionDone"
+
                             android:inputType="date"
                             android:paddingHorizontal="14dp"
                             android:textSize="13sp"/>
@@ -523,6 +528,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_input"
                             android:imeOptions="actionDone"
+
                             android:inputType="textCapWords"
                             android:maxLines="1"
                             android:nextFocusForward="@id/spinnerParentescoBene"
@@ -544,6 +550,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:imeOptions="actionDone"
                         app:endIconMode="custom"
                         app:endIconDrawable="@drawable/ic_calendario">
 
@@ -552,8 +559,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="46dp"
                             android:background="@drawable/bg_input"
-                            android:maxLength="10"
+
                             android:hint="@string/fechaformato"
+                            android:nextFocusForward="@id/editFechaCumpleanosBene"
+                            android:imeOptions="actionDone"
+
                             android:inputType="date"
                             android:paddingHorizontal="14dp"
                             android:textSize="13sp"/>

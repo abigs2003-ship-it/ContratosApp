@@ -50,12 +50,14 @@
     <string name="contrato">No. Contrato</string>
     <string name="unidad">Unidad</string>
     <string name="temporada">Temporada</string>
+
     <string-array name="temporadas">
-        <item>Selecciona</item>
+        <item>Seleccionar</item>
         <item>Platino</item>
         <item>Oro</item>
         <item>Plata</item>
     </string-array>
+
     <string name="proyecto">Proyecto</string>
     <string name="noaños">No. Años</string>
     <string name="datosventa">Datos de la Venta</string>
@@ -70,6 +72,14 @@
         <item>Anual</item>
     </string-array>
     <string name="estado">Estado *</string>
+
+    <string-array name="tiposOcupacion">
+        <item>Seleccionar</item>
+        <item>Corridos</item>
+        <item>Alternados Pares</item>
+        <item>Alternados Nones</item>
+
+    </string-array>
 
     <string-array name="parentescos">
         <item>Contacto</item>
@@ -190,7 +200,7 @@
     <string name="saldo">Saldo</string>
     <string name="resumen">Resumen de Pagos</string>
     <string name="total">Total a Pagar</string>
-    <string name="pagosde">- pagos de</string>
+    <string name="pagosde">pagos de</string>
     <string name="interes">Interés</string>
     <string name="capacumulado">Cap. Acumulado</string>
     <string-array name="Estados">
@@ -232,62 +242,82 @@
 
     <string-array name="EstadosUSA">
         <item>Select</item>
-        <item>AL Alabama</item>
-        <item>AK Alaska</item>
-        <item>AZ Arizona</item>
-        <item>AR Arkansas</item>
-        <item>CA California</item>
-        <item>CZ Canal Zone</item>
-        <item>CO Colorado</item>
-        <item>CT Conneticut</item>
-        <item>DE Delaware</item>
-        <item>DC District of Columbia</item>
-        <item>FL Florida</item>
-        <item>GA Georgia</item>
-        <item>GU Guam</item>
-        <item>HI Hawaii</item>
-        <item>ID Idaho</item>
-        <item>IL Illinois</item>
-        <item>IN Indiana</item>
-        <item>IA Iowa</item>
-        <item>KS Kansas</item>
-        <item>KY Kentuchy</item>
-        <item>LA Louisiana</item>
-        <item>ME Maine</item>
-        <item>MD Maryland</item>
-        <item>MA Massachusetts</item>
-        <item>MI Michigan</item>
-        <item>MN Minnesota</item>
-        <item>MS Mississippi</item>
-        <item>MO Missouri</item>
-        <item>MT Montana</item>
-        <item>NE Nebraska</item>
-        <item>NV Nevada</item>
-        <item>NH New Hampshire</item>
-        <item>NJ New Jersey</item>
-        <item>NM New Mexico</item>
-        <item>NY New York</item>
-        <item>NC North Carolina</item>
-        <item>ND North Dakota</item>
-        <item>OH Ohio</item>
-        <item>OK Oklahoma</item>
-        <item>OR Oregon</item>
-        <item>PA Pennsylvania</item>
-        <item>PR Puerto Rico</item>
-        <item>RI Rhode Island</item>
-        <item>SC South Carolina</item>
-        <item>SD South Dakota</item>
-        <item>TN Tennessee</item>
-        <item>TX Texas</item>
-        <item>UT Utah</item>
-        <item>VT Vermont</item>
-        <item>VI Virgin Islands</item>
-        <item>VA Virginia</item>
-        <item>WA Washington</item>
-        <item>WV West Virginia</item>
-        <item>WI Wisconsin</item>
-        <item>WY Wyoming</item>
-
+        <item>AL</item>
+        <item>AK</item>
+        <item>AZ</item>
+        <item>AR</item>
+        <item>CA</item>
+        <item>CZ</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>GU</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>PR</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VI</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+    </string-array>
+    <string-array name="Provincias">
+        <item>Select</item>
+        <item>AB</item>
+        <item>BC</item>
+        <item>MB</item>
+        <item>NB</item>
+        <item>NL</item>
+        <item>NS</item>
+        <item>ON</item>
+        <item>PE</item>
+        <item>QC</item>
+        <item>SK</item>
+        <item>NT</item>
+        <item>NU</item>
+        <item>YT</item>
 
     </string-array>
+    <string name="ultimo">1 pago de</string>
+    <string name="tipoocupacion">Tipo Ocupación</string>
+    <string name="corridos">Corridos</string>
+    <string name="alternospares">Alternos Pares</string>
+    <string name="alternosnones">Alternos nones</string>
 </resources>

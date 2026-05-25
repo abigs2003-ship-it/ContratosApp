@@ -20,21 +20,58 @@ public class VentasInventarioRepository {
         return 1;
     }
 
+
     public List<String> getUnidades() throws SQLException {
-        List<String> list = new ArrayList<>();
-        String sql = "SELECT DISTINCT Unidad FROM PMC_App_VentasTipoContrato WHERE Estatus = 'A'";
+        List<String> lista = new ArrayList<>();
+        String sql = "{call dbo.sp_App_Unidades}";
         try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(rs.getString("Unidad"));
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(rs.getString("Unidad"));
+                }
             }
         }
-        return list;
+        return lista;
+    }
+    public String getTipoCambio() throws SQLException {
+        List<String> lista = new ArrayList<>();
+        String sql = "{call dbo.sp_Sel_App_Tipo_Cambio}";
+        try (Connection conn = DbConnection.getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(rs.getString("TipoCambio"));
+                }
+            }
+        }
+        return lista.get(0);
     }
 
+    //checa si contrato existe y da el estatus del contrato
+    public String getEstatusContrato(String xref) throws SQLException {
+        String sql = "{call dbo.sp_App_Checa_Contrato(?)}";
+
+        try (Connection conn = DbConnection.getConnection();
+             CallableStatement cs = conn.prepareCall(sql)) {
+
+            cs.setString(1, xref);
+
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("EstatusContrato");
+                }
+            }
+        }
+
+        return null;
+    }
+
+
     public void insert(VentasInventario i) throws SQLException {
-        String sql = "INSERT INTO PMT_App_Ventas_Datos_Inventario (IdCondicionesVenta, IdContrato, Unidad, Temporada, TipoVenta, AñosComprados, PrimerAñoUso, MonedaVenta, TipoCambioVenta, PrecioBruto, MontoCta, NoContratosMontoCta, PrecioNeto, TipoPago, EngancheTotal, EngancheTotalPorcentaje, EnganchePagarSala, EnganchePagarSalaPorcentaje, Descuentos, NoDescuentos, EngancheDiferido, NoPagosEngancheDiferido, SaldoEnganche, MontoFinanciar, CostoContrato, TotalPagoSala, CostoMembresia, ComentariosRegalos, FechaAlta, IdUsuarioAlta) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO PMT_App_Ventas_Datos_Inventario (IdCondicionesVenta, IdContrato, Unidad, Temporada, TipoVenta, AñosComprados, PrimerAñoUso, MonedaVenta, TipoCambioVenta, PrecioBruto, MontoCta, NoContratosMontoCta, PrecioNeto, TipoPago, EngancheTotal, EngancheTotalPorcentaje, EnganchePagarSala, EnganchePagarSalaPorcentaje, Descuentos, NoDescuentos, EngancheDiferido, NoPagosEngancheDiferido, SaldoEnganche, MontoFinanciar, CostoContrato, TotalPagoSala, CostoMembresia, ComentariosRegalos, FechaAlta, IdUsuarioAlta, tipoOcupacion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, i.idCondicionesVenta);
@@ -67,6 +104,7 @@ public class VentasInventarioRepository {
             ps.setString(28, i.comentariosRegalos);
             ps.setTimestamp(29, i.fechaAlta);
             ps.setLong(30, i.idUsuarioAlta);
+            ps.setString(31, i.tipoOcupacion);
             ps.executeUpdate();
         }
     }
@@ -109,6 +147,8 @@ public class VentasInventarioRepository {
                     i.comentariosRegalos = rs.getString("ComentariosRegalos");
                     i.fechaAlta = rs.getTimestamp("FechaAlta");
                     i.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
+                    i.tipoOcupacion = rs.getString(("TipoOcupacion"));
+
                     return i;
                 }
             }
@@ -117,7 +157,7 @@ public class VentasInventarioRepository {
     }
 
     public void update(VentasInventario i) throws SQLException {
-        String sql = "UPDATE PMT_App_Ventas_Datos_Inventario SET Unidad=?, Temporada=?, TipoVenta=?, AñosComprados=?, PrimerAñoUso=?, MonedaVenta=?, TipoCambioVenta=?, PrecioBruto=?, MontoCta=?, NoContratosMontoCta=?, PrecioNeto=?, TipoPago=?, EngancheTotal=?, EngancheTotalPorcentaje=?, EnganchePagarSala=?, EnganchePagarSalaPorcentaje=?, Descuentos=?, NoDescuentos=?, EngancheDiferido=?, NoPagosEngancheDiferido=?, SaldoEnganche=?, MontoFinanciar=?, CostoContrato=?, TotalPagoSala=?, CostoMembresia=?, ComentariosRegalos=? WHERE IdCondicionesVenta=?";
+        String sql = "UPDATE PMT_App_Ventas_Datos_Inventario SET Unidad=?, Temporada=?, TipoVenta=?, AñosComprados=?, PrimerAñoUso=?, MonedaVenta=?, TipoCambioVenta=?, PrecioBruto=?, MontoCta=?, NoContratosMontoCta=?, PrecioNeto=?, TipoPago=?, EngancheTotal=?, EngancheTotalPorcentaje=?, EnganchePagarSala=?, EnganchePagarSalaPorcentaje=?, Descuentos=?, NoDescuentos=?, EngancheDiferido=?, NoPagosEngancheDiferido=?, SaldoEnganche=?, MontoFinanciar=?, CostoContrato=?, TotalPagoSala=?, CostoMembresia=?, ComentariosRegalos=?, TipoOcupacion=? WHERE IdCondicionesVenta=?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, i.unidad);
@@ -146,7 +186,8 @@ public class VentasInventarioRepository {
             ps.setObject(24, i.totalPagoSala);
             ps.setObject(25, i.costoMembresia);
             ps.setString(26, i.comentariosRegalos);
-            ps.setLong(27, i.idCondicionesVenta);
+            ps.setString(27, i.tipoOcupacion);
+            ps.setLong(28, i.idCondicionesVenta);
             ps.executeUpdate();
         }
     }

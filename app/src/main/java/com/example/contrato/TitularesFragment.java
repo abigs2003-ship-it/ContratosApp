@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class TitularesFragment extends Fragment {
 
@@ -36,6 +39,9 @@ public class TitularesFragment extends Fragment {
     private SharedContratoViewModel viewModel;
     private List<ContratoModelo.Persona> titularesList = new ArrayList<>();
     private List<ContratoModelo.Persona> beneficiariosList = new ArrayList<>();
+    private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
+    private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
+
 
     @Nullable
     @Override
@@ -69,6 +75,7 @@ public class TitularesFragment extends Fragment {
         setupFormatoFecha(binding.editFechaCumpleanos);
         setupFormatoFecha(binding.editFechaCumpleanosBene);
 
+
         List<String> parentescosList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.parentescos)));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.spinner_parentesco, android.R.id.text1, parentescosList) {
@@ -93,11 +100,11 @@ public class TitularesFragment extends Fragment {
         adapter.setDropDownViewResource(R.layout.spinner_dropdown_item_black);
         binding.spinnerParentesco.setAdapter(adapter);
         binding.spinnerParentescoBene.setAdapter(adapter);
-        
+
         binding.spinnerParentesco.setSelection(adapter.getCount());
         binding.spinnerParentescoBene.setSelection(adapter.getCount());
 
-        loadExistingData();
+        cargaDatosExistentes();
 
         binding.btnAgregar.setOnClickListener(v -> {
             String nombre = binding.editNombre.getText().toString();
@@ -105,12 +112,9 @@ public class TitularesFragment extends Fragment {
             String materno = (binding.layoutMaterno.getVisibility() == View.VISIBLE) ? binding.editMaterno.getText().toString() : "";
             String cumple = binding.editFechaCumpleanos.getText().toString();
             String ocupacion = binding.editOcupacion.getText().toString();
-            
+
             int position = binding.spinnerParentesco.getSelectedItemPosition();
-            if (position == adapter.getCount()) {
-                Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             String parentesco = String.valueOf(position);
 
             if (!nombre.isEmpty()) {
@@ -134,10 +138,7 @@ public class TitularesFragment extends Fragment {
             String ocupacion = binding.editOcupacionBene.getText().toString();
 
             int position = binding.spinnerParentescoBene.getSelectedItemPosition();
-            if (position == adapter.getCount()) {
-                Toast.makeText(requireContext(), R.string.selecciona, Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             String parentesco = String.valueOf(position);
 
             if (!nombre.isEmpty()) {
@@ -163,35 +164,124 @@ public class TitularesFragment extends Fragment {
         });
     }
 
-    private void setupFormatoFecha(EditText editText) {
-        editText.addTextChangedListener(new TextWatcher() {
-            private String prev = "";
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                prev = s.toString();
-            }
+    private boolean esIngles() {
+        return Locale.getDefault().getLanguage().equals("en");
+    }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+    //si español DD/MM/AAAA, si ingles MM/DD/YYYY
+    private void setupFormatoFecha(EditText editText) {
+
+        editText.addTextChangedListener(new TextWatcher() {
+
+            private boolean actualizandose = false;
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
-                String str = s.toString();
-                if (str.length() < prev.length()) return; 
+                if (actualizandose) return;
+                if (s.toString().matches(".*[a-zA-ZáéíóúÁÉÍÓÚ]+.*")) return;
 
-                if (str.length() == 2 || str.length() == 5) {
-                    s.append("/");
+                actualizandose = true;
+
+                String digitos = s.toString().replaceAll("[^\\d]", "");
+                if (digitos.length() > 8) digitos = digitos.substring(0, 8);
+
+                if (digitos.length() >= 4) {
+                    if (esIngles()) {
+                        // valida me
+                        String mesStr = digitos.substring(0, 2);
+                        int mes = Integer.parseInt(mesStr);
+                        if (mes > 12) {
+                            digitos = "12" + digitos.substring(2);
+                            Toast.makeText(requireContext(), "Month must be 12 or less", Toast.LENGTH_SHORT).show();
+                        }
+                        if (mes == 0) {
+                            digitos = "01" + digitos.substring(2);
+                        }
+                    } else {
+                        // valida mes
+                        String mesStr = digitos.substring(2, 4);
+                        int mes = Integer.parseInt(mesStr);
+                        if (mes > 12) {
+                            digitos = digitos.substring(0, 2) + "12" + digitos.substring(4);
+                            Toast.makeText(requireContext(), "El mes debe ser menor a 12", Toast.LENGTH_SHORT).show();
+                        }
+                        if (mes == 0) {
+                            digitos = digitos.substring(0, 2) + "01" + digitos.substring(4);
+                        }
+                    }
                 }
+
+                // se agregan los /
+                StringBuilder formateado = new StringBuilder();
+                for (int i = 0; i < digitos.length(); i++) {
+                    formateado.append(digitos.charAt(i));
+                    if ((i == 1 || i == 3) && i != digitos.length() - 1) {
+                        formateado.append("/");
+                    }
+                }
+
+                s.replace(0, s.length(), formateado.toString());
+                actualizandose = false;
             }
+        });
+
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) convertirMesANombre(editText);
+        });
+
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) convertirMesANombre(editText);
+            return false;
         });
     }
 
-    private void loadExistingData() {
+    //cambia de 01/02/2000 a 01/feb/2000
+    private void convertirMesANombre(EditText editText) {
+        String texto = editText.getText().toString();
+
+        if (texto.length() == 10) {
+            try {
+
+                if (esIngles()) {
+                    String mesStr = texto.substring(0, 2);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_EN[mes - 1];
+                        String fechaFinal = mesPalabra + texto.substring(2); // "Mar/15/2025"
+                        editText.setText(fechaFinal);
+                    }
+                } else {
+                    String mesStr = texto.substring(3, 5);
+                    int mes = Integer.parseInt(mesStr);
+                    if (mes >= 1 && mes <= 12) {
+                        String mesPalabra = MESES_ES[mes - 1];
+                        String fechaFinal = texto.substring(0, 3) + mesPalabra + texto.substring(5);
+                        editText.setText(fechaFinal); // "15/mar/2025"
+                    }
+                }
+            } catch (NumberFormatException e) {
+            }
+        }
+    }
+    private String getIdiomaActual() {
+        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+        if (!currentLocales.isEmpty()) {
+            return currentLocales.get(0).getLanguage();
+        }
+        return Locale.getDefault().getLanguage();
+    }
+
+
+
+    private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
             titularesList = new ArrayList<>(Contrato.getTitulares());
             beneficiariosList = new ArrayList<>(Contrato.getBeneficiarios());
-            
+
             binding.containerTitulares.removeAllViews();
             for (ContratoModelo.Persona p : titularesList) {
                 agregarPersonaaAContenedor(binding.containerTitulares, p, titularesList);
@@ -203,6 +293,7 @@ public class TitularesFragment extends Fragment {
         }
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
@@ -212,47 +303,68 @@ public class TitularesFragment extends Fragment {
     private void guardaDatosViewModel() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
-        
+
         Contrato.setTitulares(new ArrayList<>(titularesList));
         Contrato.setBeneficiarios(new ArrayList<>(beneficiariosList));
-        
+
         viewModel.setContrato(Contrato);
     }
 
     private void muestraDatePicker(EditText editText) {
         final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int anio  = c.get(Calendar.YEAR);
+        int mes = c.get(Calendar.MONTH);
+        int dia   = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(),
-                (view, year1, monthOfYear, dayOfMonth) -> {
-                    String selectedDate;
-                    LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-                    String lang = "es";
-                    if (!currentLocales.isEmpty()) {
-                        lang = currentLocales.get(0).getLanguage();
-                    }
 
-                    if (lang.equals("en")) {
-                        selectedDate = (monthOfYear + 1) + "/" + dayOfMonth + "/" + year1;
-                    } else {
-                        selectedDate = dayOfMonth + "/" + (monthOfYear + 1) + "/" + year1;
+        DatePickerDialog dialog = new DatePickerDialog(requireContext(),
+                (view, anio1, mesAnio, diaMes) -> {
+                    String lang = getIdiomaActual();
+                    String d = String.format(Locale.US, "%02d", diaMes);
+                    String m = String.format(Locale.US, "%02d", mesAnio + 1);
+                    String y = String.valueOf(anio1);
+
+                    String fechaSeleccionada = lang.equals("en")
+                            ? m + "/" + d + "/" + y   // MM/DD/YYYY
+                            : d + "/" + m + "/" + y;  // DD/MM/YYYY
+
+                    if (fechaSeleccionada.length() == 10) {
+                        try {
+
+                            if (esIngles()) {
+                                String mesStr = fechaSeleccionada.substring(0, 2);
+                                int me = Integer.parseInt(mesStr);
+                                if (me >= 1 && me <= 12) {
+                                    String mesPalabra = MESES_EN[me - 1];
+                                    String fechaFinal = mesPalabra + fechaSeleccionada.substring(2); // "Mar/15/2025"
+                                    editText.setText(fechaFinal);
+                                }
+                            } else {
+                                String mesStr = fechaSeleccionada.substring(3, 5);
+                                int me = Integer.parseInt(mesStr);
+                                if (me >= 1 && me <= 12) {
+                                    String mesPalabra = MESES_ES[me - 1];
+                                    String fechaFinal = fechaSeleccionada.substring(0, 3) + mesPalabra + fechaSeleccionada.substring(5);
+                                    editText.setText(fechaFinal); // "15/mar/2025"
+                                }
+                            }
+                        } catch (NumberFormatException e) {
+                        }
                     }
-                    editText.setText(selectedDate);
-                }, year, month, day);
-        datePickerDialog.show();
+                }, anio, mes, dia);
+
+        dialog.show();
     }
 
     private void agregarPersonaaAContenedor(LinearLayout contenedor, ContratoModelo.Persona p, List<ContratoModelo.Persona> list) {
         ListItemPersonBinding bindingItem = ListItemPersonBinding.inflate(getLayoutInflater(), contenedor, false);
-        
+
         String fullName = p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "");
         bindingItem.textNombre.setText(fullName.trim());
         bindingItem.textCumple.setText(p.cumple);
         bindingItem.textOcupacion.setText(p.ocupacion);
-        
-        
+
+
         String parentescoDisplay = p.parentesco;
         try {
             int pos = Integer.parseInt(p.parentesco);
@@ -262,7 +374,7 @@ public class TitularesFragment extends Fragment {
             }
         } catch (Exception ignored) {}
         bindingItem.textParentesco.setText(parentescoDisplay);
-        
+
         bindingItem.btnEliminar.setOnClickListener(v -> {
             contenedor.removeView(bindingItem.getRoot());
             list.remove(p);
