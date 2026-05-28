@@ -201,4 +201,6 @@
         <item>Alternados Nones</item>
 
     </string-array>
+    <string name="mensualbot">Monthly</string>
+    <string name="abiertobot">Open</string>
 </resources>

@@ -4,11 +4,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,7 +32,6 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +42,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +69,7 @@ public class DatosVentaFragment extends Fragment {
         viewModel = new ViewModelProvider(requireActivity()).get(SharedContratoViewModel.class);
         seleccionaBoton(binding.btnNueva);
         seleccionaBoton(binding.btnFinanciado);
+
 
         return binding.getRoot();
     }
@@ -198,6 +199,12 @@ public class DatosVentaFragment extends Fragment {
         } else {
             seleccionaBoton(binding.btnFinanciado);
         }
+        if("Mensual".equals(Contrato.getTipoPagoEnganche())){
+            seleccionaBoton(binding.btnMensual);
+        }else if("Abierto".equals(Contrato.getTipoPagoEnganche())){
+            seleccionaBoton(binding.btnAbierto);
+        }
+
         binding.EngacheColapsable.setVisibility(
                 binding.btnContado.isChecked()
                         ? View.GONE
@@ -223,8 +230,6 @@ public class DatosVentaFragment extends Fragment {
         binding.editNoContratosVenta.setText(Contrato.getNoContratosMC());
         binding.editPrecioNeto.setText(Contrato.getPrecioNeto());
 
-
-
         binding.editEnganchePorcentaje.setText(Contrato.getEnganchePorcentaje());
         binding.editEngancheMonto.setText(Contrato.getEngancheTotal());
         binding.editEngancheSalaMonto.setText(Contrato.getEngancheSalaMonto());
@@ -233,6 +238,7 @@ public class DatosVentaFragment extends Fragment {
         binding.editNoDesc.setText(Contrato.getNoDesc());
         binding.editEngDiferido.setText(Contrato.getEngDiferidoMonto());
         binding.editNoPagosEng.setText(Contrato.getNoPagosEng());
+
         binding.editSaldoEng.setText(Contrato.getSaldoEnganche());
         binding.editMontoFinanciar.setText(Contrato.getMontoFinanciar());
         binding.editCostoContrato.setText(Contrato.getCostoContrato());
@@ -326,12 +332,12 @@ public class DatosVentaFragment extends Fragment {
             }
         }}
 
+
     private void muestraDatePicker(EditText editText) {
         final Calendar c = Calendar.getInstance();
         int anio  = c.get(Calendar.YEAR);
         int mes = c.get(Calendar.MONTH);
         int dia   = c.get(Calendar.DAY_OF_MONTH);
-
 
         DatePickerDialog dialog = new DatePickerDialog(requireContext(),
                 (view, anio1, mesAnio, diaMes) -> {
@@ -345,12 +351,156 @@ public class DatosVentaFragment extends Fragment {
                             : d + "/" + m + "/" + y;  // DD/MM/YYYY
 
                     String fecha = convertirMesANombreString(fechaSeleccionada);
-                    editText.setText(fecha);
+
+                    // Validar que sea después de la fecha anterior en la secuencia
+                    if (validarFechaEnSecuencia(editText, fechaSeleccionada)) {
+                        editText.setText(fecha);
+                    } else {
+                        Toast.makeText(requireContext(),
+                                "La fecha debe ser posterior a la anterior",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }, anio, mes, dia);
+
+        //  Solo permitir fechas desde hoy hacia adelante
+        dialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
         dialog.show();
     }
+    private String convertirMesANumero(String s) {
+        if (s == null || s.length() != 11) return "";
 
+        try {
+            if (esIngles()) {
+                String mesPalabra = s.substring(0, 3);
+
+                for (int i = 0; i < MESES_EN.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_EN[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+
+                        // jan/15/2025 → 01/15/2025
+                        return mesNumero + s.substring(3);
+                    }
+                }
+
+            } else {
+                String mesPalabra = s.substring(3, 6);
+
+                for (int i = 0; i < MESES_ES.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_ES[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+
+                        // 15/may/2025 → 15/05/2025
+                        return s.substring(0, 3) + mesNumero + s.substring(6);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+
+        return "";
+    }
+    // Verifica que la fecha sea posterior a la anterior
+    private boolean validarFechaEnSecuencia(EditText editTextActual, String nuevaFecha) {
+        // Obtener la fecha anterior en la secuencia
+        Calendar calendario = Calendar.getInstance();
+
+        // Buscar el EditText anterior en el contenedor
+        EditText editTextAnterior = buscarEditTextAnterior(editTextActual);
+
+        if (editTextAnterior == null) {
+            // Si no hay fecha anterior, validar que sea >= hoy
+            Calendar hoy = Calendar.getInstance();
+            hoy.set(Calendar.HOUR_OF_DAY, 0);
+            hoy.set(Calendar.MINUTE, 0);
+            hoy.set(Calendar.SECOND, 0);
+
+            Calendar nuevaCal = parsearFechaACalendar(nuevaFecha);
+            if (nuevaCal == null) return false;
+
+            return nuevaCal.getTimeInMillis() >= hoy.getTimeInMillis();
+        }
+
+        // Comparar con la fecha anterior
+        String fechaAnteriorStr = editTextAnterior.getText().toString();
+        if (fechaAnteriorStr.isEmpty()) {
+            return true; // Si no hay fecha anterior, es válido
+        }
+
+        Calendar fechaAnteriorCal = parsearFechaACalendar(fechaAnteriorStr);
+        Calendar nuevaCal = parsearFechaACalendar(nuevaFecha);
+
+        if (fechaAnteriorCal == null || nuevaCal == null) return false;
+
+        // Nueva fecha debe ser mayor a la anterior
+        return nuevaCal.getTimeInMillis() > fechaAnteriorCal.getTimeInMillis();
+    }
+
+    //  Busca el EditText de fecha anterior en la secuencia
+    private EditText buscarEditTextAnterior(EditText editTextActual) {
+        EditText resultado = null;
+
+        // Recorre el contenedor de pagos
+        for (int i = 1; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
+            View rowFechas = binding.containerPagosDinamicos.getChildAt(i);
+
+            if (rowFechas instanceof LinearLayout) {
+                LinearLayout lf = (LinearLayout) rowFechas;
+
+                for (int col = 0; col < lf.getChildCount(); col++) {
+                    View childF = lf.getChildAt(col);
+
+                    if (childF instanceof TextInputLayout) {
+                        EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
+
+                        if (etF == editTextActual) {
+                            // Encontramos el actual, regresa el anterior
+                            return resultado;
+                        }
+
+                        // Guarda este como posible anterior
+                        resultado = etF;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    //  Convierte string de fecha a Calendar
+    private Calendar parsearFechaACalendar(String fecha) {
+        if (fecha == null || fecha.isEmpty()) return null;
+
+        try {
+            Calendar cal = Calendar.getInstance();
+
+            // Convertir formato con nombres de mes a números
+            String fechaNumeros = convertirMesANumero(fecha);
+            if (fechaNumeros.isEmpty()) {
+                fechaNumeros = fecha; // Si ya está en números, usar directo
+            }
+
+            String[] partes = fechaNumeros.split("/");
+            if (partes.length != 3) return null;
+
+            int dia, mes, anio;
+
+            if (esIngles()) {
+                mes = Integer.parseInt(partes[0]) - 1;
+                dia = Integer.parseInt(partes[1]);
+                anio = Integer.parseInt(partes[2]);
+            } else {
+                dia = Integer.parseInt(partes[0]);
+                mes = Integer.parseInt(partes[1]) - 1;
+                anio = Integer.parseInt(partes[2]);
+            }
+
+            cal.set(anio, mes, dia, 0, 0, 0);
+            return cal;
+        } catch (Exception e) {
+            return null;
+        }
+    }
     private boolean esIngles() {
         return Locale.getDefault().getLanguage().equals("en");
     }
@@ -506,6 +656,9 @@ public class DatosVentaFragment extends Fragment {
         til.setEndIconDrawable(R.drawable.ic_calendario);
 
         TextInputEditText et = new TextInputEditText(requireContext());
+        et.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#73A7E6EF")));
+        til.setHintEnabled(false);
 
         LinearLayout.LayoutParams etLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -524,7 +677,7 @@ public class DatosVentaFragment extends Fragment {
 
         // padding balanceado
         et.setPadding(14, 0, 14, 0);
-        et.setTextSize(13);
+        et.setTextSize(15);
         et.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         et.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
 
@@ -551,46 +704,75 @@ public class DatosVentaFragment extends Fragment {
     }
 
     private void setupPrefijosMoneda() {
-        agregaPrefijoMoneda(binding.editPrecioBruto);
-        agregaPrefijoMoneda(binding.editMontoCuenta);
-        agregaPrefijoMoneda(binding.editEngancheMonto);
-        agregaPrefijoMoneda(binding.editEngancheSalaMonto);
-        agregaPrefijoMoneda(binding.editVarios);
-        agregaPrefijoMoneda(binding.editEngDiferido);
-        agregaPrefijoMoneda(binding.editCostoContrato);
-        agregaPrefijoMoneda(binding.editcostomembresia);
+        formateaMontos(binding.editPrecioBruto);
+        formateaMontos(binding.editPrecioNeto);
+        formateaMontos(binding.editSaldoEng);
+        formateaMontos(binding.editMontoFinanciar);
+        formateaMontos(binding.editpagosala);
 
-        if (binding.editPrecioNeto.getText().toString().isEmpty()) binding.editPrecioNeto.setText("$0.00");
-        if (binding.editSaldoEng.getText().toString().isEmpty()) binding.editSaldoEng.setText("$0.00");
-        if (binding.editMontoFinanciar.getText().toString().isEmpty()) binding.editMontoFinanciar.setText("$0.00");
-        if (binding.editpagosala.getText().toString().isEmpty()) binding.editpagosala.setText("$0.00");
+
+        formateaMontos(binding.editMontoCuenta);
+        formateaMontos(binding.editEngancheMonto);
+        formateaMontos(binding.editEngancheSalaMonto);
+        formateaMontos(binding.editVarios);
+        formateaMontos(binding.editEngDiferido);
+        formateaMontos(binding.editCostoContrato);
+        formateaMontos(binding.editcostomembresia);
+
+
     }
 
-    private void agregaPrefijoMoneda(EditText et) {
-        et.setInputType(InputType.TYPE_CLASS_TEXT);
-        et.setKeyListener(DigitsKeyListener.getInstance("0123456789.$"));
-        et.addTextChangedListener(new TextWatcher() {
-            private String current = "";
+    //añade $ y comas a los campos de monto
+    private void formateaMontos(EditText et) {
+        TextWatcher watcher = new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!s.toString().equals(current)){
-                    et.removeTextChangedListener(this);
-                    String cleanString = s.toString().replaceAll("[^\\d.]", "");
-                    String formatted = "";
-                    if (!cleanString.isEmpty()) {
-                        formatted = "$" + cleanString;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                et.removeTextChangedListener(this);
+
+                try {
+                    String texto = s.toString()
+                            .replace("$", "")
+                            .replace(",", "")
+                            .trim();
+
+                    boolean terminaConPunto = texto.endsWith(".");
+
+                    if (!texto.isEmpty()) {
+                        double numero = Double.parseDouble(texto);
+
+                        DecimalFormat formato =
+                                (DecimalFormat) NumberFormat.getInstance(Locale.US);
+
+                        if (texto.contains(".")) {
+                            formato.applyPattern("$#,##0.##");
+                        } else {
+                            formato.applyPattern("$#,##0");
+                        }
+
+                        String formateado = formato.format(numero);
+
+                        if (terminaConPunto) {
+                            formateado += ".";
+                        }
+
+                        et.setText(formateado);
+                        et.setSelection(et.getText().length()); // fixed
                     }
-                    current = formatted;
-                    et.setText(formatted);
-                    et.setSelection(formatted.length());
-                    et.addTextChangedListener(this);
-                }
+
+                } catch (NumberFormatException ignored) {}
+
+                et.addTextChangedListener(this);
             }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
+        };
+
+        et.addTextChangedListener(watcher);
     }
 
     private boolean validarCampos() {
@@ -604,6 +786,35 @@ public class DatosVentaFragment extends Fragment {
             Toast.makeText(requireContext(), "Por favor, complete todos los campos obligatorios", Toast.LENGTH_SHORT).show();
             return false;
         }
+        // valida que se hayan puesto todas las fechas de pagos diferidos
+        for (int i = 1; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
+            View rowFechas = binding.containerPagosDinamicos.getChildAt(i);
+
+            if (rowFechas instanceof LinearLayout) {
+                LinearLayout lf = (LinearLayout) rowFechas;
+
+                // Verifica cada campo de fecha en la fila
+                for (int col = 0; col < lf.getChildCount(); col++) {
+                    View childF = lf.getChildAt(col);
+
+                    if (childF instanceof TextInputLayout) {
+                        EditText etFecha = (EditText) ((TextInputLayout) childF).getEditText();
+
+                        // Si alguna fecha está vacía, muestra el toast y retorna false
+                        if (etFecha != null && etFecha.getText().toString().isEmpty()) {
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Por favor, complete todas las fechas de los pagos diferidos",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+
 
         if (binding.btnUpgrade.isChecked() && binding.editMontoCuenta.getText().toString().isEmpty()) {
             Toast.makeText(requireContext(), "Ingrese el monto de la cuenta para Upgrade", Toast.LENGTH_SHORT).show();
@@ -692,6 +903,12 @@ public class DatosVentaFragment extends Fragment {
             resetEstiloBoton(binding.btnContado);
             resetEstiloBoton(binding.btnFinanciado);
         }
+        // Grupo Tipo Pago Enganche Diferido
+        if (seleccionado == binding.btnMensual || seleccionado == binding.btnAbierto) {
+            resetEstiloBoton(binding.btnMensual);
+            resetEstiloBoton(binding.btnAbierto);
+        }
+
 
         // Activar solo el seleccionado
         seleccionado.setChecked(true);
@@ -920,7 +1137,6 @@ public class DatosVentaFragment extends Fragment {
             calculaEngancheDiferido();
             calculaTotalPagoSala();
         } catch (Exception e) {
-            binding.editPrecioNeto.setText("$0.00");
         }
     }
 
@@ -975,6 +1191,8 @@ public class DatosVentaFragment extends Fragment {
 
     private EditText CreaEditTextContrato(int numero) {
         EditText et = new EditText(requireContext());
+        et.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#73A7E6EF")));
 
         int width = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -1037,7 +1255,7 @@ public class DatosVentaFragment extends Fragment {
 
                                 } else{
                                     et.setBackgroundTintList(
-                                            ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+                                    ColorStateList.valueOf(Color.parseColor("#AAA7E6EF")));
 
                                 }
                             });
@@ -1075,7 +1293,7 @@ public class DatosVentaFragment extends Fragment {
         binding.editEngancheMonto.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (binding.editEngancheMonto.hasFocus()) {
-                    updateEnganchePercent();
+                    updateEnganchePorcentaje();
                     calculaEngancheDiferido();
                 }
             }
@@ -1129,7 +1347,7 @@ public class DatosVentaFragment extends Fragment {
         binding.editpagosala.setText(String.format(Locale.US, "$%.2f", totalSala));
     }
 
-    private void updateEnganchePercent() {
+    private void updateEnganchePorcentaje() {
         try {
             double neto = parseDouble(binding.editPrecioNeto.getText().toString());
             double amount = parseDouble(binding.editEngancheMonto.getText().toString());
@@ -1215,20 +1433,36 @@ public class DatosVentaFragment extends Fragment {
     private View creaFilaDescuentos(int i) {
         LinearLayout row = new LinearLayout(requireContext());
         row.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int width = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                500,
+                getResources().getDisplayMetrics()
+        );
+
+        LinearLayout.LayoutParams lp =
+                new LinearLayout.LayoutParams(
+                        width,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
         lp.setMargins(0, 4, 0, 4);
         row.setLayoutParams(lp);
 
         EditText etMonto = new EditText(requireContext());
-        LinearLayout.LayoutParams lpMonto = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()), 1f);
+        etMonto.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        etMonto.setInputType(InputType.TYPE_CLASS_NUMBER);
+        formateaMontos(etMonto);
+
+        LinearLayout.LayoutParams lpMonto = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()), 0.6f);
         lpMonto.setMargins(0, 0, 4, 0);
         etMonto.setLayoutParams(lpMonto);
+
         etMonto.setBackgroundResource(R.drawable.bg_input);
         etMonto.setHint("Monto " + (i + 1));
-        etMonto.setTextSize(12);
+        etMonto.setTextSize(15);
+        etMonto.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#73A7E6EF")));
         etMonto.setPadding(8, 0, 8, 0);
         etMonto.setSingleLine(true);
-        agregaPrefijoMoneda(etMonto);
         etMonto.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { updateTotalDescuentos(); }
@@ -1236,11 +1470,15 @@ public class DatosVentaFragment extends Fragment {
         });
 
         EditText etDesc = new EditText(requireContext());
+        etDesc.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
         LinearLayout.LayoutParams lpDesc = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics()), 1.3f);
         etDesc.setLayoutParams(lpDesc);
         etDesc.setBackgroundResource(R.drawable.bg_input);
         etDesc.setHint("Descripción " + (i + 1));
-        etDesc.setTextSize(12);
+        etDesc.setTextSize(15);
+        etDesc.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#73A7E6EF")));
         etDesc.setPadding(8, 0, 8, 0);
         etDesc.setSingleLine(true);
 
@@ -1260,21 +1498,21 @@ public class DatosVentaFragment extends Fragment {
                 }
             }
         }
-        binding.editVarios.setText(String.format(Locale.US, "$%.2f", total));
+        binding.editVarios.setText(String.valueOf(total));
         calculaEngancheDiferido();
     }
     private void setupPagosDiferidos() {
 
         binding.btnMensual.setOnClickListener(v -> {
             modoMensual = true;
-            seleccionaBotonPago(binding.btnMensual, binding.btnAbierto);
+            seleccionaBoton(binding.btnMensual);
             mostrarModalFechaInicial();
         });
 
         binding.btnAbierto.setOnClickListener(v -> {
             modoMensual = false;
             fechaInicialMensual = null;
-            seleccionaBotonPago(binding.btnAbierto, binding.btnMensual);
+            seleccionaBoton(binding.btnAbierto);
             updatePagosDiferidos(null);
             calculaSaldoEnganche();
         });
@@ -1335,7 +1573,10 @@ public class DatosVentaFragment extends Fragment {
 
         TextView tvTitulo = new TextView(requireContext());
         tvTitulo.setText("Fecha del primer pago");
-        tvTitulo.setTextSize(16);
+        tvTitulo.setTextSize(18);
+        tvTitulo.setTypeface(null, Typeface.BOLD);
+        tvTitulo.setTypeface(Typeface.SERIF);
+        tvTitulo.setTextColor(Color.parseColor("#080C24"));
         tvTitulo.setGravity(Gravity.CENTER);
         tvTitulo.setTextColor(Color.parseColor("#0A0E21"));
         tvTitulo.setPadding(0, 0, 0, 24);
@@ -1347,14 +1588,26 @@ public class DatosVentaFragment extends Fragment {
         etFecha.setGravity(Gravity.CENTER);
         etFecha.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
-        ViewGroup.LayoutParams lp = etFecha.getLayoutParams();
-        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        etFecha.setLayoutParams(lp);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        300,
+                        getResources().getDisplayMetrics()
+                ),
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        lp.setMarginEnd(5);
+
+        lp.gravity = Gravity.CENTER_HORIZONTAL;
+
+        tilFecha.setLayoutParams(lp);
         etFecha.setFocusable(true);
         etFecha.setFocusableInTouchMode(true);
         etFecha.setClickable(true);
         tilFecha.setEndIconOnClickListener(v -> muestraDatePicker(etFecha));
         setupFormatoFecha(etFecha);
+        tilFecha.setHintEnabled(false);
+
 
         if (fechaInicialMensual != null && !fechaInicialMensual.isEmpty()) {
             etFecha.setText(fechaInicialMensual);
@@ -1569,7 +1822,7 @@ public class DatosVentaFragment extends Fragment {
 
                 EditText etMonto = creaEditTextPequeñoCuadrado("Pago " + (idx + 1));
                 etMonto.setText(String.format(Locale.US, "$%.2f", monto));
-                agregaPrefijoMoneda(etMonto);
+                formateaMontos(etMonto);
 
                 etMonto.addTextChangedListener(new TextWatcher() {
                     @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -1637,8 +1890,8 @@ public class DatosVentaFragment extends Fragment {
             binding.containerPagosDinamicos.addView(rowFechas);
         }
 
-        construyendoPagos = false; // ← re-enable after all rows are built
-        calculaSaldoEnganche();    // ← one clean recalc at the end
+        construyendoPagos = false;
+        calculaSaldoEnganche();
     }
     private List<String> generarFechasMensuales(String fechaInicial, int numPagos) {
         List<String> fechas = new ArrayList<>();
@@ -1749,16 +2002,6 @@ public class DatosVentaFragment extends Fragment {
     }
 
 
-    private void seleccionaBotonPago(MaterialButton activo, MaterialButton inactivo) {
-        activo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#0A0E21")));
-        activo.setTextColor(Color.WHITE);
-        activo.setStrokeWidth(0);
-
-        inactivo.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-        inactivo.setTextColor(Color.parseColor("#1E293B"));
-        inactivo.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#CBD5E1")));
-        inactivo.setStrokeWidth(1);
-    }
 
     private void updateMontoPagosDiferidos() {
         int numPagos = binding.containerPagosDinamicos.getChildCount();
@@ -1820,7 +2063,7 @@ public class DatosVentaFragment extends Fragment {
                     ViewGroup.LayoutParams.WRAP_CONTENT));
 
             EditText etMonto = creaEditTextPequeñoCuadrado("Monto");
-            agregaPrefijoMoneda(etMonto);
+            formateaMontos(etMonto);
 
             TextInputLayout tilFecha = creaCampoFechaConCalendario();
             TextInputEditText etFecha = (TextInputEditText) tilFecha.getEditText();
@@ -1848,6 +2091,8 @@ public class DatosVentaFragment extends Fragment {
 
     private EditText creaEditTextPequeñoCuadrado(String hint) {
         EditText et = new EditText(requireContext());
+        et.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor("#73A7E6EF")));
         et.setImeOptions(EditorInfo.IME_ACTION_DONE);
         int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 44,
                 getResources().getDisplayMetrics());
@@ -1856,7 +2101,9 @@ public class DatosVentaFragment extends Fragment {
         lp.setMargins(0, 4, 4, 4);
         et.setLayoutParams(lp);
         et.setBackgroundResource(R.drawable.bg_input);
-        et.setTextSize(13);
+        et.setTextSize(15);
+        formateaMontos(et);
+        et.setInputType(InputType.TYPE_CLASS_NUMBER);
         et.setPadding(10, 0, 10, 0);
         if (hint != null) et.setHint(hint);
         et.setSingleLine(true);
@@ -1897,7 +2144,7 @@ public class DatosVentaFragment extends Fragment {
         try {
             double engancheMonto = parseDouble(binding.editEngancheMonto.getText().toString());
             double salaMonto = parseDouble(binding.editEngancheSalaMonto.getText().toString());
-            double discounts = parseDouble(binding.editVarios.getText().toString());
+            double descuentos = parseDouble(binding.editVarios.getText().toString());
 
             double sumaPagosDiferidos = 0;
             for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
@@ -1913,7 +2160,7 @@ public class DatosVentaFragment extends Fragment {
                 }
             }
 
-            double saldo = engancheMonto - salaMonto - sumaPagosDiferidos - discounts;
+            double saldo = engancheMonto - salaMonto - sumaPagosDiferidos - descuentos;
             binding.editSaldoEng.setText(String.format(Locale.US, "$%.2f", saldo));
         } catch (Exception ignored) {}
     }
@@ -1962,14 +2209,15 @@ public class DatosVentaFragment extends Fragment {
             isContado = false;
 
             seleccionaBoton(binding.btnFinanciado);
+            binding.editEnganchePorcentaje.setText("");
+            binding.editEngancheMonto.setText("");
 
             binding.EngacheColapsable.setVisibility(View.VISIBLE);
 
             calculaMontoFinanciar();
             calculaEngancheDiferido();
             calculaTotalPagoSala();
-        });
-    }
+        });}
 
     private void guardaDatosViewModel() {
         ContratoModelo Contrato = viewModel.getContratoValue();
@@ -2033,6 +2281,7 @@ public class DatosVentaFragment extends Fragment {
         Contrato.setVariosMonto(binding.editVarios.getText().toString());
         Contrato.setNoDesc(binding.editNoDesc.getText().toString());
         Contrato.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
+        Contrato.setTipoPagoEnganche(binding.btnMensual.isChecked() ? "Mensual" : "Abierto");
         Contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
         Contrato.setSaldoEnganche(binding.editSaldoEng.getText().toString());
         Contrato.setMontoFinanciar(binding.editMontoFinanciar.getText().toString());
@@ -2049,7 +2298,7 @@ public class DatosVentaFragment extends Fragment {
         Contrato.setContratosMontoCuenta(Contratos);
 
         // guarda descuentos dinamicos
-        List<ContratoModelo.DescuentoDetalle> discounts = new ArrayList<>();
+        List<ContratoModelo.DescuentoDetalle> descuentos = new ArrayList<>();
 
         for (int i = 0; i < binding.containerDescuentosDinamicos.getChildCount(); i++) {
             View row = binding.containerDescuentosDinamicos.getChildAt(i);
@@ -2066,64 +2315,72 @@ public class DatosVentaFragment extends Fragment {
                         .toString();
 
                 if (!m.isEmpty() || !d.isEmpty()) {
-                    discounts.add(
+                    descuentos.add(
                             new ContratoModelo.DescuentoDetalle(m, d)
                     );
                 }
             }
         }
 
-        Contrato.setDescuentosDetalle(discounts);
+        Contrato.setDescuentosDetalle(descuentos);
 
         // guarda pagos diferidos
-        List<ContratoModelo.PagoDiferido> deferredPayments = new ArrayList<>();
-// El container tiene pares de filas: rowMontos (idx par) y rowFechas (idx impar)
+        List<ContratoModelo.PagoDiferido> pagosReferidos = new ArrayList<>();
+
         for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
             View rowMontos = binding.containerPagosDinamicos.getChildAt(i);
             View rowFechas = (i + 1 < binding.containerPagosDinamicos.getChildCount())
                     ? binding.containerPagosDinamicos.getChildAt(i + 1) : null;
 
-            if (rowMontos instanceof LinearLayout) {
-                LinearLayout lm = (LinearLayout) rowMontos;
-                for (int col = 0; col < lm.getChildCount(); col++) {
-                    View childM = lm.getChildAt(col);
-                    if (!(childM instanceof EditText)) continue;
+            if (rowMontos instanceof LinearLayout && rowFechas instanceof LinearLayout) {
+                LinearLayout lmMontos = (LinearLayout) rowMontos;
+                LinearLayout lmFechas = (LinearLayout) rowFechas;
 
-                    String monto = ((EditText) childM).getText().toString();
-                    String fecha = "";
+                int montoCount = 0;
 
-                    if (rowFechas instanceof LinearLayout) {
-                        View childF = ((LinearLayout) rowFechas).getChildAt(col);
-                        if (childF instanceof TextInputLayout) {
-                            EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
-                            if (etF != null) fecha = etF.getText().toString();
+                // Recorre cada elemento de la fila de montos
+                for (int col = 0; col < lmMontos.getChildCount(); col++) {
+                    View childM = lmMontos.getChildAt(col);
+
+                    // Solo procesa EditText (montos reales)
+                    if (childM instanceof EditText) {
+                        String monto = ((EditText) childM).getText().toString();
+
+                        // Busca el TextInputLayout en la fila de fechas en la misma posición relativa
+                        String fecha = "";
+                        int fechaCount = 0;
+                        for (int fc = 0; fc < lmFechas.getChildCount(); fc++) {
+                            View childF = lmFechas.getChildAt(fc);
+
+                            // Solo cuenta TextInputLayout
+                            if (childF instanceof TextInputLayout) {
+                                if (fechaCount == montoCount) {
+                                    EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
+                                    if (etF != null) {
+                                        fecha = etF.getText().toString();
+                                    }
+                                    break;
+                                }
+                                fechaCount++;
+                            }
                         }
-                    }
 
-                    if (!monto.isEmpty() || !fecha.isEmpty()) {
-                        deferredPayments.add(new ContratoModelo.PagoDiferido(monto, fecha));
+                        pagosReferidos.add(new ContratoModelo.PagoDiferido(monto, fecha));
+                        montoCount++;
                     }
                 }
             }
         }
-        Contrato.setPagosDiferidos(deferredPayments);
 
-        // Actualizar última fecha de enganche diferido y resetear fecha primer pago si cambió
-        if (!deferredPayments.isEmpty()) {
-            String newUltima = deferredPayments.get(deferredPayments.size() - 1).fecha;
-            String oldUltima = Contrato.getUltimaFechaEnganche();
-
-            if (newUltima != null && !newUltima.equals(oldUltima)) {
-                Contrato.setUltimaFechaEnganche(newUltima);
-                Contrato.setFechaPrimerPago(null); // Esto fuerza el recalculo en FinanciamientoFragment
-            }
-        } else if (Contrato.getUltimaFechaEnganche() != null) {
+        Contrato.setPagosDiferidos(pagosReferidos);
+        if (!pagosReferidos.isEmpty()) {
+            String ultimaFecha = pagosReferidos.get(pagosReferidos.size() - 1).fecha;
+            Contrato.setUltimaFechaEnganche(ultimaFecha);
+        } else {
             Contrato.setUltimaFechaEnganche(null);
-            Contrato.setFechaPrimerPago(null);
         }
 
-        viewModel.setContrato(Contrato);
-    }
+        viewModel.setContrato(Contrato);}
 
     private void limpiarInventario() {
         binding.editNoAnios.setText("");
@@ -2203,7 +2460,7 @@ public class DatosVentaFragment extends Fragment {
                 int dipWidth = (i == 0) ? 40 : (i == 1) ? 120 : (i == 2) ? 80 : 100;
                 int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipWidth, parent.getResources().getDisplayMetrics());
                 layout.addView(tv, new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-                tv.setTextSize(11);
+                tv.setTextSize(15);
                 tv.setGravity(android.view.Gravity.CENTER);
             }
             return new ViewHolder(layout);
@@ -2225,5 +2482,9 @@ public class DatosVentaFragment extends Fragment {
         List<DescuentoItem> getItems() { return items; }
         static class ViewHolder extends RecyclerView.ViewHolder { ViewHolder(@NonNull View itemView) { super(itemView); } }
     }
-    //agrega comas a los montos
+    @Override
+    public void onResume() {
+        super.onResume();
+        cargaDatosExistentes();  // Restores all data including fechas
+    }
 }

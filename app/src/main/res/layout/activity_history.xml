@@ -58,15 +58,33 @@
         tools:layout_editor_absoluteX="0dp"
         tools:listitem="@layout/item_contrato_historial" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
+    <LinearLayout
+        android:id="@+id/layoutCargando"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerHistory" />
+        app:layout_constraintTop_toBottomOf="@id/headerHistory">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Cargando contratos..."
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvNoData"

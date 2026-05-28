@@ -18,7 +18,7 @@
             android:id="@+id/textContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/btnEditar"
+            android:layout_toStartOf="@+id/buttonContainer"
             android:layout_marginEnd="15dp"
             android:orientation="vertical">
 
@@ -88,32 +88,36 @@
 
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEditar"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:text="Editar"
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/btnCancelar"
-            android:layout_marginEnd="15dp"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="12sp"
-            app:icon="@drawable/ic_editar"
-            app:iconSize="11dp"
-            app:iconTint="@color/black"
-            app:iconPadding="4dp"
-            app:strokeColor="@color/black" />
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditar"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="100dp"
+                android:layout_height="45dp"
+                android:text="Editar"
+                android:textAllCaps="false"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:icon="@drawable/ic_editar"
+                app:iconSize="11dp"
+                app:iconTint="@color/black"
+                app:iconPadding="4dp"
+                app:strokeColor="@color/black" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCancelar"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="110dp"
                 android:layout_height="45dp"
+                android:layout_marginStart="8dp"
                 android:text="Cancelar"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-
                 android:textAllCaps="false"
                 android:textColor="@color/error_red"
                 android:textSize="12sp"
@@ -127,20 +131,17 @@
                 android:id="@+id/btnReactivar"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="110dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-
                 android:layout_height="45dp"
                 android:layout_marginStart="8dp"
                 android:text="Reactivar"
                 android:textAllCaps="false"
+                android:textColor="#3EAF84"
+                android:textSize="12sp"
                 app:icon="@drawable/ic_reactiva"
                 app:iconSize="11dp"
                 app:iconTint="#3EAF84"
-
-                android:textColor="#3EAF84"
-                android:textSize="12sp"
                 app:strokeColor="#3EAF84" />
+        </LinearLayout>
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,695 +1,732 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/pacificagris">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/pacificagris">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_titular"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="serif"
+                    android:text="@string/titularestitulo"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_section_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="serif"
+                        android:text="@string/nombreform"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/nombreform"
+                            app:boxStrokeColor="#080C24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editNombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/editPaterno"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/apellidoform">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editPaterno"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/editMaterno"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layoutMaterno"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/maternoform">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editMaterno"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/editOcupacion"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/ocupacionform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/parentescoform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/cumpleform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editOcupacion"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionDone"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/spinnerParentesco"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Spinner
+                            android:id="@+id/spinnerParentesco"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            app:boxStrokeColor="#080C24" />
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayoutFechaCumpleanos"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:imeOptions="actionDone"
+                            app:hintEnabled="false"
+                            app:endIconMode="custom"
+                            app:endIconDrawable="@drawable/ic_calendario">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editFechaCumpleanos"
+                                android:layout_width="match_parent"
+                                android:layout_height="46dp"
+                                android:background="@drawable/bg_input"
+
+                                android:hint="@string/fechaformato"
+                                android:nextFocusForward="@id/editFechaCumpleanos"
+                                android:imeOptions="actionDone"
+
+                                android:inputType="date"
+                                android:paddingHorizontal="14dp"
+                                android:textSize="13sp"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rounded"
+                        android:padding="10dp">
+
+                        <View
+                            android:layout_width="24dp"
+                            android:layout_height="1dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/nombreform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/cumpleform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/ocupacionform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/parentescoform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/containerTitulares"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="0.6"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAgregar"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="#3EAF84"
+                        android:padding="0dp"
+                        android:text="@string/agregarbot"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_agregar"
+                        app:iconGravity="textStart"
+                        app:iconPadding="5dp"
+                        app:iconTint="@color/white" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLimpiar"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="4dp"
+                        android:backgroundTint="#64748B"
+                        android:padding="0dp"
+                        android:text="@string/limpiarbot"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_broom"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp"
+                        app:iconTint="@color/white" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_section_header"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_titular"
+                    app:tint="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:fontFamily="serif"
+                    android:text="@string/beneficiariostitulo"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_section_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="5dp"
+                        android:fontFamily="serif"
+                        android:text="@string/nombreform"
+                        android:textColor="@color/pacificagris"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/nombreform"
+                            app:boxStrokeColor="#080C24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editNombreBene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/editPaternoBene"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/apellidoform">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editPaternoBene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionNext"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/editMaternoBene"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/layoutMaternoBene"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/maternoform">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editMaternoBene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:imeOptions="actionNext"
+                                android:nextFocusForward="@id/editOcupacionBene"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/ocupacionform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/parentescoform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/cumpleform"
+                            android:textColor="@color/pacificagris"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editOcupacionBene"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_input"
+                                android:imeOptions="actionDone"
+
+                                android:inputType="textCapWords"
+                                android:maxLines="1"
+                                android:nextFocusForward="@id/spinnerParentescoBene"
+                                android:padding="12dp"
+                                android:textColorHint="@color/menta"
+                                android:textSize="14sp" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Spinner
+                            android:id="@+id/spinnerParentescoBene"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            app:boxStrokeColor="#080C24" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/textInputLayoutFechaCumpleanosBene"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            app:hintEnabled="false"
+
+                            android:imeOptions="actionDone"
+                            app:endIconMode="custom"
+                            app:endIconDrawable="@drawable/ic_calendario">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editFechaCumpleanosBene"
+                                android:layout_width="match_parent"
+                                android:layout_height="46dp"
+                                android:background="@drawable/bg_input"
+
+                                android:hint="@string/fechaformato"
+                                android:nextFocusForward="@id/editFechaCumpleanosBene"
+                                android:imeOptions="actionDone"
+
+                                android:inputType="date"
+                                android:paddingHorizontal="14dp"
+                                android:textSize="13sp"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/rounded"
+                        android:padding="10dp">
+
+                        <View
+                            android:layout_width="24dp"
+                            android:layout_height="1dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/nombreform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/cumpleform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/ocupacionform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="serif"
+                            android:text="@string/parentescoform"
+                            android:textColor="@color/white"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/containerBeneficiarios"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_weight="0.6"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAgregarBene"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="#3EAF84"
+                        android:padding="0dp"
+                        android:text="@string/agregarbot"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_agregar"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp"
+                        app:iconTint="@color/white" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLimpiarBene"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="4dp"
+                        android:backgroundTint="#64748B"
+                        android:padding="0dp"
+                        android:text="@string/limpiarbot"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_broom"
+                        app:iconGravity="textStart"
+                        app:iconPadding="4dp"
+                        app:iconTint="@color/white" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/AceptarTarea"
+                android:background="@drawable/btn_continuar"
+                app:backgroundTint="@null"
+                app:icon="@drawable/ic_cont"
+                app:iconSize="20dp"
+                android:text="@string/continuar"
+                android:textSize="15dp"
+                app:iconGravity="textEnd"
+                >
+
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Overlay de carga: cubre toda la pantalla mientras se carga el contrato en edición -->
+    <LinearLayout
+        android:id="@+id/layoutCargandoTitulares"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:visibility="gone">
 
+        <ProgressBar
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:indeterminateTint="@color/white" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/bg_section_header"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_titular"
-                app:tint="@color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="serif"
-                android:text="@string/titularestitulo"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_section_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="5dp"
-                    android:fontFamily="serif"
-                    android:text="@string/nombreform"
-                    android:textColor="@color/pacificagris"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/nombreform"
-                        app:boxStrokeColor="#080C24">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editNombre"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editPaterno"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/apellidoform">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editPaterno"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editMaterno"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutMaterno"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/maternoform">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editMaterno"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editOcupacion"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/ocupacionform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/parentescoform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/cumpleform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editOcupacion"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionDone"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/spinnerParentesco"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Spinner
-                        android:id="@+id/spinnerParentesco"
-                        android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        app:boxStrokeColor="#080C24" />
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayoutFechaCumpleanos"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:imeOptions="actionDone"
-                        app:endIconMode="custom"
-                        app:endIconDrawable="@drawable/ic_calendario">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editFechaCumpleanos"
-                            android:layout_width="match_parent"
-                            android:layout_height="46dp"
-                            android:background="@drawable/bg_input"
-
-                            android:hint="@string/fechaformato"
-                            android:nextFocusForward="@id/editFechaCumpleanos"
-                            android:imeOptions="actionDone"
-
-                            android:inputType="date"
-                            android:paddingHorizontal="14dp"
-                            android:textSize="13sp"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rounded"
-                    android:padding="10dp">
-
-                    <View
-                        android:layout_width="24dp"
-                        android:layout_height="1dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/nombreform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/cumpleform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/ocupacionform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/parentescoform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/containerTitulares"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="0.6"
-                android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAgregar"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:backgroundTint="#3EAF84"
-                    android:padding="0dp"
-                    android:text="@string/agregarbot"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp"
-                    app:icon="@drawable/ic_agregar"
-                    app:iconGravity="textStart"
-                    app:iconPadding="5dp"
-                    app:iconTint="@color/white" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLimpiar"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="4dp"
-                    android:backgroundTint="#64748B"
-                    android:padding="0dp"
-                    android:text="@string/limpiarbot"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp"
-                    app:icon="@drawable/ic_broom"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"
-                    app:iconTint="@color/white" />
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_section_header"
-            android:gravity="center_vertical"
-            android:paddingEnd="16dp"
-            android:paddingStart="16dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_titular"
-                app:tint="@color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="serif"
-                android:text="@string/beneficiariostitulo"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_section_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="5dp"
-                    android:fontFamily="serif"
-                    android:text="@string/nombreform"
-                    android:textColor="@color/pacificagris"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/nombreform"
-                        app:boxStrokeColor="#080C24">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editNombreBene"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editPaternoBene"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/apellidoform">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editPaternoBene"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editMaternoBene"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutMaternoBene"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="4dp"
-                        android:layout_weight="1"
-                        android:hint="@string/maternoform">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editMaternoBene"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/editOcupacionBene"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/ocupacionform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/parentescoform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/cumpleform"
-                        android:textColor="@color/pacificagris"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editOcupacionBene"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input"
-                            android:imeOptions="actionDone"
-
-                            android:inputType="textCapWords"
-                            android:maxLines="1"
-                            android:nextFocusForward="@id/spinnerParentescoBene"
-                            android:padding="12dp"
-                            android:textColorHint="@color/menta"
-                            android:textSize="14sp" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <Spinner
-                        android:id="@+id/spinnerParentescoBene"
-                        android:layout_width="0dp"
-                        android:layout_height="44dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        app:boxStrokeColor="#080C24" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textInputLayoutFechaCumpleanosBene"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:imeOptions="actionDone"
-                        app:endIconMode="custom"
-                        app:endIconDrawable="@drawable/ic_calendario">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editFechaCumpleanosBene"
-                            android:layout_width="match_parent"
-                            android:layout_height="46dp"
-                            android:background="@drawable/bg_input"
-
-                            android:hint="@string/fechaformato"
-                            android:nextFocusForward="@id/editFechaCumpleanosBene"
-                            android:imeOptions="actionDone"
-
-                            android:inputType="date"
-                            android:paddingHorizontal="14dp"
-                            android:textSize="13sp"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rounded"
-                    android:padding="10dp">
-
-                    <View
-                        android:layout_width="24dp"
-                        android:layout_height="1dp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/nombreform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/cumpleform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/ocupacionform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="serif"
-                        android:text="@string/parentescoform"
-                        android:textColor="@color/white"
-                        android:textSize="13sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/containerBeneficiarios"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="30dp"
-                android:layout_weight="0.6"
-                android:orientation="vertical">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAgregarBene"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:backgroundTint="#3EAF84"
-                    android:padding="0dp"
-                    android:text="@string/agregarbot"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp"
-                    app:icon="@drawable/ic_agregar"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"
-                    app:iconTint="@color/white" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLimpiarBene"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="4dp"
-                    android:backgroundTint="#64748B"
-                    android:padding="0dp"
-                    android:text="@string/limpiarbot"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    app:cornerRadius="4dp"
-                    app:icon="@drawable/ic_broom"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"
-                    app:iconTint="@color/white" />
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/AceptarTarea"
-            android:background="@drawable/btn_continuar"
-            app:backgroundTint="@null"
-            app:icon="@drawable/ic_cont"
-            app:iconSize="20dp"
-            android:text="@string/continuar"
-            android:textSize="15dp"
-            app:iconGravity="textEnd"
-           >
+            android:layout_marginTop="12dp"
+            android:text="Cargando contrato..."
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:fontFamily="serif" />
 
-        </com.google.android.material.button.MaterialButton>
     </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+</FrameLayout>

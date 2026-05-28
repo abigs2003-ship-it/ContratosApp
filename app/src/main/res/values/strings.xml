@@ -320,4 +320,6 @@
     <string name="corridos">Corridos</string>
     <string name="alternospares">Alternos Pares</string>
     <string name="alternosnones">Alternos nones</string>
+    <string name="mensualbot">Mensual</string>
+    <string name="abiertobot">Abierto</string>
 </resources>

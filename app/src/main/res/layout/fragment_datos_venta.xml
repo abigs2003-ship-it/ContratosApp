@@ -339,7 +339,7 @@
                         android:inputType="numberDecimal"
                         android:padding="8dp"
                         android:text=""
-                        android:textSize="13sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -363,11 +363,13 @@
                     android:id="@+id/editPrecioBruto"
                     android:layout_width="800dp"
                     android:layout_height="40dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_marginTop="4dp"
+                    android:padding="8dp"
+
                     android:imeOptions="actionDone"
                     android:background="@drawable/bg_html_input"
                     android:inputType="numberDecimal"
-                    android:padding="8dp"
                     android:textSize="15sp" />
 
                 <TextView
@@ -406,11 +408,10 @@
 
                     <EditText
                         android:id="@+id/editMontoCuenta"
-                        android:layout_width="0dp"
+                        android:layout_width="500dp"
                         android:layout_height="40dp"
                         android:backgroundTint="#AAA7E6EF"
 
-                        android:layout_weight="1"
                         android:imeOptions="actionDone"
                         android:background="@drawable/bg_html_input"
                         android:inputType="numberDecimal"
@@ -421,8 +422,8 @@
                         android:id="@+id/tvMonedaCuenta"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
+                        android:gravity="start"
                         android:layout_marginStart="10dp"
-                        android:gravity="center"
                         android:text="MN"
                         android:textSize="15sp" />
 
@@ -432,16 +433,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:fontFamily="serif"
                         android:text="@string/nocontratos"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                      />
 
                     <EditText
                         android:id="@+id/editNoContratosVenta"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:inputType="number"
+                        android:backgroundTint="#AAA7E6EF"
 
                         android:imeOptions="actionDone"
                         android:layout_marginStart="4dp"
@@ -485,6 +486,7 @@
                     android:layout_marginTop="4dp"
                     android:background="@drawable/bg_html_input"
                     android:focusable="false"
+                    android:layout_marginBottom="5dp"
                     android:inputType="numberDecimal"
                     android:padding="8dp"
                     android:textSize="15sp" />
@@ -567,7 +569,7 @@
                     android:id="@+id/editEnganchePorcentaje"
                     android:layout_width="200dp"
                     android:layout_height="40dp"
-                    android:padding="5dp"
+                    android:padding="8dp"
 
                     android:imeOptions="actionDone"
                     android:background="@drawable/bg_html_input"
@@ -591,7 +593,8 @@
                     android:imeOptions="actionDone"
                     android:background="@drawable/bg_html_input"
                     android:inputType="numberDecimal"
-                    android:padding="5dp"
+                    android:padding="8dp"
+
                     android:textSize="15sp" />
 
                 <TextView
@@ -674,7 +677,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:fontFamily="serif"
-                    android:text="@string/descuentos"
+                    android:text="Varios"
                     android:textColor="@color/pacificagris"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -716,6 +719,7 @@
                         android:id="@+id/editNoDesc"
                         android:layout_width="100dp"
                         android:layout_marginEnd="60dp"
+                        android:backgroundTint="#73A7E6EF"
                         android:imeOptions="actionDone"
                         android:layout_height="40dp"
                         android:layout_marginStart="4dp"
@@ -777,8 +781,10 @@
                     <EditText
                         android:id="@+id/editNoPagosEng"
                         android:layout_width="100dp"
+                        android:backgroundTint="#73A7E6EF"
+
                         android:imeOptions="actionDone"
-                        android:layout_height="40dp"
+                        android:layout_height="38dp"
                         android:layout_marginStart="4dp"
                         android:background="@drawable/bg_html_input"
                         android:gravity="center"
@@ -801,8 +807,11 @@
                             android:layout_height="48dp"
                             android:gravity="center_vertical"
                             android:layout_gravity="center_vertical"
-                            android:text="Mensual"
-                            android:textSize="12sp"
+                            android:text="@string/mensualbot"
+                            android:textSize="14sp"
+                            android:checkable="true"
+
+                            android:textAllCaps="false"
                             android:layout_marginEnd="7dp"
                             android:layout_marginTop="7dp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
@@ -813,9 +822,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="48dp"
                             android:layout_marginStart="4dp"                            android:layout_marginTop="7dp"
-
-                            android:text="Abierto"
-                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            android:checkable="true"
+                            android:text="@string/abiertobot"
+                            android:textSize="14sp"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
                     </LinearLayout>
@@ -860,6 +870,8 @@
                     <EditText
                         android:id="@+id/editSaldoEng"
                         android:layout_width="750dp"
+                        android:inputType="numberDecimal"
+
                         android:layout_height="40dp"
                         android:imeOptions="actionDone"
                         android:background="@drawable/bg_html_input"
@@ -872,7 +884,8 @@
                         android:id="@+id/tvMonedaSaldoEng"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:gravity="start"
+                        android:layout_marginStart="10dp"
                         android:text="MN"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -930,18 +943,18 @@
                         android:layout_height="40dp"
                         android:layout_weight="1"
                         android:imeOptions="actionDone"
+                        android:inputType="numberDecimal"
 
                         android:background="@drawable/bg_html_input"
-                        android:inputType="numberDecimal"
-                        android:padding="8dp"
+                        android:padding="5dp"
                         android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/tvMonedaMontoFinanciar"
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
+                        android:gravity="start"
                         android:layout_marginStart="10dp"
-                        android:gravity="center"
                         android:text="MN"
                         android:textSize="15sp" />
 
@@ -962,7 +975,7 @@
                         android:layout_width="60dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:gravity="center"
+                        android:gravity="start"
                         android:text="MN"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -1022,7 +1035,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:text="MN"
                     android:textSize="15sp" />
 
@@ -1043,7 +1056,7 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:gravity="center"
+                    android:gravity="start"
                     android:text="MN"
                     android:textSize="15sp" />
             </LinearLayout>

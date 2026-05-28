@@ -20,29 +20,25 @@ import com.example.contrato.databinding.ActivityHistoryBinding;
 
 import java.util.ArrayList;
 import java.util.Locale;
-
 public class HistorialActivity extends AppCompatActivity {
 
     private ActivityHistoryBinding binding;
     private ContratoAdapter adapter;
     private SharedContratoViewModel viewModel;
     private boolean esModoEdicion = false;
-
-
+    private boolean yaFueCargado = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityHistoryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1); //recupera el id del usuario que inicio sesión desde el MainActivity
 
-
-
+        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
         viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
 
         binding.btnBack.setOnClickListener(v -> finish());
-        
+
         binding.btnEditMode.setOnClickListener(v -> {
             esModoEdicion = !esModoEdicion;
             adapter.setEsModoEdicion(esModoEdicion);
@@ -51,93 +47,77 @@ public class HistorialActivity extends AppCompatActivity {
 
         setupRecyclerView();
         setupObservers();
-        
-        viewModel.cargaHistorialBaseDatos(idUsuario); //por ahora se cargan todos los historiales
+
+        binding.layoutCargando.setVisibility(View.VISIBLE);
+        viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
-    private void setupObservers() {
-        viewModel.getHistory().observe(this, Contratos -> {
-            binding.progressBar.setVisibility(View.GONE);
-            if (Contratos != null) {
-                adapter.setContratos(Contratos);
-                if (Contratos.isEmpty()) {
-                    binding.tvNoData.setVisibility(View.VISIBLE);
-                } else {
-                    binding.tvNoData.setVisibility(View.GONE);
-                }
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
 
-        viewModel.getErrorMessage().observe(this, error -> {
-            if (error != null) {
-                binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
-            }
-        });
+        if (!yaFueCargado) {
+            return;
+        }
+
+        viewModel.cargaHistorialBaseDatos(idUsuario);
     }
+
     private void setupRecyclerView() {
-
         adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
             Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
             intent.putExtra("contrato", contrato);
             startActivity(intent);
         });
 
-        adapter.setOnContratoEstatusListener(
-                this::mostrarConfirmacionEstatus
-        );
+        adapter.setOnContratoEstatusListener(this::mostrarConfirmacionEstatus);
 
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewHistory.setAdapter(adapter);
-        
-        binding.progressBar.setVisibility(View.VISIBLE);
     }
-    private void mostrarConfirmacionEstatus(
-            ContratoModelo contrato
-    ) {
-        boolean activo =
-                "A".equalsIgnoreCase(
-                        contrato.getEstatus()
-                );
 
-        String nuevoEstatus =
-                activo ? "C" : "A";
+    private void setupObservers() {
+        viewModel.getHistory().observe(this, contratos -> {
+            if (contratos == null) return;
 
-        String mensaje =
-                activo
-                        ? "¿Está seguro que desea cancelar el contrato?"
-                        : "¿Está seguro que desea reactivar el contrato?";
+            if (contratos.isEmpty() && !yaFueCargado) return;
+
+            binding.layoutCargando.setVisibility(View.GONE);
+            yaFueCargado = true;
+
+            adapter.setContratos(contratos);
+            binding.tvNoData.setVisibility(contratos.isEmpty() ? View.VISIBLE : View.GONE);
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                binding.layoutCargando.setVisibility(View.GONE);
+                yaFueCargado = true;
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void mostrarConfirmacionEstatus(ContratoModelo contrato) {
+        boolean activo = "A".equalsIgnoreCase(contrato.getEstatus());
+        String nuevoEstatus = activo ? "C" : "A";
+        String mensaje = activo
+                ? "¿Está seguro que desea cancelar el contrato?"
+                : "¿Está seguro que desea reactivar el contrato?";
 
         new AlertDialog.Builder(this)
                 .setTitle("Confirmar Estatus")
                 .setMessage(mensaje)
-                .setPositiveButton(
-                        "Aceptar",
-                        (dialog, which) -> {
-                            contrato.setEstatus(
-                                    nuevoEstatus
-                            );
-
-                            viewModel.actualizaContratoBaseDatos(contrato);
-                            Toast.makeText(this, "Estatus actualizado", Toast.LENGTH_LONG).show();
-                            adapter.setEsModoEdicion(false);
-                            binding.btnEditMode.setText( "EDITAR");
-
-                        }
-                )
-                .setNegativeButton(
-                        "Regresar",
-                        null
-                )
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    contrato.setEstatus(nuevoEstatus);
+                    viewModel.actualizaContratoBaseDatos(contrato);
+                    Toast.makeText(this, "Estatus actualizado", Toast.LENGTH_LONG).show();
+                    adapter.setEsModoEdicion(false);
+                    binding.btnEditMode.setText("EDITAR");
+                })
+                .setNegativeButton("Regresar", null)
                 .show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1); //recupera el id del usuario que inicio sesión desde el MainActivity
-
-        viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
     @Override

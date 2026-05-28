@@ -104,18 +104,55 @@ public class TitularesFragment extends Fragment {
         binding.spinnerParentesco.setSelection(adapter.getCount());
         binding.spinnerParentescoBene.setSelection(adapter.getCount());
 
-        cargaDatosExistentes();
+        viewModel.getContrato().observe(getViewLifecycleOwner(), contrato -> {
+            if (contrato == null) return;
 
+            boolean esModoEdicion = Boolean.TRUE.equals(contrato.getModoEdicion());
+
+            boolean titularesLocalVacios     = titularesList.isEmpty();
+            boolean beneficiariosLocalVacios = beneficiariosList.isEmpty();
+            boolean contratoTieneTitulares     = !contrato.getTitulares().isEmpty();
+            boolean contratoTieneBeneficiarios = !contrato.getBeneficiarios().isEmpty();
+
+            // En modo edición mostramos el spinner mientras los datos no hayan llegado todavía
+            if (esModoEdicion && titularesLocalVacios && !contratoTieneTitulares) {
+                binding.layoutCargandoTitulares.setVisibility(View.VISIBLE);
+                return; // esperamos a la siguiente emisión con los datos ya cargados
+            }
+
+            // Datos listos — ocultamos el spinner
+            binding.layoutCargandoTitulares.setVisibility(View.GONE);
+
+            if (titularesLocalVacios && contratoTieneTitulares) {
+                titularesList = new ArrayList<>(contrato.getTitulares());
+                binding.containerTitulares.removeAllViews();
+                for (ContratoModelo.Persona persona : titularesList) {
+                    agregarPersonaaAContenedor(binding.containerTitulares, persona, titularesList);
+                }
+            }
+
+            if (beneficiariosLocalVacios && contratoTieneBeneficiarios) {
+                beneficiariosList = new ArrayList<>(contrato.getBeneficiarios());
+                binding.containerBeneficiarios.removeAllViews();
+                for (ContratoModelo.Persona persona : beneficiariosList) {
+                    agregarPersonaaAContenedor(binding.containerBeneficiarios, persona, beneficiariosList);
+                }
+            }
+        });
         binding.btnAgregar.setOnClickListener(v -> {
-            String nombre = binding.editNombre.getText().toString();
-            String paterno = binding.editPaterno.getText().toString();
-            String materno = (binding.layoutMaterno.getVisibility() == View.VISIBLE) ? binding.editMaterno.getText().toString() : "";
-            String cumple = binding.editFechaCumpleanos.getText().toString();
+            // Esperamos a que el contrato esté cargado antes de permitir agregar
+            if (viewModel.getContratoValue() == null) {
+                Toast.makeText(requireContext(), "Espere, cargando datos...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String nombre    = binding.editNombre.getText().toString();
+            String paterno   = binding.editPaterno.getText().toString();
+            String materno   = (binding.layoutMaterno.getVisibility() == View.VISIBLE)
+                    ? binding.editMaterno.getText().toString() : "";
+            String cumple    = binding.editFechaCumpleanos.getText().toString();
             String ocupacion = binding.editOcupacion.getText().toString();
-
-            int position = binding.spinnerParentesco.getSelectedItemPosition();
-
-            String parentesco = String.valueOf(position);
+            String parentesco = String.valueOf(binding.spinnerParentesco.getSelectedItemPosition());
 
             if (!nombre.isEmpty()) {
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
@@ -128,18 +165,20 @@ public class TitularesFragment extends Fragment {
             }
         });
 
-        binding.btnLimpiar.setOnClickListener(v -> limpiarCamposTitular());
-
         binding.btnAgregarBene.setOnClickListener(v -> {
-            String nombre = binding.editNombreBene.getText().toString();
-            String paterno = binding.editPaternoBene.getText().toString();
-            String materno = (binding.layoutMaternoBene.getVisibility() == View.VISIBLE) ? binding.editMaternoBene.getText().toString() : "";
-            String cumple = binding.editFechaCumpleanosBene.getText().toString();
+            // Igual para beneficiarios
+            if (viewModel.getContratoValue() == null) {
+                Toast.makeText(requireContext(), "Espere, cargando datos...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String nombre    = binding.editNombreBene.getText().toString();
+            String paterno   = binding.editPaternoBene.getText().toString();
+            String materno   = (binding.layoutMaternoBene.getVisibility() == View.VISIBLE)
+                    ? binding.editMaternoBene.getText().toString() : "";
+            String cumple    = binding.editFechaCumpleanosBene.getText().toString();
             String ocupacion = binding.editOcupacionBene.getText().toString();
-
-            int position = binding.spinnerParentescoBene.getSelectedItemPosition();
-
-            String parentesco = String.valueOf(position);
+            String parentesco = String.valueOf(binding.spinnerParentescoBene.getSelectedItemPosition());
 
             if (!nombre.isEmpty()) {
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
@@ -301,13 +340,16 @@ public class TitularesFragment extends Fragment {
     }
 
     private void guardaDatosViewModel() {
-        ContratoModelo Contrato = viewModel.getContratoValue();
-        if (Contrato == null) Contrato = new ContratoModelo();
+        ContratoModelo contrato = viewModel.getContratoValue();
 
-        Contrato.setTitulares(new ArrayList<>(titularesList));
-        Contrato.setBeneficiarios(new ArrayList<>(beneficiariosList));
+        if (contrato == null) {
+            return;
+        }
 
-        viewModel.setContrato(Contrato);
+        contrato.setTitulares(new ArrayList<>(titularesList));
+        contrato.setBeneficiarios(new ArrayList<>(beneficiariosList));
+
+        viewModel.setContrato(contrato);
     }
 
     private void muestraDatePicker(EditText editText) {

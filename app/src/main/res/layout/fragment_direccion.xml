@@ -219,7 +219,7 @@
                     <EditText
                         android:id="@+id/etNumeroCasa1"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
@@ -253,7 +253,7 @@
                     <EditText
                         android:id="@+id/etNumeroCasa2"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
@@ -291,7 +291,7 @@
                         android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroOficina1"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
@@ -323,7 +323,7 @@
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroOficina2"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
@@ -355,7 +355,7 @@
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroCel1"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">
@@ -420,7 +420,7 @@
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="0.6" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <EditText android:id="@+id/etNumeroMensajes"
                         android:inputType="phone"
-                        android:maxLength="9"
+                        android:maxLength="10"
                         android:imeOptions="actionDone"
                         android:layout_width="0dp" android:layout_height="36dp" android:layout_weight="1.5" android:background="@drawable/bg_input" android:textSize="15sp" android:gravity="center" android:layout_marginEnd="4dp" />
                     <FrameLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.8">

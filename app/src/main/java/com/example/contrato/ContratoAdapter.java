@@ -1,5 +1,8 @@
 package com.example.contrato;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,6 +134,15 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
             }
         });
 
+        //cuando click en editar se abre la actividad principal con el contrato cargado
+
+        holder.binding.btnEditar.setOnClickListener(v -> {
+            Intent intent = new Intent(holder.itemView.getContext(), MainActivity.class);
+            intent.putExtra("ID_CONTRATO",
+                    Long.parseLong(contrato.getId()));
+            holder.itemView.getContext().startActivity(intent);
+        });
+
         // Reactivar
         holder.binding.btnReactivar.setOnClickListener(v -> {
             if (estatusListener != null) {
@@ -141,21 +153,23 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
         });
 
         //solo mostrar uno dependiendo de estatus
-        if ("A".equalsIgnoreCase(contrato.getEstatus())) {
-            holder.binding.btnCancelar.setVisibility(
-                    esModoEdicion ? View.VISIBLE : View.GONE
-            );
-            holder.binding.btnReactivar.setVisibility(
-                    View.GONE
-            );
+        if (esModoEdicion) {
+            if ("A".equals(contrato.getEstatus())) {
+                holder.binding.btnCancelar.setVisibility(View.VISIBLE);
+                holder.binding.btnReactivar.setVisibility(View.GONE);
+            } else {
+                holder.binding.btnCancelar.setVisibility(View.GONE);
+                holder.binding.btnReactivar.setVisibility(View.VISIBLE);
+            }
+
+            holder.binding.btnEditar.setVisibility(View.VISIBLE);
+
         } else {
-            holder.binding.btnCancelar.setVisibility(
-                    View.INVISIBLE
-            );
-            holder.binding.btnReactivar.setVisibility(
-                    esModoEdicion ? View.VISIBLE : View.INVISIBLE
-            );
+            holder.binding.btnEditar.setVisibility(View.GONE);
+            holder.binding.btnCancelar.setVisibility(View.GONE);
+            holder.binding.btnReactivar.setVisibility(View.GONE);
         }
+
     }
 
     private boolean esIngles() {

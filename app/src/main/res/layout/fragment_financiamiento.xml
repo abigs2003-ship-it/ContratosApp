@@ -12,7 +12,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,24 +125,21 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 app:endIconMode="custom"
+                                app:hintEnabled="false"
                                 android:imeOptions="actionDone"
-
                                 app:endIconDrawable="@drawable/ic_calendario">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/etFechaPrimerPago"
                                     android:layout_width="match_parent"
                                     android:background="@drawable/bg_input"
-                                    android:layout_height="46dp"
+                                    android:layout_height="48dp"
                                     android:hint="@string/fechaformato"
                                     android:imeOptions="actionDone"
-
                                     android:inputType="date"
                                     android:paddingHorizontal="14dp"
                                     android:textSize="13sp"/>
                             </com.google.android.material.textfield.TextInputLayout>
-
-
                         </LinearLayout>
                     </LinearLayout>
 
@@ -178,7 +174,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
                                     android:background="@drawable/bg_input"
-                                    android:textSize="13sp"
+                                    android:textSize="15sp"
                                     android:inputType="numberDecimal"
                                     android:hint="0.00" />
                             </com.google.android.material.textfield.TextInputLayout>
@@ -204,7 +200,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="50dp"
                                 android:background="@drawable/bg_input"
-                                android:textSize="13sp"
+                                android:textSize="15sp"
                                 android:paddingHorizontal="14dp"
                                 android:inputType="number"
                                 android:hint="0" />
@@ -237,7 +233,7 @@
                                     android:layout_height="50dp"
                                     android:background="@drawable/bg_input"
                                     android:paddingHorizontal="14dp"
-                                    android:textSize="13sp"
+                                    android:textSize="15sp"
                                     android:inputType="numberDecimal"
                                     android:hint="0" />
                             </com.google.android.material.textfield.TextInputLayout>
@@ -314,6 +310,7 @@
                             android:backgroundTint="#12FFFFFF"
                             android:padding="14dp">
 
+                            <!-- FILA 1: pagos regulares -->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -323,48 +320,44 @@
                                     android:id="@+id/etResumenPagos"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="0"
-                                    android:layout_marginEnd="10dp"
-                                    android:textColor="#99FFFFFF"
-                                    android:textSize="15sp" />
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/pagosde"
+                                    android:text="—"
                                     android:textColor="#99FFFFFF"
                                     android:textSize="15sp" />
                                 <TextView
                                     android:id="@+id/etResumenMensualidad"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="$0.00"
+                                    android:text=""
                                     android:textColor="#7FDBCA"
                                     android:textSize="15sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"
+                                    android:layout_marginStart="6dp" />
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/filaUltimoPago"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:visibility="gone">
                                 <TextView
-                                    android:layout_width="0dp"
+                                    android:id="@+id/tvResumenUltimoPagoLabel"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="@string/ultimo"
+                                    android:text="1 pago de "
                                     android:textColor="#99FFFFFF"
                                     android:textSize="15sp" />
                                 <TextView
                                     android:id="@+id/tvResumenUltimoPago"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="$0.00"
+                                    android:text="—"
                                     android:textColor="#7FDBCA"
                                     android:textSize="15sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
+
 
                         <View
                             android:layout_width="match_parent"
@@ -375,11 +368,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical" />
 
-
-
-                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -447,13 +437,13 @@
                             android:orientation="horizontal"
                             android:background="#1A1A2E"
                             android:gravity="center_vertical">
-                            <TextView android:layout_width="44dp" android:layout_height="wrap_content" android:text="No." android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/fechapago" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/monto" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="Capital" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/interes" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
-                            <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="@string/capacumulado" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="@string/saldo" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="60dp" android:layout_height="wrap_content" android:text="No." android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="@string/fechapago" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="@string/monto" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="Capital" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="@string/interes" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
+                            <TextView android:layout_width="160dp" android:layout_height="wrap_content" android:text="@string/capacumulado" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" android:visibility="gone" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="@string/saldo" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
                         </LinearLayout>
 
                         <!-- fila 0 Saldo Inicial -->
@@ -463,14 +453,13 @@
                             android:orientation="horizontal"
                             android:background="#2C3E50"
                             android:gravity="center_vertical">
-                            <TextView android:layout_width="44dp" android:layout_height="wrap_content" android:text="0" android:textColor="@color/white" android:textSize="15sp" android:gravity="center" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" />
-                            <!-- Visibility controlled by logic -->
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
-                            <TextView android:layout_width="100dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
-                            <TextView android:layout_width="120dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
-                            <TextView android:id="@+id/tvSaldoInicial" android:layout_width="100dp" android:layout_height="wrap_content" android:text="$0.00" android:textColor="#7FDBCA" android:textSize="11sp" android:textStyle="bold" android:gravity="center" />
+                            <TextView android:layout_width="60dp" android:layout_height="wrap_content" android:text="0" android:textColor="@color/white" android:textSize="15sp" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
+                            <TextView android:layout_width="140dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
+                            <TextView android:layout_width="160dp" android:layout_height="wrap_content" android:text="—" android:textColor="#99FFFFFF" android:textSize="15sp" android:gravity="center" android:visibility="gone" />
+                            <TextView android:id="@+id/tvSaldoInicial" android:layout_width="140dp" android:layout_height="wrap_content" android:text="$0.00" android:textColor="#7FDBCA" android:textSize="15sp" android:textStyle="bold" android:gravity="center" />
                         </LinearLayout>
 
                         <!-- Content Rows Container -->

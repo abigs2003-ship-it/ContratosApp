@@ -3,6 +3,7 @@ package com.example.contrato;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
     public ActivityMainBinding binding;
     private AppBarConfiguration appBarConfiguration;
+    private int contractId = -1;
+    private boolean modoEditar = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,44 +37,40 @@ public class MainActivity extends AppCompatActivity {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("es-MX"));
         }
 
+        SharedContratoViewModel vm = new ViewModelProvider(this).get(SharedContratoViewModel.class);
 
         long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
-        long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
+        long idUsuario  = getIntent().getLongExtra("ID_USUARIO", -1);
 
-        Intent intent2 = new Intent(this, HistorialActivity.class);
-        intent2.putExtra("ID_USUARIO", idUsuario);
-        
-        SharedContratoViewModel viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
-        
-        if (idUsuario != -1) {
-            viewModel.setCurrentUserId(idUsuario);
+        // Guardamos el id del usuario en el viewmodel
+        if (idUsuario > 0) {
+            vm.setCurrentUserId(idUsuario);
         } else {
             SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
             idUsuario = prefs.getLong("userId", -1);
-            viewModel.setCurrentUserId(idUsuario);
+            vm.setCurrentUserId(idUsuario);
         }
 
         if (idContrato != -1) {
-            ContratoModelo model = viewModel.getContratoValue();
-            if (model == null) model = new ContratoModelo();
-            model.setId(String.valueOf(idContrato));
-            viewModel.setContrato(model);
+            vm.fetchContratoPorId(idContrato);
         }
+
 
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
         String userName = prefs.getString("userName", "");
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
         setSupportActionBar(binding.barraTitulo);
 
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
         NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
 
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_datos_generales, 
-                R.id.nav_condiciones, 
+                R.id.nav_datos_generales,
+                R.id.nav_condiciones,
                 R.id.nav_financiamiento
         ).build();
 
@@ -86,19 +85,18 @@ public class MainActivity extends AppCompatActivity {
 
         binding.exitbtn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MenuActivity.class);
+            intent.putExtra("ID_USUARIO", getIntent().getLongExtra("ID_USUARIO", -1));
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             finish();
         });
 
-        // nombre despues de bienvenido
         if (!userName.isEmpty()) {
             binding.usuario.setText(userName + "!");
         }
 
         setupSpinnerIdiomas();
     }
-
     private void setupSpinnerIdiomas() {
         Spinner spin = binding.traductorSpinner;
         String[] idiomas = getResources().getStringArray(R.array.idiomas);

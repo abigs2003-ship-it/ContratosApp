@@ -1,10 +1,13 @@
 package com.example.contrato;
 
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContratoModelo implements Serializable {
+    private boolean modoEdicion;
     private String id;
     private String clientName;
     private String fechaCreacion;
@@ -91,6 +94,7 @@ public class ContratoModelo implements Serializable {
     private List<PagoDiferido> pagosDiferidos = new ArrayList<>();
     private List<DescuentoDetalle> descuentosDetalle = new ArrayList<>();
     private List<String> contratosMontoCuenta = new ArrayList<>();
+    private String tipoPagoEnganche;
     private String ultimaFechaEnganche;
     // Financiamiento
     private String tipoPeriodo;
@@ -149,6 +153,8 @@ public class ContratoModelo implements Serializable {
 
     // Getters y Setters
 
+    public boolean getModoEdicion(){return modoEdicion;}
+    public void setModoEdicion(boolean modoEdicion){this.modoEdicion = modoEdicion;}
     public String getEstatus(){return estatus;}
     public void setEstatus(String estatus){this.estatus = estatus;}
 
@@ -315,7 +321,10 @@ public class ContratoModelo implements Serializable {
     public void setUltimaFechaEnganche(String ultimaFechaEnganche) {
         this.ultimaFechaEnganche = ultimaFechaEnganche;
     }
-
+    public String getTipoPagoEnganche() {
+        return tipoPagoEnganche;
+    }
+    public void setTipoPagoEnganche(String tipoPagoEnganche) {this.tipoPagoEnganche = tipoPagoEnganche;}
 
     public List<PagoDiferido> getPagosDiferidos() { return pagosDiferidos; }
     public void setPagosDiferidos(List<PagoDiferido> pagosDiferidos) { this.pagosDiferidos = pagosDiferidos; }

@@ -58,90 +58,144 @@ public class PestañaDireccionFragment extends Fragment {
         setupNacionalidadSpinner();
         telefonosMask();
 
+
+
         cargaDatosExistentes();
 
         return binding.getRoot();
     }
 
-    //añade parentesis a la lada
     private void telefonosMask() {
-        EditText[] ladaFields = {
+        // Campos de lada (clave de área) y su número de teléfono correspondiente
+        EditText[] camposLada = {
                 binding.etLadaCasa1, binding.etLadaCasa2,
                 binding.etLadaOficina1, binding.etLadaOficina2,
                 binding.etLadaCel1, binding.etLadaCel2,
                 binding.etLadaMensajes
         };
 
-        EditText[] numberFields = {
+        EditText[] camposNumero = {
                 binding.etNumeroCasa1, binding.etNumeroCasa2,
                 binding.etNumeroOficina1, binding.etNumeroOficina2,
                 binding.etNumeroCel1, binding.etNumeroCel2,
                 binding.etNumeroMensajes
         };
-        for (EditText campo : ladaFields) {
 
+        // Guardamos qué lada corresponde a cada campo de número (mismo índice)
+        // para poder consultar sus dígitos al formatear el número
+        for (int i = 0; i < camposLada.length; i++) {
+            final EditText campoLada = camposLada[i];
+            final EditText campoNumero = camposNumero[i];
 
-            campo.setOnFocusChangeListener((vista, tieneFoco) -> {
-                // Cuando el usuario sale del campo
+            // Al perder el foco, formateamos la lada con paréntesis y la limitamos a 3 dígitos
+            campoLada.setOnFocusChangeListener((vista, tieneFoco) -> {
                 if (!tieneFoco) {
-                    String numeroLimpio = campo.getText().toString().replaceAll("[^\\d]", "");
+                    String soloDigitos = campoLada.getText().toString().replaceAll("[^\\d]", "");
 
-                    if (numeroLimpio.length() > 3) {
-                        numeroLimpio = numeroLimpio.substring(0, 3);
+                    // Máximo 3 dígitos en la lada
+                    if (soloDigitos.length() > 3) {
+                        soloDigitos = soloDigitos.substring(0, 3);
                     }
 
-                    if (!numeroLimpio.isEmpty()) {
-                        String numeroFormateado = "(" + numeroLimpio + ")";
-                        campo.setText(numeroFormateado);
+                    if (!soloDigitos.isEmpty()) {
+                        campoLada.setText("(" + soloDigitos + ")");
                     }
+
+                    // Re-formateamos el número asociado según los nuevos dígitos de lada
+                    reformatearNumero(campoLada, campoNumero);
                 }
             });
 
-            campo.setOnEditorActionListener((vista, accionId, evento) -> {
-                String numeroLimpio = campo.getText().toString().replaceAll("[^\\d]", "");
+            // También formateamos la lada al presionar Enter o siguiente campo
+            campoLada.setOnEditorActionListener((vista, accionId, evento) -> {
+                String soloDigitos = campoLada.getText().toString().replaceAll("[^\\d]", "");
 
-                if (numeroLimpio.length() > 3) {
-                    numeroLimpio = numeroLimpio.substring(0, 3);
+                if (soloDigitos.length() > 3) {
+                    soloDigitos = soloDigitos.substring(0, 3);
                 }
 
-                if (!numeroLimpio.isEmpty()) {
-                    campo.setText("(" + numeroLimpio + ")");
+                if (!soloDigitos.isEmpty()) {
+                    campoLada.setText("(" + soloDigitos + ")");
                 }
 
+                reformatearNumero(campoLada, campoNumero);
                 return false;
             });
-        }
 
-        for (EditText et : numberFields) {
-            et.addTextChangedListener(new TextWatcher() {
-                private boolean isUpdating = false;
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            // Al escribir el número, aplicamos la máscara dinámica según la lada
+            campoNumero.addTextChangedListener(new TextWatcher() {
+                private boolean estaActualizando = false;
+
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (isUpdating) return;
-                    isUpdating = true;
-                    String clean = s.toString().replaceAll("[^\\d]", "");
-                    if (clean.length() > 7) clean = clean.substring(0, 7);
-                    
-                    StringBuilder formatted = new StringBuilder();
-                    for (int i = 0; i < clean.length(); i++) {
-                        formatted.append(clean.charAt(i));
-                        if ((i == 2 || i == 4) && i != clean.length() - 1) {
-                            formatted.append("-");
-                        }
-                    }
-                    
-                    et.setText(formatted.toString());
-                    et.setSelection(formatted.length());
-                    isUpdating = false;
+                    if (estaActualizando) return;
+                    estaActualizando = true;
+
+                    // Limpiamos todo lo que no sea dígito
+                    String soloDigitos = s.toString().replaceAll("[^\\d]", "");
+
+                    // Determinamos cuántos dígitos tiene la lada para saber el formato del número
+                    int digitosLada = campoLada.getText().toString().replaceAll("[^\\d]", "").length();
+
+                    String numeroFormateado = formatearNumeroSegunLada(soloDigitos, digitosLada);
+
+                    campoNumero.setText(numeroFormateado);
+                    campoNumero.setSelection(numeroFormateado.length());
+
+                    estaActualizando = false;
                 }
             });
         }
     }
 
+    private void reformatearNumero(EditText campoLada, EditText campoNumero) {
+        String soloDigitosNumero = campoNumero.getText().toString().replaceAll("[^\\d]", "");
+        if (soloDigitosNumero.isEmpty()) return;
+
+        int digitosLada = campoLada.getText().toString().replaceAll("[^\\d]", "").length();
+        String numeroFormateado = formatearNumeroSegunLada(soloDigitosNumero, digitosLada);
+
+        campoNumero.setText(numeroFormateado);
+        campoNumero.setSelection(numeroFormateado.length());
+    }
+
+
+    private String formatearNumeroSegunLada(String soloDigitos, int digitosLada) {
+        StringBuilder resultado = new StringBuilder();
+
+        if (digitosLada == 2) {
+            // Lada corta (2 dígitos): el número local tiene 8 dígitos → XXXX-XXXX
+            if (soloDigitos.length() > 8) soloDigitos = soloDigitos.substring(0, 8);
+
+            for (int i = 0; i < soloDigitos.length(); i++) {
+                resultado.append(soloDigitos.charAt(i));
+                // Guión después del 4to dígito
+                if (i == 3 && i != soloDigitos.length() - 1) {
+                    resultado.append("-");
+                }
+            }
+
+        } else if (digitosLada == 3) {
+            // Lada larga (3 dígitos): el número local tiene 7 dígitos → XXX-XX-XX
+            if (soloDigitos.length() > 7) soloDigitos = soloDigitos.substring(0, 7);
+
+            for (int i = 0; i < soloDigitos.length(); i++) {
+                resultado.append(soloDigitos.charAt(i));
+                if ((i == 2 || i == 4) && i != soloDigitos.length() - 1) {
+                    resultado.append("-");
+                }
+            }
+
+        } else {
+            if (soloDigitos.length() > 8) soloDigitos = soloDigitos.substring(0, 8);
+            resultado.append(soloDigitos);
+        }
+
+        return resultado.toString();
+    }
     private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) return;

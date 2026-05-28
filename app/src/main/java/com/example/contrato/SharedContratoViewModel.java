@@ -39,10 +39,14 @@ public class SharedContratoViewModel extends ViewModel {
     private final MutableLiveData<List<String>> unidades = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Boolean> saveSuccess = new MutableLiveData<>();
     private final MutableLiveData<String> errorMessage = new MutableLiveData<>();
-    
+
     private long currentUserId = -1;
     private int lastDgTab = 0;
     private int lastCondTab = 0;
+    private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
+    private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
+
+
 
     private final VentasContratoRepository contratoRepo = new VentasContratoRepository();
     private final VentasInformacionGeneralRepository infoGralRepo = new VentasInformacionGeneralRepository();
@@ -104,6 +108,7 @@ public class SharedContratoViewModel extends ViewModel {
                 VentasContrato vc = contratoRepo.getById(idContrato);
                 if (vc != null) {
                     ContratoModelo m = new ContratoModelo();
+                    m.setModoEdicion(true);
                     m.setId(String.valueOf(vc.idContrato));
                     m.setIdioma(mapIdiomaFromDb(vc.idioma));
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
@@ -113,8 +118,6 @@ public class SharedContratoViewModel extends ViewModel {
                     cargaDetallesTitulares(m, vc.idContrato);
                     cargaDetallesContrato(m, vc.idContrato);
                     Contrato.postValue(m);
-                } else {
-                    errorMessage.postValue("Contrato no encontrado");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -445,7 +448,7 @@ public class SharedContratoViewModel extends ViewModel {
                     ved.idPago = engancheDiferidoRepo.getNextId();
                     ved.idContrato = idContrato;
                     ved.cantidadPago = parseDouble(pd.monto);
-                    ved.fechaPago = parseSqlDate(pd.fecha);
+                    ved.fechaPago = parseSqlDate(convertirMesANumero(pd.fecha));
                     ved.fechaAlta = originalFechaAlta;
                     ved.idUsuarioAlta = originalIdUsuarioAlta;
                     engancheDiferidoRepo.insert(ved);
@@ -454,7 +457,7 @@ public class SharedContratoViewModel extends ViewModel {
                 VentasFinanciamientos vf = financiamientoRepo.getByContratoId(idContrato);
                 if (vf != null) {
                     vf.tipoPeriodo = model.getTipoPeriodo();
-                    vf.fechaPrimerPago = parseSqlDate(model.getFechaPrimerPago());
+                    vf.fechaPrimerPago = parseSqlDate(convertirMesANumero(model.getFechaPrimerPago()));
                     vf.montoAFinanciar = parseDouble(model.getMontoFinanciar());
                     vf.numeroPagos = parseInt(model.getNumPagos());
                     vf.tasaInteres = parseDouble(model.getTasaInteres());
@@ -657,7 +660,7 @@ public class SharedContratoViewModel extends ViewModel {
                     ved.idPago = engancheDiferidoRepo.getNextId();
                     ved.idContrato = idContrato;
                     ved.cantidadPago = parseDouble(pd.monto);
-                    ved.fechaPago = parseSqlDate(pd.fecha);
+                    ved.fechaPago = parseSqlDate(convertirMesANumero(pd.fecha));
                     ved.fechaAlta = now;
                     ved.idUsuarioAlta = idUsuario;
                     engancheDiferidoRepo.insert(ved);
@@ -677,7 +680,7 @@ public class SharedContratoViewModel extends ViewModel {
                 vf.idFinanciamiento = financiamientoRepo.getNextId();
                 vf.idContrato = idContrato;
                 vf.tipoPeriodo = model.getTipoPeriodo();
-                vf.fechaPrimerPago = parseSqlDate(model.getFechaPrimerPago());
+                vf.fechaPrimerPago = parseSqlDate(convertirMesANumero(model.getFechaPrimerPago()));
                 vf.montoAFinanciar = parseDouble(model.getMontoFinanciar());
                 vf.numeroPagos = parseInt(model.getNumPagos());
                 vf.tasaInteres = parseDouble(model.getTasaInteres());
@@ -728,7 +731,7 @@ public class SharedContratoViewModel extends ViewModel {
             vt.materno = truncate(p.materno, 50);
             vt.tipoTitular = tipo;
             vt.ocupacion = truncate(p.ocupacion, 50);
-            vt.fechaCumpleaños = parseSqlDate(p.cumple);
+            vt.fechaCumpleaños = parseSqlDate(convertirMesANumero(p.cumple));
             vt.parentesco = parseLong(p.parentesco); 
             vt.idUsuarioAlta = idUsuario;
             vt.fechaAlta = now;
@@ -773,7 +776,51 @@ public class SharedContratoViewModel extends ViewModel {
         if (value == null || value.isEmpty()) return 0;
         try { return Long.parseLong(value.replaceAll("[^0-9]", "")); } catch (NumberFormatException e) { return 0; }
     }
+    private boolean esIngles() {
+        return Locale.getDefault().getLanguage().equals("en");
+    }
 
+    /**
+     * Convierte una fecha con mes en texto a formato numérico para guardar en BD.
+     * Acepta tanto "15/mar/2025" (español) / "mar/15/2025" (inglés) con mes en texto,
+     * como "15/03/2025" / "03/15/2025" con mes ya numérico — por si viene directo de BD.
+     */
+    private String convertirMesANumero(String s) {
+        if (s == null || s.isEmpty()) return "";
+
+        // Si ya viene en formato numérico DD/MM/YYYY o MM/DD/YYYY (largo 10, sin letras)
+        // lo regresamos tal cual para que parseSqlDate lo procese directamente
+        if (s.length() == 10 && s.matches("\\d{2}/\\d{2}/\\d{4}")) {
+            return s;
+        }
+
+        // Formato con mes en texto: largo esperado = 11 (ej. "15/mar/2025" o "mar/15/2025")
+        if (s.length() != 11) return "";
+
+        try {
+            if (esIngles()) {
+                // "mar/15/2025" → buscamos las primeras 3 letras como mes
+                String mesPalabra = s.substring(0, 3);
+                for (int i = 0; i < MESES_EN.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_EN[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+                        return mesNumero + s.substring(3); // "03/15/2025"
+                    }
+                }
+            } else {
+                // "15/mar/2025" → buscamos las letras en posición 3-5
+                String mesPalabra = s.substring(3, 6);
+                for (int i = 0; i < MESES_ES.length; i++) {
+                    if (mesPalabra.equalsIgnoreCase(MESES_ES[i])) {
+                        String mesNumero = String.format(Locale.US, "%02d", i + 1);
+                        return s.substring(0, 3) + mesNumero + s.substring(6); // "15/03/2025"
+                    }
+                }
+            }
+        } catch (Exception ignorado) {}
+
+        return "";
+    }
     private Date parseSqlDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) return null;
         try {

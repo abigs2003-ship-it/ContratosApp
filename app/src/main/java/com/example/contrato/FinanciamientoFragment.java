@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.contrato.databinding.FragmentFinanciamientoBinding;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,6 +67,7 @@ public class FinanciamientoFragment extends Fragment {
         configurarSpinnerTipoPeriodo();
         cargaDatosExistentes();
         setupObservers();
+        formateaMontos(binding.etMontoFinanciar);
 
         binding.textInputLayoutFechaPrimerpago.setEndIconOnClickListener(v -> {
             muestraDatePicker(binding.etFechaPrimerPago);
@@ -79,6 +81,27 @@ public class FinanciamientoFragment extends Fragment {
         binding.mostrar.setOnClickListener(v -> {
             columnasVisibles = !columnasVisibles;
             actualizarVisibilidadColumnas();
+        });
+
+
+        viewModel.getContrato().observe(getViewLifecycleOwner(), contrato -> {
+
+            if (contrato.getModoEdicion()) {
+                binding.btnEnviar.setText("Actualizar contrato");
+            } else {
+                binding.btnEnviar.setText("Enviar contrato");
+            }
+
+        });
+        binding.btnEnviar.setOnClickListener(v -> {
+
+            ContratoModelo contrato = viewModel.getContratoValue();
+
+            if (contrato.getModoEdicion()) {
+                viewModel.actualizaContratoBaseDatos(contrato);
+            } else {
+                viewModel.guardaContratoBaseDatos();
+            }
         });
 
         binding.btnEnviar.setOnClickListener(v -> mostrarConfirmacionEnvio());
@@ -306,12 +329,72 @@ public class FinanciamientoFragment extends Fragment {
 
         return "";
     }
-    private void setupObservers() {
-        viewModel.getSaveSuccess().observe(getViewLifecycleOwner(), success -> {
-            if (Boolean.TRUE.equals(success)) {
-                Toast.makeText(requireContext(), "Datos cargados", Toast.LENGTH_LONG).show();
-                irAlMenu();
+    //añade $ y comas a los campos de monto
+    private void formateaMontos(EditText et) {
+        TextWatcher watcher = new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                et.removeTextChangedListener(this);
+
+                try {
+                    String texto = s.toString()
+                            .replace("$", "")
+                            .replace(",", "")
+                            .trim();
+
+                    boolean terminaConPunto = texto.endsWith(".");
+
+                    if (!texto.isEmpty()) {
+                        double numero = Double.parseDouble(texto);
+
+                        DecimalFormat formato =
+                                (DecimalFormat) NumberFormat.getInstance(Locale.US);
+
+                        if (texto.contains(".")) {
+                            formato.applyPattern("$#,##0.##");
+                        } else {
+                            formato.applyPattern("$#,##0");
+                        }
+
+                        String formateado = formato.format(numero);
+
+                        if (terminaConPunto) {
+                            formateado += ".";
+                        }
+
+                        et.setText(formateado);
+                        et.setSelection(et.getText().length()); // fixed
+                    }
+
+                } catch (NumberFormatException ignored) {}
+
+                et.addTextChangedListener(this);
             }
+        };
+
+        et.addTextChangedListener(watcher);
+    }
+    private void setupObservers() {
+        viewModel.getSaveSuccess().observe(getViewLifecycleOwner(), exito -> {
+            if (exito == null || !exito) return;
+
+            ContratoModelo contrato = viewModel.getContratoValue();
+
+            if (contrato != null && Boolean.TRUE.equals(contrato.getModoEdicion())) {
+                Toast.makeText(requireContext(), "Contrato actualizado correctamente", Toast.LENGTH_SHORT).show();
+                requireActivity().finish(); // ← finish() en el Activity que contiene el Fragment
+                return;
+            }
+
+            Toast.makeText(requireContext(), "Contrato guardado correctamente", Toast.LENGTH_SHORT).show();
+            requireActivity().finish();
         });
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
@@ -523,7 +606,6 @@ public class FinanciamientoFragment extends Fragment {
         String fecha = binding.etFechaPrimerPago.getText().toString().trim();
         String textoFecha = convertirMesANumero(fecha);
 
-
         if (textoMonto.isEmpty() || textoPagos.isEmpty() || textoTasa.isEmpty() || textoFecha.isEmpty()) {
             Toast.makeText(requireContext(), "Complete todos los campos", Toast.LENGTH_SHORT).show();
             return;
@@ -560,23 +642,33 @@ public class FinanciamientoFragment extends Fragment {
         double capitalAcumulado = 0;
         double totalIntereses = 0;
         double ultimoPago = 0;
+        System.out.println(ultimoPago);
         Calendar calPago = (Calendar) fechaPrimerPagoSeleccionada.clone();
-
+        double todo=0;
+        double aPagar=0;
         for (int i = 1; i <= numeroPagos; i++) {
             double interes = saldo * tasaPeriodica;
             double capital = pagoFijo - interes;
+            todo += pagoFijo;
 
+            double cortado = Math.floor(pagoFijo * 100.0) / 100.0;
+
+            aPagar += cortado;
             if (i == numeroPagos) {
-                capital = saldo;
+                capital = saldo; // último pago liquida exactamente el saldo restante
             }
 
-            double montoFila = capital + interes;
-            if (i == numeroPagos) {
-                ultimoPago = montoFila;
-            }
 
             saldo -= capital;
             if (saldo < 0.001) saldo = 0;
+
+            double montoFila = capital + interes;
+
+            if (saldo == 0){
+                montoFila=montoFila+ (todo-aPagar);
+            }
+
+            if (capital < 0.001) capital = 0;
 
             capitalAcumulado += capital;
             totalIntereses += interes;
@@ -587,9 +679,15 @@ public class FinanciamientoFragment extends Fragment {
             avanzarFecha(calPago, periodoSeleccionado);
         }
 
-        actualizarResumen(numeroPagos, pagoFijo, capitalAcumulado + totalIntereses, totalIntereses, ultimoPago);
+        System.out.println(ultimoPago);
+        System.out.println(aPagar);
+        System.out.println(pagoFijo);
+        ultimoPago=pagoFijo+(todo-aPagar);
+
+        actualizarResumen(numeroPagos, pagoFijo, ultimoPago);
         actualizarVisibilidadColumnas();
     }
+
 
     private double calcularTasaPeriodica(double tasaAnual, int periodo) {
         if (tasaAnual == 0) return 0;
@@ -654,16 +752,39 @@ public class FinanciamientoFragment extends Fragment {
         tv.setText(texto);
         tv.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, weight));
         tv.setGravity(Gravity.CENTER);
-        tv.setTextSize(12);
+        tv.setTextSize(15);
         tv.setTextColor(Color.BLACK);
         return tv;
     }
-
-    private void actualizarResumen(int pagos, double mensualidad, double total, double intereses, double ultimo) {
-        binding.etResumenPagos.setText(String.valueOf(pagos));
-        binding.etResumenMensualidad.setText(formatoMoneda.format(mensualidad));
-        binding.tvResumenUltimoPago.setText(formatoMoneda.format(ultimo));
+//checa si el ultimo pago es diferente a los demas entonces hace otra fila que diga 1 pago de tanto
+private void actualizarResumen(int pagos, double pagoFijo, double ultimoPago) {
+        System.out.println(ultimoPago);
+    if (pagos == 0) {
+        binding.etResumenPagos.setText("—");
+        binding.etResumenMensualidad.setText("");
+        binding.filaUltimoPago.setVisibility(View.GONE);
+        return;
     }
+
+    boolean ultimoDiferente = Math.abs(ultimoPago - pagoFijo) > 0.01;
+
+    if (ultimoDiferente && pagos > 1) {
+        // Ej: "2 pagos de"  +  "$3,333.33"  (en verde)
+        binding.etResumenPagos.setText((pagos - 1) + " pagos de");
+        binding.etResumenMensualidad.setText(formatoMoneda.format(pagoFijo));
+
+        // Fila oculta se hace visible: "1 pago de"  +  "$3,333.34" (en verde)
+        binding.filaUltimoPago.setVisibility(View.VISIBLE);
+        binding.tvResumenUltimoPago.setText(formatoMoneda.format(ultimoPago));
+    } else {
+        // Todos iguales: "20 pagos de"  +  "$3,000.00" (en verde)
+        binding.etResumenPagos.setText(pagos + " pagos de");
+        binding.etResumenMensualidad.setText(formatoMoneda.format(pagoFijo));
+
+        // Ocultar la fila del último pago
+        binding.filaUltimoPago.setVisibility(View.GONE);
+    }
+}
 
     private void limpiarTodo() {
         binding.etMontoFinanciar.setText("");
@@ -673,7 +794,7 @@ public class FinanciamientoFragment extends Fragment {
         binding.spinnerTipoPeriodo.setSelection(0);
         binding.contenedorFilasTabla.removeAllViews();
         binding.tvSaldoInicial.setText("$0.00");
-        actualizarResumen(0, 0, 0, 0, 0);
+        actualizarResumen(0, 0, 0);
     }
 
     @Override
