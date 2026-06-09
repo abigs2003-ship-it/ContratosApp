@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
@@ -51,9 +52,6 @@ public class MainActivity extends AppCompatActivity {
             vm.setCurrentUserId(idUsuario);
         }
 
-        if (idContrato != -1) {
-            vm.fetchContratoPorId(idContrato);
-        }
 
 
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
@@ -91,12 +89,31 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
+        //si el pago es de contado la opcion de financiamiento desaparece
+        vm.getContrato().observe(this, contrato -> {
+            if (contrato == null) return;
+
+            String tipoPago = contrato.getTipoPago();
+
+            boolean hide = "Contado".equalsIgnoreCase(tipoPago != null ? tipoPago : "");
+
+            MenuItem item = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento);
+
+            if (item != null) {
+                item.setVisible(!hide);
+            }
+        });
+
         if (!userName.isEmpty()) {
             binding.usuario.setText(userName + "!");
+        }
+        if (idContrato != -1) {
+            vm.fetchContratoPorId(idContrato);
         }
 
         setupSpinnerIdiomas();
     }
+
     private void setupSpinnerIdiomas() {
         Spinner spin = binding.traductorSpinner;
         String[] idiomas = getResources().getStringArray(R.array.idiomas);
@@ -168,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.setContrato(contrato);
     }
+
+
     public static class FechaLocaleConvertidor {
 
         private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};

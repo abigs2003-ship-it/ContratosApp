@@ -191,13 +191,13 @@
     <string name="ultimo">1 pago de</string>
     <string name="tipoocupacion">Tipo Ocupación</string>
     <string name="corridos">Corridos</string>
-    <string name="alternospares">Alternados pares</string>
-    <string name="alternosnones">Alternados nones</string>
+    <string name="alternospares">Alternos pares</string>
+    <string name="alternosnones">Alternos nones</string>
     <string-array name="tiposOcupacion">
         <item>Seleccionar</item>
         <item>Corridos</item>
-        <item>Alternados Pares</item>
-        <item>Alternados Nones</item>
+        <item>Alternos Pares</item>
+        <item>Alternos Nones</item>
 
     </string-array>
     <string name="mensualbot">Mensual</string>

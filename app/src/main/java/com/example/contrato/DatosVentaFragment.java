@@ -1,5 +1,6 @@
 package com.example.contrato;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.res.ColorStateList;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,8 +46,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -77,6 +81,8 @@ public class DatosVentaFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ContratoModelo contrato = viewModel.getContratoValue();
+
 
         setupUnidadSpinner();
         setupTemporadaSpinner();
@@ -93,6 +99,7 @@ public class DatosVentaFragment extends Fragment {
         setupBotones();
         setupPrefijosMoneda();
         setupTipoCambio();
+        setupObservers();
 
 
         cargaDatosExistentes();
@@ -100,12 +107,18 @@ public class DatosVentaFragment extends Fragment {
         binding.btnLimpiarInventario.setOnClickListener(v -> limpiarInventario());
         binding.btnLimpiarDatosdeVenta.setOnClickListener(v -> limpiarDatosVenta());
 
+        //si es de contado, el boton se vuelve en enviar contrato y se deshabilita la seccion de financiamiento
         binding.AceptarTarea.setOnClickListener(v -> {
-            if (validarCampos()) {
+            if (validarCampos() && binding.btnFinanciado.isChecked()) {
                 guardaDatosViewModel();
                 irAFinanciamiento();
+            }else if(validarCampos() && binding.btnContado.isChecked()){
+
+                mostrarConfirmacionEnvio();
             }
         });
+
+
 
         //si da click a spinner año uso le avisa al usuario que primero hay que seleccionar un tipo de ocupación
         binding.spAnioUso.setOnTouchListener((v, event) -> {
@@ -780,35 +793,35 @@ public class DatosVentaFragment extends Fragment {
         if (binding.editNoAnios.getText().toString().isEmpty() ||
                 binding.editTipoCambio.getText().toString().isEmpty() ||
                 binding.editPrecioBruto.getText().toString().isEmpty() ||
-                binding.editEnganchePorcentaje.getText().toString().isEmpty() ||
-                binding.editEngancheSalaPorcentaje.getText().toString().isEmpty() ||
-                binding.editcostomembresia.getText().toString().isEmpty()) {
+                binding.editEnganchePorcentaje.getText().toString().isEmpty() ) {
 
             Toast.makeText(requireContext(), "Por favor, complete todos los campos obligatorios", Toast.LENGTH_SHORT).show();
             return false;
         }
-        // valida que se hayan puesto todas las fechas de pagos diferidos
-        for (int i = 1; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
-            View rowFechas = binding.containerPagosDinamicos.getChildAt(i);
+        // valida que se hayan puesto todas las fechas de pagos diferidos si es financiado
+        if(!binding.btnContado.isChecked()) {
+            for (int i = 1; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
+                View rowFechas = binding.containerPagosDinamicos.getChildAt(i);
 
-            if (rowFechas instanceof LinearLayout) {
-                LinearLayout lf = (LinearLayout) rowFechas;
+                if (rowFechas instanceof LinearLayout) {
+                    LinearLayout lf = (LinearLayout) rowFechas;
 
-                // Verifica cada campo de fecha en la fila
-                for (int col = 0; col < lf.getChildCount(); col++) {
-                    View childF = lf.getChildAt(col);
+                    // Verifica cada campo de fecha en la fila
+                    for (int col = 0; col < lf.getChildCount(); col++) {
+                        View childF = lf.getChildAt(col);
 
-                    if (childF instanceof TextInputLayout) {
-                        EditText etFecha = (EditText) ((TextInputLayout) childF).getEditText();
+                        if (childF instanceof TextInputLayout) {
+                            EditText etFecha = (EditText) ((TextInputLayout) childF).getEditText();
 
-                        // Si alguna fecha está vacía, muestra el toast y retorna false
-                        if (etFecha != null && etFecha.getText().toString().isEmpty()) {
-                            Toast.makeText(
-                                    requireContext(),
-                                    "Por favor, complete todas las fechas de los pagos diferidos",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-                            return false;
+                            // Si alguna fecha está vacía, muestra el toast y retorna false
+                            if (etFecha != null && etFecha.getText().toString().isEmpty()) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        "Por favor, complete todas las fechas de los pagos diferidos",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                                return false;
+                            }
                         }
                     }
                 }
@@ -834,7 +847,7 @@ public class DatosVentaFragment extends Fragment {
             Toast.makeText(requireContext(), "Ingrese un Tipo de Pago", Toast.LENGTH_SHORT).show();
             return false;
         }
-
+        if(!binding.btnContado.isChecked()){
         for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i++) {
             View row = binding.containerPagosDinamicos.getChildAt(i);
             if (row instanceof LinearLayout) {
@@ -855,7 +868,7 @@ public class DatosVentaFragment extends Fragment {
                     }
                 }
             }
-        }
+        }}
 
         return true;
     }
@@ -2192,12 +2205,21 @@ public class DatosVentaFragment extends Fragment {
     private void LogicaTipodePago() {
 
         binding.btnContado.setOnClickListener(v -> {
+
             isContado = true;
 
             seleccionaBoton(binding.btnContado);
 
+            ContratoModelo c = viewModel.getContratoValue();
+            if (c == null) c = new ContratoModelo();
+
+            c.setTipoPago("Contado");
+            viewModel.setContrato(c);
+
             binding.editEnganchePorcentaje.setText("100");
             updateEngancheMN();
+            binding.AceptarTarea.setText("Enviar Contrato");
+            binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_enviar));
 
             binding.EngacheColapsable.setVisibility(View.GONE);
 
@@ -2207,9 +2229,21 @@ public class DatosVentaFragment extends Fragment {
         });
 
         binding.btnFinanciado.setOnClickListener(v -> {
+
             isContado = false;
 
             seleccionaBoton(binding.btnFinanciado);
+
+            ContratoModelo c = viewModel.getContratoValue();
+            if (c == null) c = new ContratoModelo();
+
+            c.setTipoPago("Financiado");
+            binding.AceptarTarea.setText("Continuar");
+            binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_cont));
+
+
+            viewModel.setContrato(c);
+
             binding.editEnganchePorcentaje.setText("");
             binding.editEngancheMonto.setText("");
 
@@ -2218,8 +2252,8 @@ public class DatosVentaFragment extends Fragment {
             calculaMontoFinanciar();
             calculaEngancheDiferido();
             calculaTotalPagoSala();
-        });}
-
+        });
+    }
     private void guardaDatosViewModel() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
@@ -2251,10 +2285,10 @@ public class DatosVentaFragment extends Fragment {
                 tipo = "Corridos";
                 break;
             case 2:
-                tipo = "Alternados Pares";
+                tipo = "Alternos Pares";
                 break;
             case 3:
-                tipo = "Alternados Nones";
+                tipo = "Alternos Nones";
                 break;
             default:
                 tipo = "Seleccionar";
@@ -2487,5 +2521,63 @@ public class DatosVentaFragment extends Fragment {
     public void onResume() {
         super.onResume();
         cargaDatosExistentes();  // Restores all data including fechas
+    }
+
+    private void finalizarContrato() {
+        guardaDatosViewModel();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+
+        if (Contrato.getId() == null) {
+            Contrato.setId(String.valueOf(System.currentTimeMillis()));
+        }
+
+        SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        String now = metaSdf.format(new Date());
+
+        Contrato.setFechaCreacion(now);
+
+
+
+        if (!Contrato.getTitulares().isEmpty()) {
+            ContratoModelo.Persona p = Contrato.getTitulares().get(0);
+            Contrato.setClientName(p.nombre + " " + (p.paterno != null ? p.paterno : ""));
+        } else {
+            Contrato.setClientName("Sin nombre");
+        }
+
+        ContratoManager.getInstance().actualizaContrato(Contrato);
+
+        viewModel.guardaContratoBaseDatos();
+    }
+
+    private void setupObservers() {
+        viewModel.getSaveSuccess().observe(getViewLifecycleOwner(), exito -> {
+            if (exito == null || !exito) return;
+
+            ContratoModelo contrato = viewModel.getContratoValue();
+
+            if (contrato != null && Boolean.TRUE.equals(contrato.getModoEdicion())) {
+                Toast.makeText(requireContext(), "Contrato actualizado correctamente", Toast.LENGTH_SHORT).show();
+                requireActivity().finish(); // ← finish() en el Activity que contiene el Fragment
+                return;
+            }
+
+            Toast.makeText(requireContext(), "Contrato guardado correctamente", Toast.LENGTH_SHORT).show();
+            requireActivity().finish();
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+    private void mostrarConfirmacionEnvio() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Confirmar Envío")
+                .setMessage("¿Está seguro que desea enviar el contrato?")
+                .setPositiveButton("Enviar", (dialog, which) -> finalizarContrato())
+                .setNegativeButton("Regresar", null)
+                .show();
     }
 }

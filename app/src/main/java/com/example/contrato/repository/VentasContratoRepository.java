@@ -37,7 +37,7 @@ public class VentasContratoRepository {
     }
 
     public void insert(VentasContrato c) throws SQLException {
-        String sql = "INSERT INTO PMT_App_Ventas_Contrato (IdContrato, FechaAlta, IdUsuarioAlta, FechaModificacion, Estatus, Idioma) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO PMT_App_Ventas_Contrato (IdContrato, FechaAlta, IdUsuarioAlta, FechaModificacion, Estatus, Idioma) VALUES (?, ?, ?, ?, ?, ? )";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, c.idContrato);
@@ -46,6 +46,7 @@ public class VentasContratoRepository {
             ps.setTimestamp(4, c.fechaModificacion);
             ps.setString(5, c.estatus);
             ps.setString(6, c.idioma);
+
             ps.executeUpdate();
         }
     }

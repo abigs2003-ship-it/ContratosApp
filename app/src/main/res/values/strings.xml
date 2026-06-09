@@ -76,8 +76,8 @@
     <string-array name="tiposOcupacion">
         <item>Seleccionar</item>
         <item>Corridos</item>
-        <item>Alternados Pares</item>
-        <item>Alternados Nones</item>
+        <item>Alternos Pares</item>
+        <item>Alternos Nones</item>
 
     </string-array>
 

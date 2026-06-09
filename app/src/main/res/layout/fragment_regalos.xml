@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
                     android:layout_marginStart="12dp"
-                    android:text="Regalos"
+                    android:text="Adicionales"
                     android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
