@@ -631,7 +631,8 @@ public class DatosVentaFragment extends Fragment {
             }
         }
         return resultado;
-    }private TextInputLayout creaCampoFechaConCalendario() {
+    }
+    private TextInputLayout creaCampoFechaConCalendario() {
 
         TextInputLayout til = new TextInputLayout(requireContext());
 

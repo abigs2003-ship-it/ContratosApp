@@ -105,20 +105,8 @@ public class SharedContratoViewModel extends ViewModel {
     public void fetchContratoPorId(long idContrato) {
         new Thread(() -> {
             try {
-                VentasContrato vc = contratoRepo.getById(idContrato);
-                if (vc != null) {
-                    ContratoModelo m = new ContratoModelo();
-                    m.setModoEdicion(true);
-                    m.setId(String.valueOf(vc.idContrato));
-                    m.setIdioma(mapIdiomaFromDb(vc.idioma));
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-                    if (vc.fechaAlta != null) m.setFechaCreacion(sdf.format(vc.fechaAlta));
-                    if (vc.fechaModificacion != null) m.setFechaModificacion(sdf.format(vc.fechaModificacion));
-
-                    cargaDetallesTitulares(m, vc.idContrato);
-                    cargaDetallesContrato(m, vc.idContrato);
-                    Contrato.postValue(m);
-                }
+                ContratoModelo m = contratoRepo.getContratoCompleto(idContrato);
+                Contrato.postValue(m);
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMessage.postValue("Error al cargar contrato: " + e.getMessage());
@@ -126,51 +114,12 @@ public class SharedContratoViewModel extends ViewModel {
         }).start();
     }
 
-    private void cargaDetallesTitulares(ContratoModelo m, long idContrato) throws SQLException {
-        SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        List<VentasTitulares> tList = titularesRepo.getByContratoId(idContrato);
-        if (!tList.isEmpty()) {
-            VentasTitulares mainTitular = null;
-            for (VentasTitulares vt : tList) {
-                ContratoModelo.Persona p = new ContratoModelo.Persona(
-                    vt.nombre, vt.paterno, vt.materno, vt.ocupacion, 
-                    String.valueOf(vt.parentesco),
-                    vt.fechaCumpleaños != null ? dateOnlySdf.format(vt.fechaCumpleaños) : ""
-                );
-                if ("T".equalsIgnoreCase(vt.tipoTitular)) {
-                    m.getTitulares().add(p);
-                    if (mainTitular == null) mainTitular = vt;
-                } else {
-                    m.getBeneficiarios().add(p);
-                }
-            }
-            if (mainTitular != null) {
-                m.setClientName((mainTitular.nombre + " " + (mainTitular.paterno != null ? mainTitular.paterno : "")).trim());
-            }
-        } else {
-            m.setClientName("Contrato #" + idContrato);
-        }
-    }
 
-    public void cargaHistorialBaseDatos(long UsuarioId) {
+
+    public void cargaHistorialBaseDatos(long usuarioId) {
         new Thread(() -> {
             try {
-                List<VentasContrato> list = contratoRepo.getByUserId(UsuarioId);
-                List<ContratoModelo> models = new ArrayList<>();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-                
-                for (VentasContrato vc : list) {
-                    ContratoModelo m = new ContratoModelo();
-                    m.setEstatus(vc.estatus);
-                    m.setId(String.valueOf(vc.idContrato));
-                    m.setIdioma(mapIdiomaFromDb(vc.idioma));
-                    if (vc.fechaAlta != null) m.setFechaCreacion(sdf.format(vc.fechaAlta));
-                    if (vc.fechaModificacion != null) m.setFechaModificacion(sdf.format(vc.fechaModificacion));
-
-                    cargaDetallesTitulares(m, vc.idContrato);
-                    cargaDetallesContrato(m, vc.idContrato);
-                    models.add(m);
-                }
+                List<ContratoModelo> models = contratoRepo.getResumenByUserId(usuarioId);
                 history.postValue(models);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -179,100 +128,6 @@ public class SharedContratoViewModel extends ViewModel {
         }).start();
     }
 
-    private void cargaDetallesContrato(ContratoModelo m, long idContrato) throws SQLException {
-        SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        VentasInformacionGeneral vig = infoGralRepo.getByContratoId(idContrato);
-        if (vig != null) {
-            m.setPais(vig.pais);
-            m.setNacionalidad(vig.nacionalidad);
-            m.setTipoDir(vig.tipoDir);
-            m.setNoCorreo(vig.email1 == null && vig.email2 == null);
-
-            if ("México".equalsIgnoreCase(vig.pais)) {
-                m.setMexCalle(vig.calle); m.setMexNumExt(vig.noExt); m.setMexNumInt(vig.noInt);
-                m.setMexColonia(vig.colonia); m.setDelegacion(vig.delegacion);
-                m.setMexCiudad(vig.ciudad); m.setMexEstado(vig.estado); m.setMexCP(vig.cp);
-            } else if ("EEUU".equalsIgnoreCase(vig.pais) || "USA".equalsIgnoreCase(vig.pais) || (vig.pais != null && vig.pais.contains("USA"))) {
-                m.setUsaCalle(vig.calle); m.setUsaCity(vig.ciudad); m.setUsaState(vig.estado);
-                m.setUsaZip(vig.cp); m.setUsaNeighborhood(vig.colonia); m.setPoBox(vig.poBox);
-                m.setBox(vig.box); m.setCmr(vig.cmr); m.setApo(vig.apo);
-            } else if ("Canadá".equalsIgnoreCase(vig.pais)) {
-                m.setCanCalle(vig.calle); m.setCanCity(vig.ciudad); m.setCanProvince(vig.estado); m.setCanPostalCode(vig.cp); m.setPais(vig.pais);
-            } else {
-                m.setLinea1(vig.linea1); m.setLinea2(vig.linea2); m.setLinea3(vig.linea3);
-                m.setLinea4(vig.linea4); m.setLinea5(vig.linea5); m.setPaisOtro(vig.pais);
-            }
-
-            if (vig.telefonoCasa1 != null && !vig.telefonoCasa1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 1", vig.ladaCasa1, vig.telefonoCasa1, vig.whatsAppCasa1, "Casa 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoCasa2 != null && !vig.telefonoCasa2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 2", vig.ladaCasa2, vig.telefonoCasa2, vig.whatsAppCasa2, "Casa 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoCelular1 != null && !vig.telefonoCelular1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 1", vig.ladaCelular1, vig.telefonoCelular1, vig.whatsAppCelular1, "Celular 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoCelular2 != null && !vig.telefonoCelular2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 2", vig.ladaCelular2, vig.telefonoCelular2, vig.whatsAppCelular2, "Celular 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoOficina1 != null && !vig.telefonoOficina1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 1", vig.ladaOficina1, vig.telefonoOficina1, vig.whatsAppOficina1, "Oficina 1".equals(vig.telefonoDefault)));
-            if (vig.telefonoOficina2 != null && !vig.telefonoOficina2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 2", vig.ladaOficina2, vig.telefonoOficina2, vig.whatsAppOficina2, "Oficina 2".equals(vig.telefonoDefault)));
-            if (vig.telefonoMensajes != null && !vig.telefonoMensajes.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Mensajes", vig.ladaMensajes, vig.telefonoMensajes, vig.whatsAppMensajes, "Mensajes".equals(vig.telefonoDefault)));
-
-            if (vig.email1 != null) m.getEmails().add(vig.email1);
-            if (vig.email2 != null) m.getEmails().add(vig.email2);
-            if (vig.email3 != null) m.getEmails().add(vig.email3);
-            if (vig.email4 != null) m.getEmails().add(vig.email4);
-        }
-
-        VentasInventario vi = inventarioRepo.getByContratoId(idContrato);
-        if (vi != null) {
-            m.setUnidad(vi.unidad); m.setTemporada(vi.temporada); m.setAnioUso(String.valueOf(vi.primerAnioUso));
-            m.setTipoOcupacion(vi.tipoOcupacion);
-            m.setNoAnios(String.valueOf(vi.aniosComprados)); m.setMoneda(vi.monedaVenta);
-            m.setTipoCambio(String.valueOf(vi.tipoCambioVenta)); m.setPrecioBruto(String.valueOf(vi.precioBruto));
-            m.setMontoCuenta(String.valueOf(vi.montoCta)); m.setPrecioNeto(String.valueOf(vi.precioNeto));
-            m.setNoContratosMC(String.valueOf(vi.noContratosMontoCta));
-            m.setTipoPago(vi.tipoPago); m.setEngancheTotal(String.valueOf(vi.engancheTotal));
-            m.setEnganchePorcentaje(String.valueOf(vi.engancheTotalPorcentaje));
-            m.setEngancheSalaMonto(String.valueOf(vi.enganchePagarSala));
-            m.setEngancheSalaPorcentaje(String.valueOf(vi.enganchePagarSalaPorcentaje));
-            m.setVariosMonto(String.valueOf(vi.descuentos)); m.setNoDesc(String.valueOf(vi.noDescuentos));
-            m.setEngDiferidoMonto(String.valueOf(vi.engancheDiferido)); m.setNoPagosEng(String.valueOf(vi.noPagosEngancheDiferido));
-            m.setSaldoEnganche(String.valueOf(vi.saldoEnganche)); m.setMontoFinanciar(String.valueOf(vi.montoFinanciar));
-            m.setCostoContrato(String.valueOf(vi.costoContrato)); m.setPagoSala(String.valueOf(vi.totalPagoSala));
-            m.setCostoMembresia(String.valueOf(vi.costoMembresia)); m.setComentarios(vi.comentariosRegalos);
-            m.setTipoVenta(vi.tipoVenta);
-        }
-
-        List<VentasDescuentos> discounts = descuentosRepo.getByContratoId(idContrato);
-        for (VentasDescuentos vd : discounts) {
-            m.getDescuentosDetalle().add(new ContratoModelo.DescuentoDetalle(String.valueOf(vd.montoDescuento), vd.descripcion));
-        }
-
-        List<VentasEngancheDiferido> payments = engancheDiferidoRepo.getByContratoId(idContrato);
-        for (VentasEngancheDiferido vp : payments) {
-            m.getPagosDiferidos().add(new ContratoModelo.PagoDiferido(String.valueOf(vp.cantidadPago), vp.fechaPago != null ? dateOnlySdf.format(vp.fechaPago) : ""));
-        }
-
-        List<VentasMontoCta> montosCta = montoCtaRepo.getByContratoId(idContrato);
-        for (VentasMontoCta vmc : montosCta) {
-            m.getContratosMontoCuenta().add(vmc.xref);
-        }
-
-        VentasFinanciamientos vf = financiamientoRepo.getByContratoId(idContrato);
-        if (vf != null) {
-            m.setTipoPeriodo(vf.tipoPeriodo);
-            m.setFechaPrimerPago(vf.fechaPrimerPago != null ? dateOnlySdf.format(vf.fechaPrimerPago) : "");
-            m.setNumPagos(String.valueOf(vf.numeroPagos));
-            m.setTasaInteres(String.valueOf(vf.tasaInteres));
-        }
-
-        List<VentasRegalos> gifts = regalosRepo.getByContratoId(idContrato);
-        for (VentasRegalos vr : gifts) {
-            m.getRegalos().add(vr.descripcion);
-        }
-
-        VentasRedesSociales vrs = redesSocialesRepo.getByContratoId(idContrato);
-        if (vrs != null) {
-            if (vrs.usuarioFacebook != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Facebook", vrs.usuarioFacebook));
-            if (vrs.usuarioInstagram != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Instagram", vrs.usuarioInstagram));
-            if (vrs.usuarioTwitter != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Twitter", vrs.usuarioTwitter));
-        }
-    }
 
 
 
@@ -511,7 +366,7 @@ public class SharedContratoViewModel extends ViewModel {
                 vc.idContrato = idContrato;
                 vc.fechaAlta = now;
                 vc.idUsuarioAlta = idUsuario;
-                vc.fechaModificacion = now;
+                vc.fechaModificacion = null;
                 vc.estatus = "A";
                 vc.idioma = mapIdiomaToDb(model.getIdioma());
                 contratoRepo.insert(vc);

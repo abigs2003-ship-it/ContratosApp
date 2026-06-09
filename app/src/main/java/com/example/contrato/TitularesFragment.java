@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,6 +116,8 @@ public class TitularesFragment extends Fragment {
             boolean contratoTieneBeneficiarios = !contrato.getBeneficiarios().isEmpty();
 
             // En modo edición mostramos el spinner mientras los datos no hayan llegado todavía
+            Log.d("titulares vacios", String.valueOf(titularesLocalVacios));
+            Log.d("contrato tiene titulares", String.valueOf(contratoTieneTitulares));
             if (esModoEdicion && titularesLocalVacios && !contratoTieneTitulares) {
                 binding.layoutCargandoTitulares.setVisibility(View.VISIBLE);
                 return; // esperamos a la siguiente emisión con los datos ya cargados

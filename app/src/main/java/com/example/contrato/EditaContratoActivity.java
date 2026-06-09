@@ -1,7 +1,12 @@
 package com.example.contrato;
 
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +60,14 @@ public class EditaContratoActivity extends AppCompatActivity {
     private void llenarDatos() {
         if (contrato == null) return;
         String creacion = String.format("Creado: %s", convertirMesANombre(contrato.getFechaCreacion()));
-        String modificacion = String.format("Modificado: %s", convertirMesANombre(contrato.getFechaModificacion()));
+        String modificacion = String.format("| Modificado: %s", convertirMesANombre(contrato.getFechaModificacion()));
         binding.tvCreacion.setText(creacion);
-        if(!contrato.getFechaModificacion().equals(contrato.getFechaCreacion())){
+        if(contrato.getFechaModificacion() == null){
+            binding.tvModificado.setText("");
+        }else{
             binding.tvModificado.setText(modificacion);
         }
+
 
         binding.tvIdioma.setText(contrato.getIdioma());
         llenarContenedorPersonas(binding.containerTitulares, contrato.getTitulares());
@@ -84,9 +92,21 @@ public class EditaContratoActivity extends AppCompatActivity {
                 binding.containerEmails.addView(createEmailView(email));
             }
         }
-        binding.checkNoCorreo.setChecked(contrato.isNoCorreo());
 
-        binding.checkNoRedes.setChecked(contrato.isNoRedesSociales());
+        if(!contrato.isNoCorreo()){
+            binding.checkNoCorreo.setVisibility(View.GONE);
+        }else {
+            binding.checkNoCorreo.setVisibility(View.VISIBLE);
+            binding.checkNoCorreo.setChecked(contrato.isNoCorreo());
+        }
+
+        if(!contrato.isNoRedesSociales()){
+            binding.checkNoRedes.setVisibility(View.GONE);
+        }else{
+            binding.checkNoRedes.setVisibility(View.VISIBLE);
+            binding.checkNoRedes.setChecked(contrato.isNoRedesSociales());
+
+        }
         binding.containerRedes.removeAllViews();
         if (contrato.getRedesSociales() != null) {
             for (ContratoModelo.CuentaRed sa : contrato.getRedesSociales()) {
@@ -111,8 +131,23 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.tvNoContratosMontoCta.setText(contrato.getNoContratosMC());
         binding.containerContratosMontoCuenta.removeAllViews();
         for (String c : contrato.getContratosMontoCuenta()) {
-            binding.containerContratosMontoCuenta.addView(createTextViewRow(c));
-        }
+            String etiqueta = "Contrato " + (binding.containerContratosMontoCuenta.getChildCount() + 1);
+            String textoCompleto = etiqueta + ": " + c;
+
+            SpannableString spannable = new SpannableString(textoCompleto);
+
+            spannable.setSpan(
+                    new StyleSpan(Typeface.BOLD),
+                    0,
+                    etiqueta.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            );
+
+            TextView tv = creaTextViewFila("");
+            tv.setText(spannable);
+
+            binding.containerContratosMontoCuenta.addView(tv);        }
+
 
         binding.tvEngancheMonto.setText(contrato.getEngancheTotal());
         binding.tvEnganchePorcentaje.setText(contrato.getEnganchePorcentaje());
@@ -132,8 +167,10 @@ public class EditaContratoActivity extends AppCompatActivity {
         binding.tvNoDesc.setText(contrato.getNoDesc());
         binding.containerDescuentos.removeAllViews();
         for (ContratoModelo.DescuentoDetalle d : contrato.getDescuentosDetalle()) {
-            binding.containerDescuentos.addView(createDescuentoRow(d));
+            String numDescuento = String.valueOf(binding.containerDescuentos.getChildCount() + 1);
+            binding.containerDescuentos.addView(creaFilaDescuentos(d, numDescuento));
         }
+
 
         binding.tvCostoContrato.setText(contrato.getCostoContrato());
         binding.tvPagoSala.setText(contrato.getPagoSala());
@@ -256,7 +293,7 @@ public class EditaContratoActivity extends AppCompatActivity {
         ((TextView)fila.findViewById(R.id.textParentesco)).setText(parentescoDisplay);
     }
 
-    private View createTextViewRow(String text) {
+    private TextView creaTextViewFila(String text) {
         TextView tv = new TextView(this);
         tv.setText(text);
         tv.setPadding(0, 4, 0, 4);
@@ -274,15 +311,44 @@ public class EditaContratoActivity extends AppCompatActivity {
         return row;
     }
 
-    private View createDescuentoRow(ContratoModelo.DescuentoDetalle d) {
+    private View creaFilaDescuentos(ContratoModelo.DescuentoDetalle d, String numDescuento) {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setPadding(0, 4, 0, 4);
+
         TextView tv = new TextView(this);
-        tv.setText(String.format("%s: %s", d.descripcion, d.monto));
+
+        String monto = "Monto: " + d.monto;
+        SpannableString montoSpanned = new SpannableString(monto);
+        montoSpanned.setSpan(
+                new StyleSpan(Typeface.BOLD),
+                0,
+                "Monto:".length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        String descripcion = "Descripción: " + d.descripcion;
+        SpannableString descSpanned = new SpannableString(descripcion);
+        descSpanned.setSpan(
+                new StyleSpan(Typeface.BOLD),
+                0,
+                "Descripción:".length(),
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append(numDescuento)
+                .append(": ")
+                .append(montoSpanned)
+                .append(" ")
+                .append(descSpanned);
+
+        tv.setText(builder);
+
         row.addView(tv);
         return row;
     }
+
 
     private View createTelefonoView(ContratoModelo.InfoTelefono t) {
         View item = getLayoutInflater().inflate(R.layout.item_historial_telefono, binding.containerTelefonos, false);

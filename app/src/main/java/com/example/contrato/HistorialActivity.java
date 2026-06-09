@@ -66,9 +66,7 @@ public class HistorialActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
-            Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
-            intent.putExtra("contrato", contrato);
-            startActivity(intent);
+            viewModel.fetchContratoPorId(Long.parseLong(contrato.getId()));
         });
 
         adapter.setOnContratoEstatusListener(this::mostrarConfirmacionEstatus);
@@ -76,7 +74,6 @@ public class HistorialActivity extends AppCompatActivity {
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewHistory.setAdapter(adapter);
     }
-
     private void setupObservers() {
         viewModel.getHistory().observe(this, contratos -> {
             if (contratos == null) return;
@@ -96,6 +93,12 @@ public class HistorialActivity extends AppCompatActivity {
                 yaFueCargado = true;
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
             }
+        });
+        viewModel.getContrato().observe(this, contrato -> {
+            if (contrato == null || contrato.getId() == null || !contrato.getModoEdicion()) return;
+            Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
+            intent.putExtra("contrato", contrato);
+            startActivity(intent);
         });
     }
 

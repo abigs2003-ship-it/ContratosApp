@@ -98,10 +98,14 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
                 "Creado: " + convertirMesANombre(contrato.getFechaCreacion())
         );
 
-        if(!contrato.getFechaModificacion().equals(contrato.getFechaCreacion())){
+
+        if(contrato.getFechaModificacion() == null){
+            holder.binding.tvModifiedDate.setText("");
+        }else{
             holder.binding.tvModifiedDate.setText(
                     "Modificado: " + convertirMesANombre(contrato.getFechaModificacion())
             );
+
         }
 
 

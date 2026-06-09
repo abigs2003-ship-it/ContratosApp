@@ -93,20 +93,25 @@ public class FinanciamientoFragment extends Fragment {
             }
 
         });
+
+
         binding.btnEnviar.setOnClickListener(v -> {
-
-            ContratoModelo contrato = viewModel.getContratoValue();
-
-            if (contrato.getModoEdicion()) {
-                viewModel.actualizaContratoBaseDatos(contrato);
-            } else {
-                viewModel.guardaContratoBaseDatos();
-            }
+        if(!binding.btnEnviar.getText().equals("Actualizar contrato")){
+            mostrarConfirmacionEnvio();
+        }else{
+            mostrarConfirmacionActualizar();
+        }
         });
 
-        binding.btnEnviar.setOnClickListener(v -> mostrarConfirmacionEnvio());
-
         actualizarVisibilidadColumnas();
+    }
+    private void mostrarConfirmacionActualizar() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Confirmar Editar")
+                .setMessage("¿Está seguro que desea editar el contrato?")
+                .setPositiveButton("Enviar", (dialog, which) -> actualizarContrato())
+                .setNegativeButton("Regresar", null)
+                .show();
     }
 
     private String getIdiomaActual() {
@@ -534,10 +539,10 @@ public class FinanciamientoFragment extends Fragment {
 
         SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String now = metaSdf.format(new Date());
-        if (Contrato.getFechaCreacion() == null) {
-            Contrato.setFechaCreacion(now);
-        }
-        Contrato.setFechaModificacion(now);
+
+        Contrato.setFechaCreacion(now);
+
+
 
         if (!Contrato.getTitulares().isEmpty()) {
             ContratoModelo.Persona p = Contrato.getTitulares().get(0);
@@ -549,6 +554,30 @@ public class FinanciamientoFragment extends Fragment {
         ContratoManager.getInstance().actualizaContrato(Contrato);
 
         viewModel.guardaContratoBaseDatos();
+    }
+    private void actualizarContrato() {
+        guardaDatosViewModel();
+        ContratoModelo Contrato = viewModel.getContratoValue();
+
+        if (Contrato.getId() == null) {
+            Contrato.setId(String.valueOf(System.currentTimeMillis()));
+        }
+
+        SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        String now = metaSdf.format(new Date());
+
+        Contrato.setFechaModificacion(now);
+
+        if (!Contrato.getTitulares().isEmpty()) {
+            ContratoModelo.Persona p = Contrato.getTitulares().get(0);
+            Contrato.setClientName(p.nombre + " " + (p.paterno != null ? p.paterno : ""));
+        } else {
+            Contrato.setClientName("Sin nombre");
+        }
+
+        //ContratoManager.getInstance().actualizaContrato(Contrato); voy a ver si esto los vuelve a crear
+
+        viewModel.actualizaContratoBaseDatos(Contrato);
     }
 
     private void irAlMenu() {

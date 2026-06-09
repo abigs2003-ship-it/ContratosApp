@@ -503,15 +503,26 @@
                     </LinearLayout>
 
                     <TextView style="@style/SubsectionLabel" android:text="Contratos Monto a Cuenta" />
-                    <TextView
-                        android:id="@+id/tvNoContratosMontoCta"
-                        android:layout_width="80dp"
-                        android:inputType="number"
-                        android:textStyle="normal"
-                        style="@style/FieldLabel"
-                        android:maxLength="1"
-                        android:enabled="false"
-                        android:layout_marginBottom="4dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="No. Contratos: "
+                           ></TextView>
+                        <TextView
+                            android:id="@+id/tvNoContratosMontoCta"
+                            android:layout_width="80dp"
+                            android:inputType="number"
+                            android:textStyle="normal"
+                            style="@style/FieldLabel"
+                            android:maxLength="1"
+                            android:enabled="false"
+                            android:layout_marginBottom="4dp" />
+                    </LinearLayout>
+
 
                     <LinearLayout
                         android:id="@+id/containerContratosMontoCuenta"
