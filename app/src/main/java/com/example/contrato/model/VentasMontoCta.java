@@ -8,6 +8,8 @@ public class VentasMontoCta {
     public String xref;
     public Timestamp fechaAlta;
     public long idUsuarioAlta;
-
+    public long idUsuarioModificacion;
+    public String estatus;
+    public Timestamp fechaModificacion;
     public VentasMontoCta() {}
 }

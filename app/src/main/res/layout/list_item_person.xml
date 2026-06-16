@@ -68,6 +68,7 @@
             android:layout_height="24dp"
             android:visibility="gone" />
 
+
         <ImageButton
             android:id="@+id/btnEliminar"
             android:layout_width="24dp"

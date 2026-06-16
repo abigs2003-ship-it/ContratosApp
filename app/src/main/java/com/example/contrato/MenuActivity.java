@@ -27,6 +27,7 @@ public class MenuActivity extends AppCompatActivity {
             return;
         }
 
+
         binding = ActivityHomepageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -38,6 +39,8 @@ public class MenuActivity extends AppCompatActivity {
         if (!userName.isEmpty()) {
             binding.bienvenida.setText("¡Bienvenido " + userName + "!");
         }
+
+        binding.btnCerrarSesion.setOnClickListener(v -> cerrarSesion());
 
         binding.crearContrato.setOnClickListener(v -> {
             v.setEnabled(false);

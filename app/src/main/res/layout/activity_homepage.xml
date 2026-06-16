@@ -17,13 +17,15 @@
             android:id="@+id/bienvenida"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="150dp"
+            android:gravity="center_vertical"
             android:fontFamily="serif"
             android:text="¡Bienvenido!"
             android:textColor="@color/white"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -105,7 +107,24 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_historial"
                 android:contentDescription="Historial" />
+
         </LinearLayout>
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_continuar"
+            android:text="Cerrar sesión"
+            android:textSize="13dp"
+            app:backgroundTint="@null"
+
+            />
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

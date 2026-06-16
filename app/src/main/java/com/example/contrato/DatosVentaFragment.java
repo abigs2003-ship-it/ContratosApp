@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,11 +60,13 @@ public class DatosVentaFragment extends Fragment {
     private SharedContratoViewModel viewModel;
 
     private VentasInventarioRepository repoVentas = new VentasInventarioRepository();
+    private boolean cargandoDatos = false;
 
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
     private boolean modoMensual = false;
     private boolean construyendoPagos = false;
+    private boolean datosLocalesInicializados = false;
 
 
     @Nullable
@@ -198,8 +201,10 @@ public class DatosVentaFragment extends Fragment {
     }
 
     private void cargaDatosExistentes() {
+
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) return;
+        cargandoDatos = true;
 
         if ("Upgrade".equals(Contrato.getTipoVenta())) {
             seleccionaBoton(binding.btnUpgrade);
@@ -228,11 +233,9 @@ public class DatosVentaFragment extends Fragment {
         setSpinnerValue(binding.spUnidad, Contrato.getUnidad());
         setSpinnerValue(binding.spTemporada, Contrato.getTemporada());
         setSpinnerValue(binding.spTipoOcupacion, Contrato.getTipoOcupacion());
-        setSpinnerValue(binding.spTipoOcupacion, Contrato.getTipoOcupacion());
-
-
         binding.spAnioUso.post(() -> {
             setSpinnerValue(binding.spAnioUso, Contrato.getAnioUso());
+            binding.spAnioUso.post(() -> cargandoDatos = false); // ← extra post to ensure it runs last
         });
         binding.editNoAnios.setText(Contrato.getNoAnios());
 
@@ -269,6 +272,7 @@ public class DatosVentaFragment extends Fragment {
                 binding.containerContratosDinamicos.addView(et);
             }
         }
+
 
         // restaura descuentos dinamicos
         if (Contrato.getDescuentosDetalle() != null) {
@@ -323,27 +327,60 @@ public class DatosVentaFragment extends Fragment {
             for (ContratoModelo.PagoDiferido pd : Contrato.getPagosDiferidos()) {
                 fechas.add(pd.fecha);
             }
-
+            for (ContratoModelo.PagoDiferido pd : Contrato.getPagosDiferidos()) {
+                Log.d("DEBUG_PAGOS", "CARGANDO → monto=" + pd.monto + " fecha=" + pd.fecha);
+            }
             agregarFilasPagos3Columnas(numPagos, fechas, cuotaBase, residuo);
 
-            // Restaura montos individuales (pueden diferir del promedio si el usuario los editó)
+            // Restaura montos Y fechas individuales
             int pagoIdx = 0;
             for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
                 View rowMontos = binding.containerPagosDinamicos.getChildAt(i);
-                if (rowMontos instanceof LinearLayout) {
-                    LinearLayout lm = (LinearLayout) rowMontos;
-                    for (int col = 0; col < lm.getChildCount() && pagoIdx < numPagos; col++) {
-                        View child = lm.getChildAt(col);
-                        if (child instanceof EditText) {
-                            ((EditText) child).setText(
-                                    Contrato.getPagosDiferidos().get(pagoIdx).monto
-                            );
-                            pagoIdx++;
+                View rowFechas = (i + 1 < binding.containerPagosDinamicos.getChildCount())
+                        ? binding.containerPagosDinamicos.getChildAt(i + 1) : null;
+
+                if (!(rowMontos instanceof LinearLayout)) continue;
+                LinearLayout lm = (LinearLayout) rowMontos;
+                int columnaFecha = 0;
+
+                for (int col = 0; col < lm.getChildCount() && pagoIdx < numPagos; col++) {
+                    View child = lm.getChildAt(col);
+                    if (!(child instanceof EditText)) continue;
+
+                    ContratoModelo.PagoDiferido pd = Contrato.getPagosDiferidos().get(pagoIdx);
+
+                    // Restaura monto
+                    ((EditText) child).setText(pd.monto);
+
+                    // Restaura fecha buscando el TextInputLayout en la posición relativa
+                    if (rowFechas instanceof LinearLayout) {
+                        LinearLayout lf = (LinearLayout) rowFechas;
+                        int tilEncontrado = 0;
+                        for (int fc = 0; fc < lf.getChildCount(); fc++) {
+                            View childF = lf.getChildAt(fc);
+                            if (!(childF instanceof TextInputLayout)) continue;
+                            if (tilEncontrado == columnaFecha) {
+                                EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
+                                if (etF != null){
+                                    Log.d("DEBUG_PAGOS", "RESTAURANDO fecha pagoIdx=" + pagoIdx + " → " + pd.fecha);
+                                 etF.setText(pd.fecha);
+                                    etF.setTag(pd.fecha); // ← respaldo
+                                }
+
+                                break;
+                            }
+                            tilEncontrado++;
                         }
                     }
+
+                    columnaFecha++;
+                    pagoIdx++;
                 }
             }
-        }}
+        }
+        modoMensual = viewModel.isModoMensual();
+        fechaInicialMensual = viewModel.getFechaInicialMensual();
+        datosLocalesInicializados = true; }
 
 
     private void muestraDatePicker(EditText editText) {
@@ -580,7 +617,10 @@ public class DatosVentaFragment extends Fragment {
         });
 
         editText.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) convertirMesANombre(editText);
+            if (!hasFocus) {
+                convertirMesANombre(editText);
+                editText.setTag(editText.getText().toString()); // ← actualiza respaldo
+            }
         });
 
         editText.setOnEditorActionListener((v, actionId, event) -> {
@@ -714,7 +754,9 @@ public class DatosVentaFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        guardaDatosViewModel();
+        if (datosLocalesInicializados) {
+            guardaDatosViewModel();
+        }
     }
 
     private void setupPrefijosMoneda() {
@@ -897,7 +939,9 @@ public class DatosVentaFragment extends Fragment {
                 if (binding == null) return;
                 requireActivity().runOnUiThread(() -> {
                     if (binding == null) return;
-                    binding.editTipoCambio.setText(tipo);
+                    if (binding.editTipoCambio.getText().toString().isEmpty()) {
+                        binding.editTipoCambio.setText(tipo);
+                    }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1019,46 +1063,51 @@ public class DatosVentaFragment extends Fragment {
         int anioactual = Calendar.getInstance().get(Calendar.YEAR);
         List<String> anios = new ArrayList<>();
 
-        if(getLenguajeActual().equalsIgnoreCase("es")){
-            anios.add("Seleccionar");
-        }else if(getLenguajeActual().contains("en")){
-            anios.add("Select");
+        ContratoModelo contrato = viewModel.getContratoValue();
+        if (contrato != null && contrato.getAnioUso() != null
+                && !contrato.getAnioUso().isEmpty()
+                && !contrato.getAnioUso().equals("Seleccionar")
+                && !contrato.getAnioUso().equals("Select")) {
+            if (!anios.contains(contrato.getAnioUso())) {
+                anios.add(contrato.getAnioUso());
+            }
         }
-        if(TO.getSelectedItem().toString().equalsIgnoreCase("Corridos")|| binding.spTipoOcupacion.getSelectedItem().toString().equalsIgnoreCase("Consecutive years")){
-
+        if (TO.getSelectedItem().toString().equalsIgnoreCase("Corridos") || binding.spTipoOcupacion.getSelectedItem().toString().equalsIgnoreCase("Years")) {
             for (int i = 0; i <= 2; i++) {
                 anios.add(String.valueOf(anioactual + i));
             }
         }
-        if(TO.getSelectedItem().toString().contains("Pares" )|| binding.spTipoOcupacion.getSelectedItem().toString().contains("Even")){
-            while(anios.size() < 4){
-                if(anioactual % 2 == 0){
+        if (TO.getSelectedItem().toString().contains("Pares") || binding.spTipoOcupacion.getSelectedItem().toString().contains("Even")) {
+            while (anios.size() < 3) {
+                if (anioactual % 2 == 0) {
                     anios.add(String.valueOf(anioactual));
-                    anioactual+=2;
-                }else{
-                    anioactual++;
-                }
-            }
-
-        }
-        if(binding.spTipoOcupacion.getSelectedItem().toString().contains("Nones" )|| binding.spTipoOcupacion.getSelectedItem().toString().contains("Odd")){
-            while(anios.size() < 4){
-                if(anioactual % 2 != 0){
-                    anios.add(String.valueOf(anioactual));
-                    anioactual+=2;
-                }else{
+                    anioactual += 2;
+                } else {
                     anioactual++;
                 }
             }
         }
+        if (binding.spTipoOcupacion.getSelectedItem().toString().contains("Nones") || binding.spTipoOcupacion.getSelectedItem().toString().contains("Odd")) {
+            while (anios.size() < 3) {
+                if (anioactual % 2 != 0) {
+                    anios.add(String.valueOf(anioactual));
+                    anioactual += 2;
+                } else {
+                    anioactual++;
+                }
+            }
+        }
 
+        // Si el año guardado no está en la lista, agrégalo
+        if (contrato != null && contrato.getAnioUso() != null && !contrato.getAnioUso().isEmpty()) {
+            if (!anios.contains(contrato.getAnioUso())) {
+                anios.add(contrato.getAnioUso());
+            }
+        }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, anios);
         binding.spAnioUso.setAdapter(adapter);
-
-
     }
-
     private void setupTipoOcupacionSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(),
                 R.array.tiposOcupacion, android.R.layout.simple_spinner_item);
@@ -1067,13 +1116,10 @@ public class DatosVentaFragment extends Fragment {
         binding.spTipoOcupacion.setOnItemSelectedListener(
                 new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemSelected(AdapterView<?> parent,
-                                               View view,
-                                               int position,
-                                               long id) {
-
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         setupAnioUsoSpinner();
-
+                        // Only restore anioUso when explicitly loading data, not on every save
+                        if (!cargandoDatos) return;
                         ContratoModelo contrato = viewModel.getContratoValue();
                         if (contrato != null && contrato.getAnioUso() != null) {
                             binding.spAnioUso.post(() -> {
@@ -1081,14 +1127,11 @@ public class DatosVentaFragment extends Fragment {
                             });
                         }
                     }
-
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
                 }
         );
-
     }
-
     private void setupMonedaSpinner() {
         String[] tipoMonedas = {"MXN", "USD", "CAD"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, tipoMonedas);
@@ -1103,7 +1146,13 @@ public class DatosVentaFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!datosLocalesInicializados) {
+            cargaDatosExistentes();
+        }
+    }
     private void actualizaMoneda(String currency) {
         String label = currency.equals("MXN") ? "MN" : currency;
         binding.tvMonedaBruto.setText(label);
@@ -1868,6 +1917,10 @@ public class DatosVentaFragment extends Fragment {
 
                 if (idx < fechas.size() && !fechas.get(idx).isEmpty()) {
                     etFecha.setText(fechas.get(idx));
+                    if (idx < fechas.size() && !fechas.get(idx).isEmpty()) {
+                        etFecha.setText(fechas.get(idx));
+                        etFecha.setTag(fechas.get(idx)); // ← guarda respaldo
+                    }
                 }
 
                 if (modoMensual) {
@@ -2125,9 +2178,19 @@ public class DatosVentaFragment extends Fragment {
     }
     private List<String[]> extraerDatosDeFila(View filaView) {
         List<String[]> datos = new ArrayList<>();
+        if (!(filaView instanceof LinearLayout)) return datos;
+        LinearLayout row = (LinearLayout) filaView;
+        for (int col = 0; col < row.getChildCount(); col++) {
+            View child = row.getChildAt(col);
+            if (child instanceof EditText) {
+                datos.add(new String[]{((EditText) child).getText().toString(), ""});
+            } else if (child instanceof TextInputLayout) {
+                EditText et = (EditText) ((TextInputLayout) child).getEditText();
+                datos.add(new String[]{"", et != null ? et.getText().toString() : ""});
+            }
+        }
         return datos;
     }
-
     private View getFilaEnIndice(int pagoIdx) {
         int rowFila = pagoIdx / 3;
         int col = pagoIdx % 3;
@@ -2202,25 +2265,18 @@ public class DatosVentaFragment extends Fragment {
 
     private boolean isContado = false;
 
+
     private void LogicaTipodePago() {
 
         binding.btnContado.setOnClickListener(v -> {
 
             isContado = true;
-
             seleccionaBoton(binding.btnContado);
-
-            ContratoModelo c = viewModel.getContratoValue();
-            if (c == null) c = new ContratoModelo();
-
-            c.setTipoPago("Contado");
-            viewModel.setContrato(c);
 
             binding.editEnganchePorcentaje.setText("100");
             updateEngancheMN();
             binding.AceptarTarea.setText("Enviar Contrato");
             binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_enviar));
-
             binding.EngacheColapsable.setVisibility(View.GONE);
 
             calculaMontoFinanciar();
@@ -2231,22 +2287,12 @@ public class DatosVentaFragment extends Fragment {
         binding.btnFinanciado.setOnClickListener(v -> {
 
             isContado = false;
-
             seleccionaBoton(binding.btnFinanciado);
 
-            ContratoModelo c = viewModel.getContratoValue();
-            if (c == null) c = new ContratoModelo();
-
-            c.setTipoPago("Financiado");
             binding.AceptarTarea.setText("Continuar");
             binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_cont));
-
-
-            viewModel.setContrato(c);
-
             binding.editEnganchePorcentaje.setText("");
             binding.editEngancheMonto.setText("");
-
             binding.EngacheColapsable.setVisibility(View.VISIBLE);
 
             calculaMontoFinanciar();
@@ -2278,27 +2324,25 @@ public class DatosVentaFragment extends Fragment {
         }
 
         Contrato.setTemporada(temporada);
-        int posTipoOcupacion = binding.spTipoOcupacion.getSelectedItemPosition();
-        String tipo = "";
-        switch (posTipoOcupacion) {
-            case 1:
-                tipo = "Corridos";
-                break;
-            case 2:
-                tipo = "Alternos Pares";
-                break;
-            case 3:
-                tipo = "Alternos Nones";
-                break;
-            default:
-                tipo = "Seleccionar";
-                break;
+
+
+        if (binding.spTipoOcupacion.getSelectedItem() != null){
+            String elegido = binding.spTipoOcupacion.getSelectedItem().toString();
+            if(elegido.equalsIgnoreCase("Alternos Pares") || elegido.equalsIgnoreCase("Even Years")){
+                Contrato.setTipoOcupacion("Años Alternos Pares");
+            }else if(elegido.equalsIgnoreCase("Alternos Nones") || elegido.equalsIgnoreCase("Odd Years")) {
+                Contrato.setTipoOcupacion("Años Alternos Nones");
+            }else if(elegido.equalsIgnoreCase("Corridos")|| elegido.equalsIgnoreCase("Years")){
+                Contrato.setTipoOcupacion("Años Corridos");
+            }else if(elegido.equalsIgnoreCase("Seleccionar")){
+                Contrato.setTipoOcupacion(null);
+            }
         }
-
-        Contrato.setTipoOcupacion(tipo);
-        if (binding.spTipoOcupacion.getSelectedItem() != null) Contrato.setTipoOcupacion(binding.spTipoOcupacion.getSelectedItem().toString());
-
-        if (binding.spAnioUso.getSelectedItem() != null) Contrato.setAnioUso(binding.spAnioUso.getSelectedItem().toString());
+        String anioUso = binding.spAnioUso.getSelectedItem() != null
+                ? binding.spAnioUso.getSelectedItem().toString() : "";
+        if (!anioUso.equals("Seleccionar") && !anioUso.equals("Select")) {
+            Contrato.setAnioUso(anioUso);
+        }
         Contrato.setNoAnios(binding.editNoAnios.getText().toString());
 
         if (binding.spMoneda.getSelectedItem() != null) Contrato.setMoneda(binding.spMoneda.getSelectedItem().toString());
@@ -2392,7 +2436,12 @@ public class DatosVentaFragment extends Fragment {
                                 if (fechaCount == montoCount) {
                                     EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
                                     if (etF != null) {
-                                        fecha = etF.getText().toString();
+                                        String fechaRaw = etF.getText().toString().trim();
+                                        // Si el watcher ya limpió los dígitos, recupera el valor del tag
+                                        if (fechaRaw.isEmpty() && etF.getTag() != null) {
+                                            fechaRaw = etF.getTag().toString();
+                                        }
+                                        fecha = fechaRaw;
                                     }
                                     break;
                                 }
@@ -2406,7 +2455,9 @@ public class DatosVentaFragment extends Fragment {
                 }
             }
         }
-
+        for (ContratoModelo.PagoDiferido pd : pagosReferidos) {
+            Log.d("DEBUG_PAGOS", "GUARDANDO → monto=" + pd.monto + " fecha=" + pd.fecha);
+        }
         Contrato.setPagosDiferidos(pagosReferidos);
         if (!pagosReferidos.isEmpty()) {
             String ultimaFecha = pagosReferidos.get(pagosReferidos.size() - 1).fecha;
@@ -2414,8 +2465,10 @@ public class DatosVentaFragment extends Fragment {
         } else {
             Contrato.setUltimaFechaEnganche(null);
         }
-
-        viewModel.setContrato(Contrato);}
+        viewModel.setModoMensual(modoMensual);
+        viewModel.setFechaInicialMensual(fechaInicialMensual);
+        viewModel.setContrato(Contrato
+        );}
 
     private void limpiarInventario() {
         binding.editNoAnios.setText("");
@@ -2462,9 +2515,9 @@ public class DatosVentaFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        datosLocalesInicializados = false;
         binding = null;
     }
-
     private static class DescuentoItem {
         final int no;
         final String descripcion;
@@ -2517,26 +2570,22 @@ public class DatosVentaFragment extends Fragment {
         List<DescuentoItem> getItems() { return items; }
         static class ViewHolder extends RecyclerView.ViewHolder { ViewHolder(@NonNull View itemView) { super(itemView); } }
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        cargaDatosExistentes();  // Restores all data including fechas
-    }
+
+
 
     private void finalizarContrato() {
         guardaDatosViewModel();
         ContratoModelo Contrato = viewModel.getContratoValue();
 
-        if (Contrato.getId() == null) {
+        boolean esEdicion = binding.AceptarTarea.getText().equals("Actualizar contrato");
+
+        if (!esEdicion && (Contrato.getId() == null || Contrato.getId().isEmpty())) {
             Contrato.setId(String.valueOf(System.currentTimeMillis()));
         }
 
         SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String now = metaSdf.format(new Date());
-
         Contrato.setFechaCreacion(now);
-
-
 
         if (!Contrato.getTitulares().isEmpty()) {
             ContratoModelo.Persona p = Contrato.getTitulares().get(0);
@@ -2547,28 +2596,39 @@ public class DatosVentaFragment extends Fragment {
 
         ContratoManager.getInstance().actualizaContrato(Contrato);
 
-        viewModel.guardaContratoBaseDatos();
+        if (esEdicion) {
+            viewModel.actualizaContratoBaseDatos(Contrato);
+        } else {
+            viewModel.guardaContratoBaseDatos();
+        }
     }
-
     private void setupObservers() {
         viewModel.getSaveSuccess().observe(getViewLifecycleOwner(), exito -> {
-            if (exito == null || !exito) return;
+            if (exito == null) return;
+
+            if (!exito) {
+                viewModel.resetSaveState();
+                return;
+            }
 
             ContratoModelo contrato = viewModel.getContratoValue();
 
             if (contrato != null && Boolean.TRUE.equals(contrato.getModoEdicion())) {
                 Toast.makeText(requireContext(), "Contrato actualizado correctamente", Toast.LENGTH_SHORT).show();
-                requireActivity().finish(); // ← finish() en el Activity que contiene el Fragment
+                viewModel.resetSaveState();
+                requireActivity().finish();
                 return;
             }
 
             Toast.makeText(requireContext(), "Contrato guardado correctamente", Toast.LENGTH_SHORT).show();
+            viewModel.resetSaveState();
             requireActivity().finish();
         });
 
         viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
             if (error != null) {
                 Toast.makeText(requireContext(), error, Toast.LENGTH_LONG).show();
+                viewModel.resetSaveState();
             }
         });
     }

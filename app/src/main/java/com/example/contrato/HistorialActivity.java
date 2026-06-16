@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -27,6 +28,9 @@ public class HistorialActivity extends AppCompatActivity {
     private SharedContratoViewModel viewModel;
     private boolean esModoEdicion = false;
     private boolean yaFueCargado = false;
+    private boolean navegandoAEdicion = false;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,28 +56,39 @@ public class HistorialActivity extends AppCompatActivity {
         viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
+        navegandoAEdicion = false; // reset so next click works
+
         long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
-
-        if (!yaFueCargado) {
-            return;
-        }
-
+        if (!yaFueCargado) return;
         viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
     private void setupRecyclerView() {
         adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
-            viewModel.fetchContratoPorId(Long.parseLong(contrato.getId()));
+            Log.d("HISTORIAL", "Se ejecuta click en contrato: " + contrato.getId());
+            viewModel.fetchContratoPorId(
+                    Long.parseLong(contrato.getId())
+            );
         });
-
         adapter.setOnContratoEstatusListener(this::mostrarConfirmacionEstatus);
 
         binding.recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewHistory.setAdapter(adapter);
+        adapter.setOnContratoEditListener(contrato -> {
+            // Solo permite editar contratos activos
+            if (!"A".equalsIgnoreCase(contrato.getEstatus())) {
+                Toast.makeText(this, "Solo se pueden editar contratos activos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            binding.layoutCargando.setVisibility(View.VISIBLE);
+            viewModel.fetchContratoPorId(Long.parseLong(contrato.getId()));
+        });
     }
+
     private void setupObservers() {
         viewModel.getHistory().observe(this, contratos -> {
             if (contratos == null) return;
@@ -94,35 +109,47 @@ public class HistorialActivity extends AppCompatActivity {
                 Toast.makeText(this, error, Toast.LENGTH_LONG).show();
             }
         });
+
         viewModel.getContrato().observe(this, contrato -> {
-            if (contrato == null || contrato.getId() == null || !contrato.getModoEdicion()) return;
+            if (contrato == null || contrato.getId() == null) {
+                navegandoAEdicion = false;
+                return;
+            }
+            if (!Boolean.TRUE.equals(contrato.getModoEdicion())) {
+                navegandoAEdicion = false;
+                return;
+            }
+            if (!contrato.isDatosListos()) return;
+            if (navegandoAEdicion) return;
+
+            navegandoAEdicion = true;
             Intent intent = new Intent(HistorialActivity.this, EditaContratoActivity.class);
-            intent.putExtra("contrato", contrato);
+            intent.putExtra("ID_CONTRATO", Long.parseLong(contrato.getId()));
             startActivity(intent);
         });
     }
 
     private void mostrarConfirmacionEstatus(ContratoModelo contrato) {
-        boolean activo = "A".equalsIgnoreCase(contrato.getEstatus());
-        String nuevoEstatus = activo ? "C" : "A";
-        String mensaje = activo
-                ? "¿Está seguro que desea cancelar el contrato?"
-                : "¿Está seguro que desea reactivar el contrato?";
+        boolean cancelado = "C".equalsIgnoreCase(contrato.getEstatus());
+        String nuevoEstatus = cancelado ? "A" : "C";
+        String mensaje = cancelado
+                ? "¿Está seguro que desea reactivar el contrato?"
+                : "¿Está seguro que desea cancelar el contrato?";
 
         new AlertDialog.Builder(this)
                 .setTitle("Confirmar Estatus")
                 .setMessage(mensaje)
                 .setPositiveButton("Aceptar", (dialog, which) -> {
-                    contrato.setEstatus(nuevoEstatus);
-                    viewModel.actualizaContratoBaseDatos(contrato);
-                    Toast.makeText(this, "Estatus actualizado", Toast.LENGTH_LONG).show();
+                    viewModel.actualizaEstatusContrato(
+                            Long.parseLong(contrato.getId()),
+                            nuevoEstatus
+                    );
                     adapter.setEsModoEdicion(false);
                     binding.btnEditMode.setText("EDITAR");
                 })
                 .setNegativeButton("Regresar", null)
                 .show();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

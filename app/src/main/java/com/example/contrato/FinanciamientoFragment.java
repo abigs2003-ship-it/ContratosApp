@@ -528,21 +528,20 @@ public class FinanciamientoFragment extends Fragment {
                 ? m + "/" + d + "/" + y
                 : d + "/" + m + "/" + y;
     }
-
     private void finalizarContrato() {
         guardaDatosViewModel();
         ContratoModelo Contrato = viewModel.getContratoValue();
 
-        if (Contrato.getId() == null) {
+        // Use button text as source of truth, not modoEdicion
+        boolean esEdicion = binding.btnEnviar.getText().equals("Actualizar contrato");
+
+        if (!esEdicion && (Contrato.getId() == null || Contrato.getId().isEmpty())) {
             Contrato.setId(String.valueOf(System.currentTimeMillis()));
         }
 
         SimpleDateFormat metaSdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
         String now = metaSdf.format(new Date());
-
         Contrato.setFechaCreacion(now);
-
-
 
         if (!Contrato.getTitulares().isEmpty()) {
             ContratoModelo.Persona p = Contrato.getTitulares().get(0);
@@ -553,7 +552,11 @@ public class FinanciamientoFragment extends Fragment {
 
         ContratoManager.getInstance().actualizaContrato(Contrato);
 
-        viewModel.guardaContratoBaseDatos();
+        if (esEdicion) {
+            viewModel.actualizaContratoBaseDatos(Contrato);
+        } else {
+            viewModel.guardaContratoBaseDatos();
+        }
     }
     private void actualizarContrato() {
         guardaDatosViewModel();

@@ -31,7 +31,6 @@ public class EditaContratoActivity extends AppCompatActivity {
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,24 +38,28 @@ public class EditaContratoActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         viewModel = new ViewModelProvider(this).get(SharedContratoViewModel.class);
-
         SharedPreferences prefs = getSharedPreferences("app", MODE_PRIVATE);
         long userId = prefs.getLong("userId", -1);
         viewModel.setCurrentUserId(userId);
 
-        contrato = (ContratoModelo) getIntent().getSerializableExtra("contrato");
+        binding.btnBack.setOnClickListener(v -> finish());
 
-        if (contrato != null) {
-            llenarDatos();
+
+        long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
+        if (idContrato == -1) {
+            finish();
+            return;
         }
 
-        binding.btnBack.setOnClickListener(v -> finish());
-        
+        viewModel.getContrato().observe(this, c -> {
+            if (c == null || !c.isDatosListos()) return;
+            contrato = c;
+            llenarDatos();
+        });
+        binding.tvId.setText("#" + idContrato);
 
-        binding.btnEditToggle.setVisibility(View.GONE);
-        binding.btnGuardar.setVisibility(View.GONE);
+        viewModel.fetchContratoPorId(idContrato);
     }
-
     private void llenarDatos() {
         if (contrato == null) return;
         String creacion = String.format("Creado: %s", convertirMesANombre(contrato.getFechaCreacion()));
@@ -70,6 +73,7 @@ public class EditaContratoActivity extends AppCompatActivity {
 
 
         binding.tvIdioma.setText(contrato.getIdioma());
+        binding.tvTipoDiferido.setText(contrato.getTipoPagoEnganche());
         llenarContenedorPersonas(binding.containerTitulares, contrato.getTitulares());
         llenarContenedorPersonas(binding.containerBeneficiarios, contrato.getBeneficiarios());
 

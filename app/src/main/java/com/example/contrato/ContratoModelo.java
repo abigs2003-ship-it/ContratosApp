@@ -90,6 +90,7 @@ public class ContratoModelo implements Serializable {
     private String pagoSala;
     private String costoMembresia;
     private String comentarios;
+    private String tipoPagoDiferido;
 
     private List<PagoDiferido> pagosDiferidos = new ArrayList<>();
     private List<DescuentoDetalle> descuentosDetalle = new ArrayList<>();
@@ -104,6 +105,8 @@ public class ContratoModelo implements Serializable {
 
     //tipo ocupacion
     private String tipoOcupación;
+    private boolean datosListos = false;
+
 
     private List<String> regalos = new ArrayList<>();
 
@@ -152,6 +155,8 @@ public class ContratoModelo implements Serializable {
     }
 
     // Getters y Setters
+    public boolean isDatosListos() { return datosListos; }
+    public void setDatosListos(boolean datosListos) { this.datosListos = datosListos; }
 
     public boolean getModoEdicion(){return modoEdicion;}
     public void setModoEdicion(boolean modoEdicion){this.modoEdicion = modoEdicion;}
@@ -321,9 +326,9 @@ public class ContratoModelo implements Serializable {
     public void setUltimaFechaEnganche(String ultimaFechaEnganche) {
         this.ultimaFechaEnganche = ultimaFechaEnganche;
     }
-    public String getTipoPagoEnganche() {
-        return tipoPagoEnganche;
-    }
+
+    public String getTipoPagoEnganche() {return tipoPagoEnganche;}
+
     public void setTipoPagoEnganche(String tipoPagoEnganche) {this.tipoPagoEnganche = tipoPagoEnganche;}
 
     public List<PagoDiferido> getPagosDiferidos() { return pagosDiferidos; }

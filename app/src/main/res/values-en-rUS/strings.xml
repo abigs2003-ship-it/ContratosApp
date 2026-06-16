@@ -196,11 +196,12 @@
 
     <string-array name="tiposOcupacion">
         <item>Select</item>
-        <item>Corridos</item>
-        <item>Alternos Pares</item>
-        <item>Alternos Nones</item>
+        <item>Years</item>
+        <item>Odd Years</item>
+        <item>Even Years</item>
 
     </string-array>
     <string name="mensualbot">Monthly</string>
     <string name="abiertobot">Open</string>
+    <string name="firma">Add Signature</string>
 </resources>

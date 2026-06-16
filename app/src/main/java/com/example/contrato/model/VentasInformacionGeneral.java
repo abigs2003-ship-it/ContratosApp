@@ -54,6 +54,8 @@ public class VentasInformacionGeneral {
     public String email4;
     public Timestamp fechaAlta;
     public long idUsuarioAlta;
-
+    public long idUsuarioModificacion;
+    public String estatus;
+    public Timestamp fechaModificacion;
     public VentasInformacionGeneral() {}
 }

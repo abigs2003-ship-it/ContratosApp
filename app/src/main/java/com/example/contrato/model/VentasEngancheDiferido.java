@@ -10,6 +10,8 @@ public class VentasEngancheDiferido {
     public Date fechaPago;
     public Timestamp fechaAlta;
     public long idUsuarioAlta;
-
+    public long idUsuarioModificacion;
+    public String estatus;
+    public Timestamp fechaModificacion;
     public VentasEngancheDiferido() {}
 }

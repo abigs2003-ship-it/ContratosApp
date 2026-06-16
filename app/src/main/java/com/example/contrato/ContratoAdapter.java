@@ -3,6 +3,7 @@ package com.example.contrato;
 import static androidx.core.content.ContextCompat.startActivity;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,15 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
 
+    public interface OnContratoEditListener {
+        void onContratoEditClick(ContratoModelo contrato);
+    }
 
+    private OnContratoEditListener editListener;
+
+    public void setOnContratoEditListener(OnContratoEditListener listener) {
+        this.editListener = listener;
+    }
     public interface OnContratoClickListener {
         void onContratoClick(ContratoModelo contrato);
     }
@@ -78,103 +87,65 @@ public class ContratoAdapter extends RecyclerView.Adapter<ContratoAdapter.ViewHo
 
         return new ViewHolder(binding);
     }
-
     @Override
-    public void onBindViewHolder(
-            @NonNull ViewHolder holder,
-            int position
-    ) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ContratoModelo contrato = contratoList.get(position);
 
-        holder.binding.tvClientName.setText(
-                contrato.getClientName()
-        );
+        holder.binding.tvClientName.setText(contrato.getClientName());
+        holder.binding.tvContractId.setText("ID: #" + contrato.getId());
+        holder.binding.tvCreatedDate.setText("Creado: " + convertirMesANombre(contrato.getFechaCreacion()));
 
-        holder.binding.tvContractId.setText(
-                "ID: #" + contrato.getId()
-        );
-
-        holder.binding.tvCreatedDate.setText(
-                "Creado: " + convertirMesANombre(contrato.getFechaCreacion())
-        );
-
-
-        if(contrato.getFechaModificacion() == null){
+        if (contrato.getFechaModificacion() == null) {
             holder.binding.tvModifiedDate.setText("");
-        }else{
-            holder.binding.tvModifiedDate.setText(
-                    "Modificado: " + convertirMesANombre(contrato.getFechaModificacion())
-            );
-
+        } else {
+            holder.binding.tvModifiedDate.setText("Modificado: " + convertirMesANombre(contrato.getFechaModificacion()));
         }
 
+        holder.binding.tvEstatus.setText("Estatus: " + contrato.getEstatus());
 
-        holder.binding.tvEstatus.setText(
-                "Estatus: " + contrato.getEstatus()
-        );
-
-        holder.binding.textContainer.setOnClickListener(
-                v -> clickListener.onContratoClick(contrato)
-        );
-
-        // muestra botones solo en modo edicion
-        holder.binding.btnCancelar.setVisibility(
-                esModoEdicion ? View.VISIBLE : View.GONE
-        );
-        holder.binding.btnEditar.setVisibility(
-                esModoEdicion ? View.VISIBLE : View.GONE
-        );
-
-        holder.binding.btnReactivar.setVisibility(
-                esModoEdicion ? View.VISIBLE : View.GONE
-        );
-
-        // Cancelar
-        holder.binding.btnCancelar.setOnClickListener(v -> {
-            if (estatusListener != null) {
-                estatusListener.onContratoStatusClick(
-                        contrato
-                );
-            }
+        holder.binding.textContainer.setOnClickListener(null);
+        holder.binding.textContainer.setOnClickListener(v -> {
+            v.setEnabled(false);
+            v.postDelayed(() -> v.setEnabled(true), 1000);
+            Log.d("CONTRATO_CLICK", "Contrato clickeado: " + contrato.getId());
+            clickListener.onContratoClick(contrato);
         });
 
-        //cuando click en editar se abre la actividad principal con el contrato cargado
+        holder.binding.btnCancelar.setOnClickListener(null);
+        holder.binding.btnReactivar.setOnClickListener(null);
+        holder.binding.btnEditar.setOnClickListener(v -> {
+            if (editListener != null) editListener.onContratoEditClick(contrato);
+        });
+        holder.binding.btnCancelar.setOnClickListener(v -> {
+            if (estatusListener != null) estatusListener.onContratoStatusClick(contrato);
+        });
+
+        holder.binding.btnReactivar.setOnClickListener(v -> {
+            if (estatusListener != null) estatusListener.onContratoStatusClick(contrato);
+        });
 
         holder.binding.btnEditar.setOnClickListener(v -> {
             Intent intent = new Intent(holder.itemView.getContext(), MainActivity.class);
-            intent.putExtra("ID_CONTRATO",
-                    Long.parseLong(contrato.getId()));
+            intent.putExtra("ID_CONTRATO", Long.parseLong(contrato.getId()));
             holder.itemView.getContext().startActivity(intent);
         });
 
-        // Reactivar
-        holder.binding.btnReactivar.setOnClickListener(v -> {
-            if (estatusListener != null) {
-                estatusListener.onContratoStatusClick(
-                        contrato
-                );
-            }
-        });
-
-        //solo mostrar uno dependiendo de estatus
         if (esModoEdicion) {
-            if ("A".equals(contrato.getEstatus())) {
+            if ("A".equals(contrato.getEstatus()) ||"M".equals(contrato.getEstatus()) ) {
                 holder.binding.btnCancelar.setVisibility(View.VISIBLE);
                 holder.binding.btnReactivar.setVisibility(View.GONE);
-            } else {
+            } else if("C".equals(contrato.getEstatus())){
                 holder.binding.btnCancelar.setVisibility(View.GONE);
                 holder.binding.btnReactivar.setVisibility(View.VISIBLE);
             }
-
             holder.binding.btnEditar.setVisibility(View.VISIBLE);
-
         } else {
             holder.binding.btnEditar.setVisibility(View.GONE);
             holder.binding.btnCancelar.setVisibility(View.GONE);
             holder.binding.btnReactivar.setVisibility(View.GONE);
         }
-
     }
+
 
     private boolean esIngles() {
         return Locale.getDefault().getLanguage().equals("en");

@@ -35,6 +35,14 @@ public class VentasInventario {
     public String comentariosRegalos;
     public Timestamp fechaAlta;
     public long idUsuarioAlta;
+    public long idUsuarioModificacion;
+    public String estatus;
+    public Timestamp fechaModificacion;
+    public String tipoPagoDiferido;
+    public String idUnidad;
+    public Long idTemporada;
+    public String idTipoOcupacion;
+
 
     public VentasInventario() {}
 }

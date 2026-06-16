@@ -40,6 +40,11 @@ public class TitularesFragment extends Fragment {
     private SharedContratoViewModel viewModel;
     private List<ContratoModelo.Persona> titularesList = new ArrayList<>();
     private List<ContratoModelo.Persona> beneficiariosList = new ArrayList<>();
+
+    // Flag que indica si las listas locales ya fueron inicializadas desde el ViewModel.
+    // Sin esto, onPause() puede guardar listas vacías y borrar los datos del contrato.
+    private boolean datosLocalesInicializados = false;
+
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
 
@@ -76,7 +81,6 @@ public class TitularesFragment extends Fragment {
         setupFormatoFecha(binding.editFechaCumpleanos);
         setupFormatoFecha(binding.editFechaCumpleanosBene);
 
-
         List<String> parentescosList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.parentescos)));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireContext(), R.layout.spinner_parentesco, android.R.id.text1, parentescosList) {
@@ -110,23 +114,24 @@ public class TitularesFragment extends Fragment {
 
             boolean esModoEdicion = Boolean.TRUE.equals(contrato.getModoEdicion());
 
-            boolean titularesLocalVacios     = titularesList.isEmpty();
-            boolean beneficiariosLocalVacios = beneficiariosList.isEmpty();
-            boolean contratoTieneTitulares     = !contrato.getTitulares().isEmpty();
-            boolean contratoTieneBeneficiarios = !contrato.getBeneficiarios().isEmpty();
-
-            // En modo edición mostramos el spinner mientras los datos no hayan llegado todavía
-            Log.d("titulares vacios", String.valueOf(titularesLocalVacios));
-            Log.d("contrato tiene titulares", String.valueOf(contratoTieneTitulares));
-            if (esModoEdicion && titularesLocalVacios && !contratoTieneTitulares) {
+            // En modo edición, esperamos hasta que getContratoCompleto() haya terminado
+            // (datosListos = true). En modo nuevo, no hay nada que esperar.
+            if (esModoEdicion && !contrato.isDatosListos()) {
                 binding.layoutCargandoTitulares.setVisibility(View.VISIBLE);
-                return; // esperamos a la siguiente emisión con los datos ya cargados
+                return;
             }
 
-            // Datos listos — ocultamos el spinner
+            // Datos listos — ocultamos el spinner y marcamos las listas como inicializadas.
+            // A partir de aquí onPause() puede guardar sin riesgo.
             binding.layoutCargandoTitulares.setVisibility(View.GONE);
+            datosLocalesInicializados = true;
 
-            if (titularesLocalVacios && contratoTieneTitulares) {
+            boolean titularesLocalVacios     = titularesList.isEmpty();
+            boolean beneficiariosLocalVacios = beneficiariosList.isEmpty();
+
+            // Solo copiamos del ViewModel si la lista local está vacía,
+            // para no pisar cambios que el usuario ya haya hecho en esta sesión.
+            if (titularesLocalVacios && !contrato.getTitulares().isEmpty()) {
                 titularesList = new ArrayList<>(contrato.getTitulares());
                 binding.containerTitulares.removeAllViews();
                 for (ContratoModelo.Persona persona : titularesList) {
@@ -134,7 +139,7 @@ public class TitularesFragment extends Fragment {
                 }
             }
 
-            if (beneficiariosLocalVacios && contratoTieneBeneficiarios) {
+            if (beneficiariosLocalVacios && !contrato.getBeneficiarios().isEmpty()) {
                 beneficiariosList = new ArrayList<>(contrato.getBeneficiarios());
                 binding.containerBeneficiarios.removeAllViews();
                 for (ContratoModelo.Persona persona : beneficiariosList) {
@@ -142,8 +147,8 @@ public class TitularesFragment extends Fragment {
                 }
             }
         });
+
         binding.btnAgregar.setOnClickListener(v -> {
-            // Esperamos a que el contrato esté cargado antes de permitir agregar
             if (viewModel.getContratoValue() == null) {
                 Toast.makeText(requireContext(), "Espere, cargando datos...", Toast.LENGTH_SHORT).show();
                 return;
@@ -169,7 +174,6 @@ public class TitularesFragment extends Fragment {
         });
 
         binding.btnAgregarBene.setOnClickListener(v -> {
-            // Igual para beneficiarios
             if (viewModel.getContratoValue() == null) {
                 Toast.makeText(requireContext(), "Espere, cargando datos...", Toast.LENGTH_SHORT).show();
                 return;
@@ -210,11 +214,8 @@ public class TitularesFragment extends Fragment {
         return Locale.getDefault().getLanguage().equals("en");
     }
 
-    //si español DD/MM/AAAA, si ingles MM/DD/YYYY
     private void setupFormatoFecha(EditText editText) {
-
         editText.addTextChangedListener(new TextWatcher() {
-
             private boolean actualizandose = false;
 
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -232,7 +233,6 @@ public class TitularesFragment extends Fragment {
 
                 if (digitos.length() >= 4) {
                     if (esIngles()) {
-                        // valida me
                         String mesStr = digitos.substring(0, 2);
                         int mes = Integer.parseInt(mesStr);
                         if (mes > 12) {
@@ -243,7 +243,6 @@ public class TitularesFragment extends Fragment {
                             digitos = "01" + digitos.substring(2);
                         }
                     } else {
-                        // valida mes
                         String mesStr = digitos.substring(2, 4);
                         int mes = Integer.parseInt(mesStr);
                         if (mes > 12) {
@@ -256,7 +255,6 @@ public class TitularesFragment extends Fragment {
                     }
                 }
 
-                // se agregan los /
                 StringBuilder formateado = new StringBuilder();
                 for (int i = 0; i < digitos.length(); i++) {
                     formateado.append(digitos.charAt(i));
@@ -280,19 +278,17 @@ public class TitularesFragment extends Fragment {
         });
     }
 
-    //cambia de 01/02/2000 a 01/feb/2000
     private void convertirMesANombre(EditText editText) {
         String texto = editText.getText().toString();
 
         if (texto.length() == 10) {
             try {
-
                 if (esIngles()) {
                     String mesStr = texto.substring(0, 2);
                     int mes = Integer.parseInt(mesStr);
                     if (mes >= 1 && mes <= 12) {
                         String mesPalabra = MESES_EN[mes - 1];
-                        String fechaFinal = mesPalabra + texto.substring(2); // "Mar/15/2025"
+                        String fechaFinal = mesPalabra + texto.substring(2);
                         editText.setText(fechaFinal);
                     }
                 } else {
@@ -301,13 +297,14 @@ public class TitularesFragment extends Fragment {
                     if (mes >= 1 && mes <= 12) {
                         String mesPalabra = MESES_ES[mes - 1];
                         String fechaFinal = texto.substring(0, 3) + mesPalabra + texto.substring(5);
-                        editText.setText(fechaFinal); // "15/mar/2025"
+                        editText.setText(fechaFinal);
                     }
                 }
             } catch (NumberFormatException e) {
             }
         }
     }
+
     private String getIdiomaActual() {
         LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
         if (!currentLocales.isEmpty()) {
@@ -315,8 +312,6 @@ public class TitularesFragment extends Fragment {
         }
         return Locale.getDefault().getLanguage();
     }
-
-
 
     private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
@@ -335,7 +330,6 @@ public class TitularesFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -344,23 +338,22 @@ public class TitularesFragment extends Fragment {
 
     private void guardaDatosViewModel() {
         ContratoModelo contrato = viewModel.getContratoValue();
+        if (contrato == null) return;
 
-        if (contrato == null) {
-            return;
-        }
+        // Si los datos locales aún no se inicializaron (el observer no ha pasado el spinner),
+        // no guardamos para no sobreescribir el ViewModel con listas vacías.
+        if (!datosLocalesInicializados) return;
 
         contrato.setTitulares(new ArrayList<>(titularesList));
         contrato.setBeneficiarios(new ArrayList<>(beneficiariosList));
-
         viewModel.setContrato(contrato);
     }
 
     private void muestraDatePicker(EditText editText) {
         final Calendar c = Calendar.getInstance();
-        int anio  = c.get(Calendar.YEAR);
-        int mes = c.get(Calendar.MONTH);
-        int dia   = c.get(Calendar.DAY_OF_MONTH);
-
+        int anio = c.get(Calendar.YEAR);
+        int mes  = c.get(Calendar.MONTH);
+        int dia  = c.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dialog = new DatePickerDialog(requireContext(),
                 (view, anio1, mesAnio, diaMes) -> {
@@ -370,18 +363,17 @@ public class TitularesFragment extends Fragment {
                     String y = String.valueOf(anio1);
 
                     String fechaSeleccionada = lang.equals("en")
-                            ? m + "/" + d + "/" + y   // MM/DD/YYYY
-                            : d + "/" + m + "/" + y;  // DD/MM/YYYY
+                            ? m + "/" + d + "/" + y
+                            : d + "/" + m + "/" + y;
 
                     if (fechaSeleccionada.length() == 10) {
                         try {
-
                             if (esIngles()) {
                                 String mesStr = fechaSeleccionada.substring(0, 2);
                                 int me = Integer.parseInt(mesStr);
                                 if (me >= 1 && me <= 12) {
                                     String mesPalabra = MESES_EN[me - 1];
-                                    String fechaFinal = mesPalabra + fechaSeleccionada.substring(2); // "Mar/15/2025"
+                                    String fechaFinal = mesPalabra + fechaSeleccionada.substring(2);
                                     editText.setText(fechaFinal);
                                 }
                             } else {
@@ -390,7 +382,7 @@ public class TitularesFragment extends Fragment {
                                 if (me >= 1 && me <= 12) {
                                     String mesPalabra = MESES_ES[me - 1];
                                     String fechaFinal = fechaSeleccionada.substring(0, 3) + mesPalabra + fechaSeleccionada.substring(5);
-                                    editText.setText(fechaFinal); // "15/mar/2025"
+                                    editText.setText(fechaFinal);
                                 }
                             }
                         } catch (NumberFormatException e) {
@@ -408,7 +400,6 @@ public class TitularesFragment extends Fragment {
         bindingItem.textNombre.setText(fullName.trim());
         bindingItem.textCumple.setText(p.cumple);
         bindingItem.textOcupacion.setText(p.ocupacion);
-
 
         String parentescoDisplay = p.parentesco;
         try {

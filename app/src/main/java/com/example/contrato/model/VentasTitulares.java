@@ -15,6 +15,10 @@ public class VentasTitulares {
     public Date fechaCumpleaños;
     public String ocupacion;
     public long parentesco;
-
+    public long idUsuarioModificacion;
+    public String estatus;
+    public Timestamp fechaModificacion;
+    public int tipoRegistro;     // 0 = Titular, 1 = Beneficiario
+    public int ordenTitulares;   // posición en la lista (1, 2, 3...)
     public VentasTitulares() {}
 }

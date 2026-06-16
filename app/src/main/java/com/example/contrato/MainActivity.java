@@ -39,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         SharedContratoViewModel vm = new ViewModelProvider(this).get(SharedContratoViewModel.class);
+        LocaleListCompat locales = AppCompatDelegate.getApplicationLocales();
+        String lang = locales.isEmpty() ? "es" : locales.get(0).getLanguage();
+        vm.setIdiomaActual(lang);
 
         long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
         long idUsuario  = getIntent().getLongExtra("ID_USUARIO", -1);
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (!current.toLowerCase().startsWith(targetBase)) {
                         convertirFechasEnViewModel(targetBase);
+                        new ViewModelProvider(MainActivity.this).get(SharedContratoViewModel.class).setIdiomaActual(targetBase);
                         AppCompatDelegate.setApplicationLocales(
                                 LocaleListCompat.forLanguageTags(targetFull)
                         );
