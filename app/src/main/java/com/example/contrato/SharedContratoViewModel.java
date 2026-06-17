@@ -47,6 +47,17 @@ public class SharedContratoViewModel extends ViewModel {
     private int lastCondTab = 0;
     private boolean modoMensual = false;
     private String fechaInicialMensual = null;
+    private ContratoModelo.Persona personaParaFirma;
+
+
+    public void setPersonaParaFirma(ContratoModelo.Persona persona) {
+        personaParaFirma = persona;
+    }
+
+
+    public ContratoModelo.Persona getPersonaParaFirma() {
+        return personaParaFirma;
+    }
 
     public boolean isModoMensual() { return modoMensual; }
     public void setModoMensual(boolean v) { modoMensual = v; }

@@ -9,13 +9,22 @@
         android:id="@+id/nav_titulares"
         android:name="com.example.contrato.TitularesFragment"
         android:label="@string/datosgen"
-        tools:layout="@layout/fragment_titulares" />
+        tools:layout="@layout/fragment_titulares">
+        <action
+            android:id="@+id/action_titulares_a_firmas"
+            app:destination="@id/nav_firmas" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_direcciones"
         android:name="com.example.contrato.PestañaDireccion.PestañaDireccionFragment"
         android:label="@string/condicionesbot"
         tools:layout="@layout/fragment_direccion" />
+
+    <fragment
+        android:id="@+id/nav_firmas"
+        android:name="com.example.contrato.FirmasFragment"
+        android:label="Firma"/>
 
     <fragment
         android:id="@+id/nav_redes_sociales"

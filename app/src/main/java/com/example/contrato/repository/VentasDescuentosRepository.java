@@ -24,7 +24,8 @@ public class VentasDescuentosRepository {
         }
         return false;
     }
-    // 2.1
+    // aqui empieza 104
+    /*
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Descuentos_GetNextId}");
@@ -91,7 +92,10 @@ public class VentasDescuentosRepository {
         }
         return list;
     }
-/*
+    */
+
+    //Aqui empieza cintas
+// /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDescuento), 0) + 1 AS NextId FROM PMT_App_Ventas_Descuentos";
         try (Connection conn = DbConnection.getConnection();
@@ -198,5 +202,6 @@ public class VentasDescuentosRepository {
             }
         }
         return list;
-    }*/
+    }
+    // */
 }

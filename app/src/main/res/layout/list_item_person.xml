@@ -9,10 +9,14 @@
     android:gravity="center_vertical"
     android:background="#FFFFFF">
 
-    <View
-        android:layout_width="24dp"
-        android:layout_height="1dp" />
 
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"></CheckBox>
+    <View
+        android:layout_width="4dp"
+        android:layout_height="1dp" />
     <TextView
         android:id="@+id/textNombre"
         android:layout_width="0dp"
@@ -67,14 +71,24 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:visibility="gone" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnFirma"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="80dp"
+            android:layout_height="38dp"
+            android:backgroundTint="@color/pacificaazul"
+            android:padding="0dp"
+            android:text="@string/firmas"
+            android:textColor="#FFFFFF"
+            android:textStyle="normal"
+            android:textSize="12sp"
+            android:textAllCaps="false"
+            app:cornerRadius="4dp"
+            app:iconGravity="textEnd"
+            app:iconPadding="5dp"
+            android:visibility="invisible"
+            app:iconTint="@color/white" />
 
 
-        <ImageButton
-            android:id="@+id/btnEliminar"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_trash2" />
     </LinearLayout>
 </LinearLayout>

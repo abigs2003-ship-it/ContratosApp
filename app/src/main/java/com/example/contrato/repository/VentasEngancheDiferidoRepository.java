@@ -72,7 +72,8 @@ public class VentasEngancheDiferidoRepository {
     }
     // Solo devuelve registros activos (Estatus = 'A') para mostrar en pantalla
 
-    // 3.1
+    // aqui empieza 104
+    /*
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_EngancheDiferido_GetNextId}");
@@ -126,8 +127,9 @@ public class VentasEngancheDiferidoRepository {
         }
         return list;
     }
+*/
+    //aqui empieza citas
 
-/*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdPago), 0) + 1 AS NextId FROM PMT_App_Ventas_EngancheDiferido";
         try (Connection conn = DbConnection.getConnection();
@@ -186,5 +188,5 @@ public class VentasEngancheDiferidoRepository {
         }
     }
 
-*/
+// */
 }

@@ -30,7 +30,8 @@ public class VentasTitularesRepository {
         return false;
     }
 
-    // 7.1
+    // 104
+    /*
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_GetNextId}");
@@ -110,10 +111,10 @@ public class VentasTitularesRepository {
         }
         return list;
     }
+*/
 
-
-
-    /*
+//cintas
+    // /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdTitular), 0) + 1 AS NextId FROM PMT_App_Ventas_Titulares";
         try (Connection conn = DbConnection.getConnection();
@@ -196,6 +197,6 @@ public class VentasTitularesRepository {
             ps.executeUpdate();
         }
     }
-    */
+   // */
 
 }

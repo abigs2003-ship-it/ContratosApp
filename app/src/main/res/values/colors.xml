@@ -84,4 +84,14 @@
     <color name="row_divider">#14FFFFFF</color>
     <color name="list_bg">#0AFFFFFF</color>
     <color name="list_header_bg">#18FFFFFF</color>
+
+    <color name="botonEditar">#64748B</color>
+    <color name="botonLimpiar">#64748B</color>
+
+    <color name="botonEliminar">#FB6161</color>
+
+    <color name="botonFirma">#3EAF84</color>
+    <color name="botonAgregar">#3EAF84</color>
+
+
 </resources>

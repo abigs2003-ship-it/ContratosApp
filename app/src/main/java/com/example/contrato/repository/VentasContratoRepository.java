@@ -90,7 +90,8 @@ public class VentasContratoRepository {
         if (dbIdioma.equalsIgnoreCase("ING")) return "English";
         return "Español";
     }
-    // 1.1
+    /*
+    // aqui empieza sp
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Contrato_GetNextId}");
@@ -232,7 +233,7 @@ public class VentasContratoRepository {
         return models;
     }
 
-    // 1.9 — sp returns 6 result sets; jtds/mssql-jdbc: use getMoreResults() to advance
+    // 1.9 —
     public ContratoModelo getContratoCompleto(long idContrato) throws SQLException {
         Log.d("CONTRATO_DB", "getContratoCompleto id=" + idContrato);
         SimpleDateFormat sdf         = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
@@ -373,7 +374,7 @@ public class VentasContratoRepository {
         return m;
     }
 
-    // ── Private helpers ────────────────────────────────────────────────────────
+    // ──  helpers privados────────────────────────────────────────────────────────
 
     private void mapInfoGeneral(ResultSet rs, ContratoModelo m,
                                 SimpleDateFormat dateOnlySdf) throws SQLException {
@@ -491,7 +492,9 @@ public class VentasContratoRepository {
         String ig = rs.getString("UsuarioInstagram"); if (ig != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Instagram", ig));
         String tw = rs.getString("UsuarioTwitter");   if (tw != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Twitter",   tw));
     }
-/*
+     */
+    //Aqui empieza cintas
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdContrato), 0) + 1 AS NextId FROM PMT_App_Ventas_Contrato";
         try (Connection conn = DbConnection.getConnection();
@@ -833,7 +836,6 @@ public class VentasContratoRepository {
         m.setDatosListos(true);
         return m;
     }
-    //cambia de 01/02/2000 a 01/feb/2000
-*/
+
 
 }

@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.contrato"
-    compileSdk = 35
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.contrato"
@@ -37,8 +37,8 @@ android {
             excludes += "/META-INF/LICENSE*"
         }
     }
-}
 
+}
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
@@ -49,6 +49,10 @@ dependencies {
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("se.warting.signature:signature-view:0.2.0")
+    implementation(libs.core.ktx)
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx) //librería para las firmas
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

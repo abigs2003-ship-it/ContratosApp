@@ -204,4 +204,6 @@
     <string name="mensualbot">Monthly</string>
     <string name="abiertobot">Open</string>
     <string name="firma">Add Signature</string>
+    <string name="ver">View</string>
+    <string name="firmas">Signature</string>
 </resources>

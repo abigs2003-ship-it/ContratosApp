@@ -344,6 +344,25 @@
                         app:iconGravity="textStart"
                         app:iconPadding="4dp"
                         app:iconTint="@color/white" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFirma"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="#EF9E1B"
+                        android:padding="0dp"
+                        android:text="@string/firma"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:visibility="invisible"
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_firma"
+                        app:iconGravity="textStart"
+                        app:iconPadding="5dp"
+                        app:iconTint="@color/white" />
+
+
 
 
                 </LinearLayout>
@@ -677,6 +696,25 @@
                         app:iconGravity="textStart"
                         app:iconPadding="4dp"
                         app:iconTint="@color/white" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnFirmaBene"
+                        style="@style/Widget.MaterialComponents.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:backgroundTint="#EF9E1B"
+                        android:padding="0dp"
+                        android:text="@string/firma"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:visibility="invisible"
+
+                        app:cornerRadius="4dp"
+                        app:icon="@drawable/ic_firma"
+                        app:iconGravity="textStart"
+                        app:iconPadding="5dp"
+                        app:iconTint="@color/white" />
+
 
 
                 </LinearLayout>

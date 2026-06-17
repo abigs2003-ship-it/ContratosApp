@@ -134,9 +134,8 @@ public class VentasInventarioRepository {
         }
         return null;
     }
-//Aqui empieza sps
-// 6.2
-// 6.1
+//Aqui empieza 104
+/*
 public long getNextId() throws SQLException {
     try (Connection conn = DbConnection.getConnection();
          CallableStatement cs = conn.prepareCall("{call sp_App_Inventario_GetNextId}");
@@ -162,7 +161,7 @@ public void insert(VentasInventario i) throws SQLException {
         }
     }
 
-    // 6.4
+
     public VentasInventario getByContratoId(long idContrato) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Inventario_GetByContratoId(?)}")) {
@@ -174,7 +173,7 @@ public void insert(VentasInventario i) throws SQLException {
         return null;
     }
 
-    // 6.5
+
 
     // ── Helpers ────────────────────────────────────────────────────────────────
 
@@ -258,8 +257,10 @@ public void insert(VentasInventario i) throws SQLException {
         cs.setLong(29,   idUsuario);
         cs.setString(30, i.tipoPagoDiferido);
     }
-/*
 
+ */
+
+    //aqui empieza cintas
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdCondicionesVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Datos_Inventario";
         try (Connection conn = DbConnection.getConnection();
@@ -470,5 +471,5 @@ public void insert(VentasInventario i) throws SQLException {
         ps.setString(33, i.idTipoOcupacion);
         ps.setString(34, i.tipoPagoDiferido);
     }
-*/
+// */
 }

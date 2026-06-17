@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/pacificagris">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_regresar_firma"
+            app:tint="@color/white"
+            android:layout_marginStart="10dp"
+            android:backgroundTint="@color/pacificagris"
+            android:padding="15dp"
+
+            />
+        <TextView
+            android:background="@color/pacificagris"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Firme aquí"
+            android:layout_marginEnd="50dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:fontFamily="serif"></TextView>
+    </LinearLayout>
+
+
+
+
+    <TextView
+        android:id="@+id/nombreTitular"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:text="Titular"></TextView>
+    <se.warting.signatureview.views.SignaturePad
+        android:id="@+id/signaturePad"
+        android:background="@drawable/bg_card"
+        android:layout_margin="50dp"
+        android:layout_gravity="center"
+        android:layout_width="500dp"
+        android:layout_height="150dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLimpiar"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="100dp"
+            android:layout_height="55dp"
+            android:layout_marginEnd="50dp"
+            android:backgroundTint="#64748B"
+            android:padding="0dp"
+            android:text="@string/limpiarbot"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:cornerRadius="4dp"
+
+            app:icon="@drawable/ic_broom"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconTint="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGuardarFirma"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="100dp"
+            android:layout_height="55dp"
+            android:backgroundTint="#3EAF84"
+            android:padding="0dp"
+            android:text="@string/guardar"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            app:cornerRadius="4dp"
+            app:icon="@drawable/check2"
+            app:iconGravity="textStart"
+            app:iconPadding="5dp"
+            app:iconTint="@color/white" />
+    </LinearLayout>
+</LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

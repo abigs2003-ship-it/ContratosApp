@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ContratoModelo implements Serializable {
     private boolean modoEdicion;
@@ -116,13 +117,28 @@ public class ContratoModelo implements Serializable {
 
     public static class Persona implements Serializable {
         public String nombre, paterno, materno, ocupacion, parentesco, cumple;
+        //imagen de la firma del titular en base 64
+        public String imagenFirmaBase64;
+        public String id;
         public Persona() {}
         public Persona(String n, String p, String m, String o, String par, String c) {
+            this.id = UUID.randomUUID().toString();
             this.nombre = n; this.paterno = p; this.materno = m;
             this.ocupacion = o; this.parentesco = par; this.cumple = c;
         }
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Persona)) return false;
+        Persona other = (Persona) o;
+        return id != null && id.equals(other.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
     public static class InfoTelefono implements Serializable {
         public String etiqueta, lada, numero;
         public boolean isWhatsApp, esPrincipal;

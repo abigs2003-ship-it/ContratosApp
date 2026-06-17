@@ -113,7 +113,8 @@ public class VentasInformacionGeneralRepository {
                 || !Objects.equals(a.email4,           n.email4);
     }
 
-    // 5.1
+    // aqui empieza 104
+    /*
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_InfoGeneral_GetNextId}");
@@ -276,8 +277,9 @@ public class VentasInformacionGeneralRepository {
         cs.setLong(48,   idUsuario);
     }
 
-
-    /*
+*/
+    //Aqui empieza cintas
+   // /*
 
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDatosVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Informacion_General";
@@ -469,5 +471,5 @@ public class VentasInformacionGeneralRepository {
         ps.setString(48, g.email4);
         // índice 49 = IdUsuarioAlta → se setea fuera de este método
     }
-  */
+  // */
 }
