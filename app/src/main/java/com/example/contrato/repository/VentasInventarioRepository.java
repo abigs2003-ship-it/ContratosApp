@@ -135,7 +135,7 @@ public class VentasInventarioRepository {
         return null;
     }
 //Aqui empieza 104
-/*
+
 public long getNextId() throws SQLException {
     try (Connection conn = DbConnection.getConnection();
          CallableStatement cs = conn.prepareCall("{call sp_App_Inventario_GetNextId}");
@@ -258,9 +258,9 @@ public void insert(VentasInventario i) throws SQLException {
         cs.setString(30, i.tipoPagoDiferido);
     }
 
- */
 
-    //aqui empieza cintas
+
+ /*   //aqui empieza cintas
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdCondicionesVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Datos_Inventario";
         try (Connection conn = DbConnection.getConnection();

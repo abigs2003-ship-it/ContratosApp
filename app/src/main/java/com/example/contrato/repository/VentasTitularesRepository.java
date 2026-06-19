@@ -16,10 +16,16 @@ public class VentasTitularesRepository {
         for (VentasTitulares t : actuales) {
             if (tipo.equals(t.tipoTitular)) filtrados.add(t);
         }
+
         if (filtrados.size() != nuevos.size()) return true;
+
         for (int i = 0; i < filtrados.size(); i++) {
             VentasTitulares a = filtrados.get(i);
             ContratoModelo.Persona n = nuevos.get(i);
+
+            // Si hay una nueva firma en memoria, consideramos que hubo cambios
+            if (n.imagenFirmaBase64 != null && !n.imagenFirmaBase64.isEmpty()) return true;
+
             if (!Objects.equals(a.nombre,    n.nombre)
                     || !Objects.equals(a.paterno,   n.paterno)
                     || !Objects.equals(a.materno,   n.materno)
@@ -31,7 +37,7 @@ public class VentasTitularesRepository {
     }
 
     // 104
-    /*
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_GetNextId}");
@@ -111,10 +117,10 @@ public class VentasTitularesRepository {
         }
         return list;
     }
-*/
+
 
 //cintas
-    // /*
+    /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdTitular), 0) + 1 AS NextId FROM PMT_App_Ventas_Titulares";
         try (Connection conn = DbConnection.getConnection();

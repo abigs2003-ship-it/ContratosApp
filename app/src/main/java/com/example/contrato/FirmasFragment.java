@@ -96,7 +96,7 @@ public class FirmasFragment extends Fragment {
         persona.imagenFirmaBase64 =
                 Base64.encodeToString(
                         bytes,
-                        Base64.DEFAULT
+                        Base64.NO_WRAP
                 );
 
         // guardar en contrato del ViewModel
@@ -104,21 +104,6 @@ public class FirmasFragment extends Fragment {
                 viewModel.getContratoValue();
         if(contrato != null){
 
-            // FIX: antes se comparaba "p == persona" (identidad de
-            // referencia). Eso funcionaba cuando "persona" venía de
-            // viewModel.getPersonaParaFirma() (misma instancia en
-            // memoria), pero fallaba cuando "persona" llegaba por
-            // Bundle.getSerializable("persona") — flujo "Rehacer firma"
-            // desde TitularesFragment — porque la serialización/
-            // deserialización siempre produce una instancia NUEVA.
-            // Con esa instancia nueva, "p == persona" nunca era true,
-            // el contrato nunca recibía la firma actualizada para ese
-            // titular/beneficiario, y al volver a TitularesFragment
-            // parecía que el cambio "no se guardó".
-            //
-            // Ahora comparamos por persona.id, que es estable: se genera
-            // una sola vez al crear la Persona y se conserva igual a
-            // través de cualquier serialización o copia de lista.
             for(ContratoModelo.Persona p :
                     contrato.getTitulares()){
 

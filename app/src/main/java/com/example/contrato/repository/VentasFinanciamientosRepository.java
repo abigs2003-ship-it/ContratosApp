@@ -8,14 +8,15 @@ import java.util.Objects;
 public class VentasFinanciamientosRepository {
 
     public boolean huboCambios(VentasFinanciamientos a, VentasFinanciamientos n) {
-        return !Objects.equals(a.tipoPeriodo,     n.tipoPeriodo)
+        return !Objects.equals(a.tipoPeriodo, n.tipoPeriodo)
                 || !Objects.equals(a.fechaPrimerPago, n.fechaPrimerPago)
                 || !Objects.equals(a.montoAFinanciar, n.montoAFinanciar)
-                || !Objects.equals(a.numeroPagos,     n.numeroPagos)
-                || !Objects.equals(a.tasaInteres,     n.tasaInteres);
+                || !Objects.equals(a.numeroPagos, n.numeroPagos)
+                || !Objects.equals(a.tasaInteres, n.tasaInteres);
     }
+
     // aqui empieza 104
-   /* public long getNextId() throws SQLException {
+    public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Financiamientos_GetNextId}");
              ResultSet rs = cs.executeQuery()) {
@@ -64,15 +65,15 @@ public class VentasFinanciamientosRepository {
                 if (rs.next()) {
                     VentasFinanciamientos f = new VentasFinanciamientos();
                     f.idFinanciamiento = rs.getLong("IdFinanciamiento");
-                    f.idContrato       = rs.getLong("IdContrato");
-                    f.tipoPeriodo      = rs.getString("TipoPeriodo");
-                    f.fechaPrimerPago  = rs.getDate("FechaPrimerPago");
-                    f.montoAFinanciar  = rs.getDouble("MontoAFinanciar");
-                    f.numeroPagos      = rs.getInt("NumeroPagos");
-                    f.tasaInteres      = rs.getDouble("TasaInteres");
-                    f.fechaAlta        = rs.getTimestamp("FechaAlta");
-                    f.idUsuarioAlta    = rs.getLong("IdUsuarioAlta");
-                    f.estatus          = rs.getString("Estatus");
+                    f.idContrato = rs.getLong("IdContrato");
+                    f.tipoPeriodo = rs.getString("TipoPeriodo");
+                    f.fechaPrimerPago = rs.getDate("FechaPrimerPago");
+                    f.montoAFinanciar = rs.getDouble("MontoAFinanciar");
+                    f.numeroPagos = rs.getInt("NumeroPagos");
+                    f.tasaInteres = rs.getDouble("TasaInteres");
+                    f.fechaAlta = rs.getTimestamp("FechaAlta");
+                    f.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
+                    f.estatus = rs.getString("Estatus");
                     return f;
                 }
             }
@@ -89,9 +90,9 @@ public class VentasFinanciamientosRepository {
             cs.executeUpdate();
         }
     }
-*/
+}
     //aqui empieza cintas
-    // /*
+     /*
 
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdFinanciamiento), 0) + 1 AS NextId FROM PMT_App_Ventas_Financiamientos";
@@ -208,4 +209,4 @@ public class VentasFinanciamientosRepository {
 
 // */
 
-}
+

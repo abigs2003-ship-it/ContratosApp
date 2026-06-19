@@ -20,5 +20,6 @@ public class VentasTitulares {
     public Timestamp fechaModificacion;
     public int tipoRegistro;     // 0 = Titular, 1 = Beneficiario
     public int ordenTitulares;   // posición en la lista (1, 2, 3...)
+    public String rutaFirma;
     public VentasTitulares() {}
 }

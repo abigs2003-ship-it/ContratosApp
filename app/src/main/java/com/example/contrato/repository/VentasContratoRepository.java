@@ -51,6 +51,7 @@ public class VentasContratoRepository {
         }
         return resultado;
     }
+
     private boolean esIngles() {
         return Locale.getDefault().getLanguage().equals("en");
     }
@@ -84,13 +85,15 @@ public class VentasContratoRepository {
             resultado = formateado;
 
         }
-        return resultado;}
+        return resultado;
+    }
+
     private String mapIdiomaFromDb(String dbIdioma) {
         if (dbIdioma == null) return "Español";
         if (dbIdioma.equalsIgnoreCase("ING")) return "English";
         return "Español";
     }
-    /*
+
     // aqui empieza sp
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
@@ -135,12 +138,12 @@ public class VentasContratoRepository {
             try (ResultSet rs = cs.executeQuery()) {
                 if (rs.next()) {
                     VentasContrato c = new VentasContrato();
-                    c.idContrato        = rs.getLong("IdContrato");
-                    c.fechaAlta         = rs.getTimestamp("FechaAlta");
-                    c.idUsuarioAlta     = rs.getLong("IdUsuarioAlta");
+                    c.idContrato = rs.getLong("IdContrato");
+                    c.fechaAlta = rs.getTimestamp("FechaAlta");
+                    c.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     c.fechaModificacion = rs.getTimestamp("FechaModificacion");
-                    c.estatus           = rs.getString("Estatus");
-                    c.idioma            = rs.getString("Idioma");
+                    c.estatus = rs.getString("Estatus");
+                    c.idioma = rs.getString("Idioma");
                     return c;
                 }
             }
@@ -157,12 +160,12 @@ public class VentasContratoRepository {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     VentasContrato c = new VentasContrato();
-                    c.idContrato        = rs.getLong("IdContrato");
-                    c.fechaAlta         = rs.getTimestamp("FechaAlta");
-                    c.idUsuarioAlta     = rs.getLong("IdUsuarioAlta");
+                    c.idContrato = rs.getLong("IdContrato");
+                    c.fechaAlta = rs.getTimestamp("FechaAlta");
+                    c.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     c.fechaModificacion = rs.getTimestamp("FechaModificacion");
-                    c.estatus           = rs.getString("Estatus");
-                    c.idioma            = rs.getString("Idioma");
+                    c.estatus = rs.getString("Estatus");
+                    c.idioma = rs.getString("Idioma");
                     lista.add(c);
                 }
             }
@@ -178,12 +181,12 @@ public class VentasContratoRepository {
              ResultSet rs = cs.executeQuery()) {
             while (rs.next()) {
                 VentasContrato c = new VentasContrato();
-                c.idContrato        = rs.getLong("IdContrato");
-                c.fechaAlta         = rs.getTimestamp("FechaAlta");
-                c.idUsuarioAlta     = rs.getLong("IdUsuarioAlta");
+                c.idContrato = rs.getLong("IdContrato");
+                c.fechaAlta = rs.getTimestamp("FechaAlta");
+                c.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                 c.fechaModificacion = rs.getTimestamp("FechaModificacion");
-                c.estatus           = rs.getString("Estatus");
-                c.idioma            = rs.getString("Idioma");
+                c.estatus = rs.getString("Estatus");
+                c.idioma = rs.getString("Idioma");
                 list.add(c);
             }
         }
@@ -215,11 +218,11 @@ public class VentasContratoRepository {
                     m.setIdioma(mapIdiomaFromDb(rs.getString("Idioma")));
 
                     Timestamp fechaAlta = rs.getTimestamp("FechaAlta");
-                    Timestamp fechaMod  = rs.getTimestamp("FechaModificacion");
+                    Timestamp fechaMod = rs.getTimestamp("FechaModificacion");
                     if (fechaAlta != null) m.setFechaCreacion(sdf.format(fechaAlta));
-                    if (fechaMod  != null) m.setFechaModificacion(sdf.format(fechaMod));
+                    if (fechaMod != null) m.setFechaModificacion(sdf.format(fechaMod));
 
-                    String nombre  = rs.getString("Nombre");
+                    String nombre = rs.getString("Nombre");
                     String paterno = rs.getString("Paterno");
                     if (nombre != null) {
                         m.setClientName((nombre + " " + (paterno != null ? paterno : "")).trim());
@@ -236,8 +239,8 @@ public class VentasContratoRepository {
     // 1.9 —
     public ContratoModelo getContratoCompleto(long idContrato) throws SQLException {
         Log.d("CONTRATO_DB", "getContratoCompleto id=" + idContrato);
-        SimpleDateFormat sdf         = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy",       Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        SimpleDateFormat dateOnlySdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
         ContratoModelo m = new ContratoModelo();
         m.setId(String.valueOf(idContrato));
@@ -255,9 +258,9 @@ public class VentasContratoRepository {
                         m.setEstatus(rs.getString("Estatus"));
                         m.setIdioma(mapIdiomaFromDb(rs.getString("Idioma")));
                         Timestamp fechaAlta = rs.getTimestamp("FechaAlta");
-                        Timestamp fechaMod  = rs.getTimestamp("FechaModificacion");
+                        Timestamp fechaMod = rs.getTimestamp("FechaModificacion");
                         if (fechaAlta != null) m.setFechaCreacion(sdf.format(fechaAlta));
-                        if (fechaMod  != null) m.setFechaModificacion(sdf.format(fechaMod));
+                        if (fechaMod != null) m.setFechaModificacion(sdf.format(fechaMod));
                     } else {
                         m.setModoEdicion(false);
                     }
@@ -275,11 +278,11 @@ public class VentasContratoRepository {
 
                         while (rs.next()) {
                             String tipoTitular = rs.getString("TipoTitular");
-                            String nombre      = rs.getString("Nombre");
-                            String paterno     = rs.getString("Paterno");
-                            String materno     = rs.getString("Materno");
-                            String ocupacion   = rs.getString("Ocupacion");
-                            long   parentesco  = rs.getLong("Parentesco");
+                            String nombre = rs.getString("Nombre");
+                            String paterno = rs.getString("Paterno");
+                            String materno = rs.getString("Materno");
+                            String ocupacion = rs.getString("Ocupacion");
+                            long parentesco = rs.getLong("Parentesco");
                             java.sql.Date fechaCumple = rs.getDate("FechaCumpleaños");
 
                             String key = tipoTitular + "|" + nombre + "|" + paterno + "|" + materno;
@@ -294,7 +297,7 @@ public class VentasContratoRepository {
                                     m.getTitulares().add(p);
                                     if (mainTitular == null) {
                                         mainTitular = new VentasTitulares();
-                                        mainTitular.nombre  = nombre;
+                                        mainTitular.nombre = nombre;
                                         mainTitular.paterno = paterno;
                                     }
                                 } else {
@@ -421,18 +424,20 @@ public class VentasContratoRepository {
         }
 
         String telDefault = rs.getString("TelefonoDefault");
-        addTelefono(m, "Casa 1",    rs.getString("LadaCasa1"),    rs.getString("TelefonoCasa1"),    rs.getString("WhatsAppCasa1"),    telDefault);
-        addTelefono(m, "Casa 2",    rs.getString("LadaCasa2"),    rs.getString("TelefonoCasa2"),    rs.getString("WhatsAppCasa2"),    telDefault);
+        addTelefono(m, "Casa 1", rs.getString("LadaCasa1"), rs.getString("TelefonoCasa1"), rs.getString("WhatsAppCasa1"), telDefault);
+        addTelefono(m, "Casa 2", rs.getString("LadaCasa2"), rs.getString("TelefonoCasa2"), rs.getString("WhatsAppCasa2"), telDefault);
         addTelefono(m, "Celular 1", rs.getString("LadaCelular1"), rs.getString("TelefonoCelular1"), rs.getString("WhatsAppCelular1"), telDefault);
         addTelefono(m, "Celular 2", rs.getString("LadaCelular2"), rs.getString("TelefonoCelular2"), rs.getString("WhatsAppCelular2"), telDefault);
         addTelefono(m, "Oficina 1", rs.getString("LadaOficina1"), rs.getString("TelefonoOficina1"), rs.getString("WhatsAppOficina1"), telDefault);
         addTelefono(m, "Oficina 2", rs.getString("LadaOficina2"), rs.getString("TelefonoOficina2"), rs.getString("WhatsAppOficina2"), telDefault);
-        addTelefono(m, "Mensajes",  rs.getString("LadaMensajes"),  rs.getString("TelefonoMensajes"), rs.getString("WhatsAppMensajes"),  telDefault);
+        addTelefono(m, "Mensajes", rs.getString("LadaMensajes"), rs.getString("TelefonoMensajes"), rs.getString("WhatsAppMensajes"), telDefault);
 
         if (email1 != null) m.getEmails().add(email1);
         if (email2 != null) m.getEmails().add(email2);
-        String email3 = rs.getString("Email3"); if (email3 != null) m.getEmails().add(email3);
-        String email4 = rs.getString("Email4"); if (email4 != null) m.getEmails().add(email4);
+        String email3 = rs.getString("Email3");
+        if (email3 != null) m.getEmails().add(email3);
+        String email4 = rs.getString("Email4");
+        if (email4 != null) m.getEmails().add(email4);
     }
 
     private void addTelefono(ContratoModelo m, String tipo, String lada,
@@ -488,14 +493,17 @@ public class VentasContratoRepository {
     }
 
     private void mapRedesSociales(ResultSet rs, ContratoModelo m) throws SQLException {
-        String fb = rs.getString("UsuarioFacebook");  if (fb != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Facebook",  fb));
-        String ig = rs.getString("UsuarioInstagram"); if (ig != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Instagram", ig));
-        String tw = rs.getString("UsuarioTwitter");   if (tw != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Twitter",   tw));
+        String fb = rs.getString("UsuarioFacebook");
+        if (fb != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Facebook", fb));
+        String ig = rs.getString("UsuarioInstagram");
+        if (ig != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Instagram", ig));
+        String tw = rs.getString("UsuarioTwitter");
+        if (tw != null) m.getRedesSociales().add(new ContratoModelo.CuentaRed("Twitter", tw));
     }
-     */
+}
     //Aqui empieza cintas
 
-    public long getNextId() throws SQLException {
+  /*  public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdContrato), 0) + 1 AS NextId FROM PMT_App_Ventas_Contrato";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -838,4 +846,4 @@ public class VentasContratoRepository {
     }
 
 
-}
+}*/

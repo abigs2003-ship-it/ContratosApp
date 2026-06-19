@@ -120,6 +120,7 @@ public class ContratoModelo implements Serializable {
         //imagen de la firma del titular en base 64
         public String imagenFirmaBase64;
         public String id;
+        public long idTitularBD = -1; // se llena después de insertar en BD
         public Persona() {}
         public Persona(String n, String p, String m, String o, String par, String c) {
             this.id = UUID.randomUUID().toString();

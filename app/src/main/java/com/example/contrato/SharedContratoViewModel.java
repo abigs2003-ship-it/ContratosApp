@@ -6,6 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.contrato.API.ApiResponse;
+import com.example.contrato.API.FotoTitularRequest;
+import com.example.contrato.API.RetrofitClient;
+import com.example.contrato.API.TitularApiService;
 import com.example.contrato.model.VentasContrato;
 import com.example.contrato.model.VentasDescuentos;
 import com.example.contrato.model.VentasEngancheDiferido;
@@ -34,6 +38,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SharedContratoViewModel extends ViewModel {
     private final MutableLiveData<ContratoModelo> Contrato = new MutableLiveData<>(new ContratoModelo());
@@ -653,7 +661,33 @@ public class SharedContratoViewModel extends ViewModel {
             vt.parentesco      = parseLong(p.parentesco);
             vt.idUsuarioAlta   = idUsuarioAlta;
             titularesRepo.insert(vt);
+
+            p.idTitularBD = vt.idTitular;
+
+            if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
+                String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
+                subirFirmaAlBackend(vt.idTitular, nombreCompleto, p.imagenFirmaBase64);
+            }
         }
+    }
+
+    private void subirFirmaAlBackend(long idTitular, String nombreCompleto, String base64) {
+        FotoTitularRequest request = new FotoTitularRequest((int) idTitular, nombreCompleto, base64, "png");
+        TitularApiService api = RetrofitClient.getTitularApiService();
+        api.guardarFotoTitular(request).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
+                    Log.d("FIRMA_UPLOAD", "Firma subida: " + response.body().getRutaFirma());
+                } else {
+                    Log.e("FIRMA_UPLOAD", "Error al subir firma para titular " + idTitular);
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e("FIRMA_UPLOAD", "Fallo de red al subir firma", t);
+            }
+        });
     }
 
     private String truncate(String value, int length) {

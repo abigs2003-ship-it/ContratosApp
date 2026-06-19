@@ -18,7 +18,7 @@ public class VentasMontoCtaRepository {
     }
 
     // aqui empieza 104
-    /*
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_MontoCta_GetNextId}");
@@ -70,9 +70,9 @@ public class VentasMontoCtaRepository {
         }
         return list;
     }
-    */
+
     //Aqui empieza cointas
-// /*
+ /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdMontoCta), 0) + 1 AS NextId FROM PMT_App_Ventas_Monto_Cta";
         try (Connection conn = DbConnection.getConnection();

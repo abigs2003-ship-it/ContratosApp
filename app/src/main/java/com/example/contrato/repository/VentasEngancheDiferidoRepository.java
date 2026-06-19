@@ -15,6 +15,7 @@ public class VentasEngancheDiferidoRepository {
 
     private static final String[] MESES_ES = {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"};
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
+
     public boolean huboCambios(List<VentasEngancheDiferido> actuales, List<ContratoModelo.PagoDiferido> nuevos) {
         if (actuales.size() != nuevos.size()) return true;
         for (int i = 0; i < actuales.size(); i++) {
@@ -26,6 +27,7 @@ public class VentasEngancheDiferidoRepository {
         }
         return false;
     }
+
     private double parseMonto(String value) {
         if (value == null || value.isEmpty()) return 0.0;
         try {
@@ -35,6 +37,7 @@ public class VentasEngancheDiferidoRepository {
             return 0.0;
         }
     }
+
     private String convertirMesANumero(String s) {
         if (s == null || s.length() != 11) return "";
 
@@ -63,17 +66,19 @@ public class VentasEngancheDiferidoRepository {
                     }
                 }
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         return "";
     }
+
     private boolean esIngles() {
         return Locale.getDefault().getLanguage().equals("en");
     }
     // Solo devuelve registros activos (Estatus = 'A') para mostrar en pantalla
 
     // aqui empieza 104
-    /*
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_EngancheDiferido_GetNextId}");
@@ -115,11 +120,11 @@ public class VentasEngancheDiferidoRepository {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     VentasEngancheDiferido p = new VentasEngancheDiferido();
-                    p.idPago        = rs.getLong("IdPago");
-                    p.idContrato    = rs.getLong("IdContrato");
-                    p.cantidadPago  = rs.getDouble("CantidadPago");
-                    p.fechaPago     = rs.getDate("FechaPago");
-                    p.fechaAlta     = rs.getTimestamp("FechaAlta");
+                    p.idPago = rs.getLong("IdPago");
+                    p.idContrato = rs.getLong("IdContrato");
+                    p.cantidadPago = rs.getDouble("CantidadPago");
+                    p.fechaPago = rs.getDate("FechaPago");
+                    p.fechaAlta = rs.getTimestamp("FechaAlta");
                     p.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     list.add(p);
                 }
@@ -127,9 +132,9 @@ public class VentasEngancheDiferidoRepository {
         }
         return list;
     }
-*/
+}
     //aqui empieza citas
-
+/*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdPago), 0) + 1 AS NextId FROM PMT_App_Ventas_EngancheDiferido";
         try (Connection conn = DbConnection.getConnection();
@@ -189,4 +194,4 @@ public class VentasEngancheDiferidoRepository {
     }
 
 // */
-}
+

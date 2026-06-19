@@ -18,14 +18,14 @@ public class VentasDescuentosRepository {
         for (int i = 0; i < actuales.size(); i++) {
             VentasDescuentos a = actuales.get(i);
             ContratoModelo.DescuentoDetalle n = nuevos.get(i);
-            if (!Objects.equals(a.descripcion,   n.descripcion)
+            if (!Objects.equals(a.descripcion, n.descripcion)
                     || !Objects.equals(a.montoDescuento, parseDouble(n.monto)))
                 return true;
         }
         return false;
     }
     // aqui empieza 104
-    /*
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Descuentos_GetNextId}");
@@ -80,22 +80,22 @@ public class VentasDescuentosRepository {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     VentasDescuentos d = new VentasDescuentos();
-                    d.idDescuento    = rs.getLong("IdDescuento");
-                    d.idContrato     = rs.getLong("IdContrato");
+                    d.idDescuento = rs.getLong("IdDescuento");
+                    d.idContrato = rs.getLong("IdContrato");
                     d.montoDescuento = rs.getDouble("MontoDescuento");
-                    d.descripcion    = rs.getString("Descripcion");
-                    d.fechaAlta      = rs.getTimestamp("FechaAlta");
-                    d.idUsuarioAlta  = rs.getLong("IdUsuarioAlta");
+                    d.descripcion = rs.getString("Descripcion");
+                    d.fechaAlta = rs.getTimestamp("FechaAlta");
+                    d.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     list.add(d);
                 }
             }
         }
         return list;
     }
-    */
+}
 
     //Aqui empieza cintas
-// /*
+ /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDescuento), 0) + 1 AS NextId FROM PMT_App_Ventas_Descuentos";
         try (Connection conn = DbConnection.getConnection();
@@ -203,5 +203,5 @@ public class VentasDescuentosRepository {
         }
         return list;
     }
-    // */
-}
+    */
+

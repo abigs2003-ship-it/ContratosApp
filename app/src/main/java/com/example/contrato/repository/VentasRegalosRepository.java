@@ -17,7 +17,7 @@ public class VentasRegalosRepository {
         return false;
     }
     //104
-    /*
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Regalos_GetNextId}");
@@ -69,9 +69,9 @@ public class VentasRegalosRepository {
         }
         return list;
     }
-*/
+
     //Aqui empieza cintas
-    // /*
+    /*
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdRegalo), 0) + 1 AS NextId FROM PMT_App_Ventas_Regalos";
         try (Connection conn = DbConnection.getConnection();
