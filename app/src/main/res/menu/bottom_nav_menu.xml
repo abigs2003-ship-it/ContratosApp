@@ -13,4 +13,9 @@
         android:icon="@drawable/ic_dollar"
         android:title="@string/financiamiento"
         android:visible="true"/>
+    <item
+        android:id="@+id/nav_financiamiento2"
+        android:icon="@drawable/ic_dollar"
+        android:title="@string/financiamiento2"
+        android:visible="true"/>
 </menu>

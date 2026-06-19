@@ -17,5 +17,9 @@
         android:id="@+id/nav_financiamiento"
         android:name="com.example.contrato.FinanciamientoFragment"
         android:label="Financiamiento" />
+    <fragment
+        android:id="@+id/nav_financiamiento2"
+        android:name="com.example.contrato.FinanciamientoFragment2"
+        android:label="Financiamiento2" />
 
 </navigation>

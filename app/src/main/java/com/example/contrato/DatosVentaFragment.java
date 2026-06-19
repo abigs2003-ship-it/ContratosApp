@@ -1316,9 +1316,13 @@ public class DatosVentaFragment extends Fragment {
                                     et.setBackgroundTintList(
                                             ColorStateList.valueOf(Color.parseColor("#7FF6ADAD")));
 
-                                } else{
+                                } else if (estatus.equals("2")) {
                                     et.setBackgroundTintList(
-                                    ColorStateList.valueOf(Color.parseColor("#AAA7E6EF")));
+                                    ColorStateList.valueOf(Color.parseColor("#9E8BC34A")));
+
+                                }else{
+                                    et.setBackgroundTintList(
+                                            ColorStateList.valueOf(Color.parseColor("#AAA7E6EF")));
 
                                 }
                             });
