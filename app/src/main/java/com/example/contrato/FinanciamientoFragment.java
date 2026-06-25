@@ -30,8 +30,10 @@ import com.example.contrato.databinding.FragmentFinanciamientoBinding;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class FinanciamientoFragment extends Fragment {
@@ -630,12 +632,11 @@ public class FinanciamientoFragment extends Fragment {
     }
 
 
-
     private void calcularAmortizacion() {
         String textoMonto = binding.etMontoFinanciar.getText().toString().trim();
         String textoPagos = binding.etNumeroPagos.getText().toString().trim();
-        String textoTasa = binding.etTasaInteres.getText().toString().trim();
-        String fecha = binding.etFechaPrimerPago.getText().toString().trim();
+        String textoTasa  = binding.etTasaInteres.getText().toString().trim();
+        String fecha      = binding.etFechaPrimerPago.getText().toString().trim();
         String textoFecha = convertirMesANumero(fecha);
 
         if (textoMonto.isEmpty() || textoPagos.isEmpty() || textoTasa.isEmpty() || textoFecha.isEmpty()) {
@@ -646,13 +647,13 @@ public class FinanciamientoFragment extends Fragment {
         parseFechaEnCalendario(textoFecha, fechaPrimerPagoSeleccionada);
 
         double montoFinanciar;
-        int numeroPagos;
+        int    numeroPagos;
         double tasaInteres;
 
         try {
             montoFinanciar = Double.parseDouble(textoMonto.replaceAll("[^\\d.]", ""));
-            numeroPagos = Integer.parseInt(textoPagos);
-            tasaInteres = Double.parseDouble(textoTasa);
+            numeroPagos    = Integer.parseInt(textoPagos);
+            tasaInteres    = Double.parseDouble(textoTasa);
         } catch (NumberFormatException e) {
             Toast.makeText(requireContext(), "Valores numéricos inválidos", Toast.LENGTH_SHORT).show();
             return;
@@ -663,47 +664,55 @@ public class FinanciamientoFragment extends Fragment {
             return;
         }
 
-        int periodoSeleccionado = binding.spinnerTipoPeriodo.getSelectedItemPosition();
-        double tasaPeriodica = calcularTasaPeriodica(tasaInteres, periodoSeleccionado);
-        double pagoFijo = calcularPagoFijo(montoFinanciar, tasaPeriodica, numeroPagos);
+        int    periodoSeleccionado = binding.spinnerTipoPeriodo.getSelectedItemPosition();
+        double tasaPeriodica       = calcularTasaPeriodica(tasaInteres, periodoSeleccionado);
+        double pagoFijo            = calcularPagoFijo(montoFinanciar, tasaPeriodica, numeroPagos);
 
         binding.contenedorFilasTabla.removeAllViews();
         binding.tvSaldoInicial.setText(formatoMoneda.format(montoFinanciar));
 
-        double saldo = montoFinanciar;
+        double saldo            = montoFinanciar;
         double capitalAcumulado = 0;
-        double totalIntereses = 0;
-        double ultimoPago = 0;
-        System.out.println(ultimoPago);
+        double totalIntereses   = 0;
+        double ultimoPago       = 0;
+
+        // ── lista para persistir ─────────────────────────────────────
+        List<ContratoModelo.FilaAmortizacion> filasCapturadas = new ArrayList<>();
+        // ────────────────────────────────────────────────────────────
+
         Calendar calPago = (Calendar) fechaPrimerPagoSeleccionada.clone();
-        double todo=0;
-        double aPagar=0;
+        double todo = 0, aPagar = 0;
+
         for (int i = 1; i <= numeroPagos; i++) {
             double interes = saldo * tasaPeriodica;
             double capital = pagoFijo - interes;
-            todo += pagoFijo;
-
+            todo   += pagoFijo;
             double cortado = Math.floor(pagoFijo * 100.0) / 100.0;
-
             aPagar += cortado;
-            if (i == numeroPagos) {
-                capital = saldo; // último pago liquida exactamente el saldo restante
-            }
 
+            if (i == numeroPagos) capital = saldo;
 
             saldo -= capital;
             if (saldo < 0.001) saldo = 0;
 
             double montoFila = capital + interes;
-
-            if (saldo == 0){
-                montoFila=montoFila+ (todo-aPagar);
-            }
-
+            if (saldo == 0) montoFila += (todo - aPagar);
             if (capital < 0.001) capital = 0;
 
             capitalAcumulado += capital;
-            totalIntereses += interes;
+            totalIntereses   += interes;
+
+            // ── captura la fila ──────────────────────────────────────
+            ContratoModelo.FilaAmortizacion fa = new ContratoModelo.FilaAmortizacion();
+            fa.no           = i;
+            fa.fecha        = formatFecha(calPago);
+            fa.monto        = montoFila;
+            fa.capital      = capital;
+            fa.interes      = interes;
+            fa.capAcumulado = capitalAcumulado;
+            fa.saldo        = saldo;
+            filasCapturadas.add(fa);
+            // ────────────────────────────────────────────────────────
 
             agregarFilaTabla(i, formatFecha(calPago), montoFila,
                     capital, interes, capitalAcumulado, saldo, i % 2 == 0);
@@ -711,10 +720,15 @@ public class FinanciamientoFragment extends Fragment {
             avanzarFecha(calPago, periodoSeleccionado);
         }
 
-        System.out.println(ultimoPago);
-        System.out.println(aPagar);
-        System.out.println(pagoFijo);
-        ultimoPago=pagoFijo+(todo-aPagar);
+        ultimoPago = pagoFijo + (todo - aPagar);
+
+        // ── guarda en el ViewModel ───────────────────────────────────
+        ContratoModelo contrato = viewModel.getContratoValue();
+        if (contrato != null) {
+            contrato.setFilasAmortizacion(filasCapturadas);
+            viewModel.setContrato(contrato);
+        }
+        // ────────────────────────────────────────────────────────────
 
         actualizarResumen(numeroPagos, pagoFijo, ultimoPago);
         actualizarVisibilidadColumnas();

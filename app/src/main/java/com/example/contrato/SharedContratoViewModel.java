@@ -12,6 +12,7 @@ import com.example.contrato.API.RetrofitClient;
 import com.example.contrato.API.TitularApiService;
 import com.example.contrato.model.VentasContrato;
 import com.example.contrato.model.VentasDescuentos;
+import com.example.contrato.model.VentasDetalleFinanciamiento;
 import com.example.contrato.model.VentasEngancheDiferido;
 import com.example.contrato.model.VentasFinanciamientos;
 import com.example.contrato.model.VentasInformacionGeneral;
@@ -22,6 +23,7 @@ import com.example.contrato.model.VentasRegalos;
 import com.example.contrato.model.VentasTitulares;
 import com.example.contrato.repository.VentasContratoRepository;
 import com.example.contrato.repository.VentasDescuentosRepository;
+import com.example.contrato.repository.VentasDetalleFinanciamientoRepository;
 import com.example.contrato.repository.VentasEngancheDiferidoRepository;
 import com.example.contrato.repository.VentasFinanciamientosRepository;
 import com.example.contrato.repository.VentasInformacionGeneralRepository;
@@ -84,7 +86,7 @@ public class SharedContratoViewModel extends ViewModel {
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
 
 
-
+    private final VentasDetalleFinanciamientoRepository detalleFinRepo = new VentasDetalleFinanciamientoRepository();
     private final VentasContratoRepository contratoRepo = new VentasContratoRepository();
     private final VentasInformacionGeneralRepository infoGralRepo = new VentasInformacionGeneralRepository();
     private final VentasTitularesRepository titularesRepo = new VentasTitularesRepository();
@@ -371,7 +373,7 @@ public class SharedContratoViewModel extends ViewModel {
 
                 // ── Financiamiento ───────────────────────────────────────────────
                 VentasFinanciamientos vfActual = financiamientoRepo.getByContratoId(idContrato);
-                VentasFinanciamientos vfNuevo  = new VentasFinanciamientos(); // ✅ siempre nuevo
+                VentasFinanciamientos vfNuevo  = new VentasFinanciamientos();
                 vfNuevo.idContrato      = idContrato;
                 vfNuevo.tipoPeriodo     = model.getTipoPeriodo();
                 vfNuevo.fechaPrimerPago = parseSqlDate(convertirMesANumero(model.getFechaPrimerPago()));
@@ -413,6 +415,31 @@ public class SharedContratoViewModel extends ViewModel {
                 ContratoModelo modelFinal = getContratoValue();
                 if (modelFinal != null) {
                     Contrato.postValue(modelFinal);
+                }
+                // ── Detalle Financiamiento ───────────────────────────────────────
+                List<ContratoModelo.FilaAmortizacion> filasNuevas = model.getFilasAmortizacion();
+                if (filasNuevas != null && !filasNuevas.isEmpty()) {
+                    List<VentasDetalleFinanciamiento> filasActuales =
+                            detalleFinRepo.getByContratoId(idContrato);
+
+                    if (detalleFinRepo.huboCambios(filasActuales, filasNuevas)) {
+                        List<VentasDetalleFinanciamiento> paraInsertar = new ArrayList<>();
+                        for (ContratoModelo.FilaAmortizacion fa : filasNuevas) {
+                            VentasDetalleFinanciamiento df = new VentasDetalleFinanciamiento();
+                            df.idContrato    = idContrato;
+                            df.no            = fa.no;
+                            df.fechaPago     = parseSqlDate(convertirMesANumero(fa.fecha));
+                            df.monto         = fa.monto;
+                            df.capital       = fa.capital;
+                            df.interes       = fa.interes;
+                            df.capAcumulado  = fa.capAcumulado;
+                            df.saldo         = fa.saldo;
+                            df.idUsuarioAlta = originalIdUsuarioAlta;
+                            paraInsertar.add(df);
+                        }
+                        detalleFinRepo.replaceByContrato(idContrato, paraInsertar, idUsuario);
+                    }
+
                 }
                 saveSuccess.postValue(true);
             } catch (Exception e) {
@@ -658,7 +685,23 @@ public class SharedContratoViewModel extends ViewModel {
                     vrs.idUsuarioAlta = idUsuario;
                     redesSocialesRepo.insert(vrs);
                 }
-
+// ── Detalle Financiamiento (tabla de amortización) ───────────────
+                List<ContratoModelo.FilaAmortizacion> filas = model.getFilasAmortizacion();
+                if (filas != null && !filas.isEmpty()) {
+                    for (ContratoModelo.FilaAmortizacion fa : filas) {
+                        VentasDetalleFinanciamiento df = new VentasDetalleFinanciamiento();
+                        df.idDetalleFinanciamiento = detalleFinRepo.getNextId();
+                        df.idContrato   = idContrato;
+                        df.no           = fa.no;
+                        df.fechaPago    = parseSqlDate(convertirMesANumero(fa.fecha));
+                        df.monto        = fa.monto;
+                        df.capital      = fa.capital;
+                        df.interes      = fa.interes;
+                        df.capAcumulado = fa.capAcumulado;
+                        df.saldo        = fa.saldo;
+                        detalleFinRepo.insert(df);
+                    }
+                }
                 saveSuccess.postValue(true);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1141,7 +1141,7 @@ public class DatosVentaFragment extends Fragment {
         );
     }
     private void setupMonedaSpinner() {
-        String[] tipoMonedas = {"MXN", "USD", "CAD"};
+        String[] tipoMonedas = {"MN", "USD", "CAD"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, tipoMonedas);
         binding.spMoneda.setAdapter(adapter);
 
@@ -2390,7 +2390,7 @@ public class DatosVentaFragment extends Fragment {
             Contrato.setVariosMonto(binding.editVarios.getText().toString());
             Contrato.setNoDesc(binding.editNoDesc.getText().toString());
             Contrato.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
-            Contrato.setTipoPagoEnganche(binding.btnMensual.isChecked() ? "Mensual" : "Abierto");
+            Contrato.setTipoPagoEnganche(binding.btnMensual.isChecked() ? "Iguales" : "Abiertos");
             Contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
             Contrato.setSaldoEnganche(binding.editSaldoEng.getText().toString());
         }

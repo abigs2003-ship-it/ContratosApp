@@ -523,8 +523,8 @@ public class VentasContratoRepository {
     }
 }
     //Aqui empieza cintas
-
-  /*  public long getNextId() throws SQLException {
+/*
+    public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdContrato), 0) + 1 AS NextId FROM PMT_App_Ventas_Contrato";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -873,7 +873,6 @@ public class VentasContratoRepository {
         return m;
 
     }
+*/
 
 
-}
-//*/

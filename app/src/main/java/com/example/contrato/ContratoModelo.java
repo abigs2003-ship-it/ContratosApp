@@ -135,6 +135,22 @@ public class ContratoModelo implements Serializable {
             this.ocupacion = o; this.parentesco = par; this.cumple = c; this.archivoFirma = archivo;
         }
     }
+    // ── Detalle de financiamiento  ──────────────────────────────────────
+    public static class FilaAmortizacion {
+        public int    no;
+        public String fecha;
+        public double monto;
+        public double capital;
+        public double interes;
+        public double capAcumulado;
+        public double saldo;
+    }
+
+    private List<FilaAmortizacion> filasAmortizacion = new ArrayList<>();
+
+    public List<FilaAmortizacion> getFilasAmortizacion() { return filasAmortizacion; }
+    public void setFilasAmortizacion(List<FilaAmortizacion> v) { filasAmortizacion = v; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
