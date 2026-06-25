@@ -1,6 +1,8 @@
 package com.example.contrato;
 
 import static android.view.View.VISIBLE;
+
+import com.example.contrato.databinding.ModalIdBinding;
 import com.google.android.material.button.MaterialButton;
 
 import android.app.AlertDialog;
@@ -17,9 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,14 +105,32 @@ public class TitularesFragment extends Fragment {
                 return;
             }
 
-
-            viewModel.setPersonaParaFirma(
+                viewModel.setPersonaParaFirma(
                     titularPersonaSeleccionada
             );
 
-
             Navigation.findNavController(this.requireView())
                     .navigate(R.id.action_titulares_a_firmas);
+
+        });
+        //si seleccionas titular y das click en INE se abre fragmento para esa persona
+        binding.btnINE.setOnClickListener(v -> {
+
+          /*  if (titularPersonaSeleccionada == null) {
+                Toast.makeText(
+                        requireContext(),
+                        "Seleccione un titular",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }*/
+
+            viewModel.setPersonaParaINE(
+                    titularPersonaSeleccionada
+            );
+
+                muestraConfirmacionID();
 
         });
         //lo mismo para beneficiarios
@@ -133,6 +156,26 @@ public class TitularesFragment extends Fragment {
 
             Navigation.findNavController(v)
                     .navigate(R.id.action_titulares_a_firmas);
+
+        });
+        //si seleccionas titular y das click en INE se abre fragmento para esa persona
+        binding.btnINEBene.setOnClickListener(v -> {
+
+            if (benePersonaSeleccionada == null) {
+                Toast.makeText(
+                        requireContext(),
+                        "Seleccione un titular",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }
+
+            viewModel.setPersonaParaINE(
+                    benePersonaSeleccionada
+            );
+
+        muestraConfirmacionID();
 
         });
         binding.textInputLayoutFechaCumpleanos.setEndIconOnClickListener(v -> {
@@ -173,22 +216,6 @@ public class TitularesFragment extends Fragment {
         binding.spinnerParentesco.setSelection(adapter.getCount());
         binding.spinnerParentescoBene.setSelection(adapter.getCount());
 
-        // FIX: repoblamos los containers de inmediato usando lo que ya tengamos en
-        // titularesList / beneficiariosList (estado en memoria del Fragment).
-        //
-        // Por qué es necesario: cuando navegamos a FirmasFragment y volvemos con
-        // popBackStack(), Navigation vuelve a llamar onCreateView/onViewCreated en
-        // esta instancia de TitularesFragment (la vista anterior fue destruida en
-        // onDestroyView). El objeto Fragment como tal NO se destruyó, así que
-        // titularesList/beneficiariosList siguen teniendo los datos de antes de
-        // navegar. Pero el container nuevo (binding.containerTitulares) está vacío,
-        // porque es una View recién inflada.
-        //
-        // Antes, el único lugar donde se llamaba a agregarPersonaaAContenedorTitular/
-        // Bene era dentro del observer del ViewModel, y SOLO si la lista local estaba
-        // vacía. Como titularesList ya no estaba vacía al volver, ese bloque nunca se
-        // ejecutaba y el container se quedaba vacío aunque los datos siguieran vivos
-        // en memoria: por eso el titular "desaparecía" visualmente tras guardar la firma.
         if (!titularesList.isEmpty()) {
             binding.containerTitulares.removeAllViews();
             for (ContratoModelo.Persona persona : titularesList) {
@@ -208,14 +235,13 @@ public class TitularesFragment extends Fragment {
             boolean esModoEdicion = Boolean.TRUE.equals(contrato.getModoEdicion());
 
             // En modo edición, esperamos hasta que getContratoCompleto() haya terminado
-            // (datosListos = true). En modo nuevo, no hay nada que esperar.
             if (esModoEdicion && !contrato.isDatosListos()) {
                 binding.layoutCargandoTitulares.setVisibility(VISIBLE);
                 return;
             }
 
-            // Datos listos — ocultamos el spinner y marcamos las listas como inicializadas.
-            // A partir de aquí onPause() puede guardar sin riesgo.
+            // Datos listos, ocultamos el spinner y marcamos las listas como inicializadas.
+            // A partir de aquí onPause() puede guardar sin problemas.
             binding.layoutCargandoTitulares.setVisibility(View.GONE);
             datosLocalesInicializados = true;
 
@@ -266,7 +292,8 @@ public class TitularesFragment extends Fragment {
                     resetBotones(
                             binding.btnLimpiar,
                             binding.btnAgregar,
-                            binding.btnFirma
+                            binding.btnFirma,
+                            binding.btnINE
                     );
                 }
 
@@ -290,7 +317,7 @@ public class TitularesFragment extends Fragment {
             String ocupacion = binding.editOcupacion.getText().toString();
             String parentesco =
                     String.valueOf(binding.spinnerParentesco.getSelectedItemPosition());
-
+            String archivoFirma = null;
             if (!nombre.isEmpty()) {
 
                 ContratoModelo.Persona p =
@@ -300,7 +327,7 @@ public class TitularesFragment extends Fragment {
                                 materno,
                                 ocupacion,
                                 parentesco,
-                                cumple);
+                                cumple, archivoFirma);
 
                 titularesList.add(p);
 
@@ -342,7 +369,8 @@ public class TitularesFragment extends Fragment {
                     resetBotones(
                             binding.btnLimpiarBene,
                             binding.btnAgregarBene,
-                            binding.btnFirmaBene
+                            binding.btnFirmaBene,
+                            binding.btnINEBene
                     );
                 }
 
@@ -361,9 +389,10 @@ public class TitularesFragment extends Fragment {
             String cumple    = binding.editFechaCumpleanosBene.getText().toString();
             String ocupacion = binding.editOcupacionBene.getText().toString();
             String parentesco = String.valueOf(binding.spinnerParentescoBene.getSelectedItemPosition());
+            String archivoFirma = null;
 
             if (!nombre.isEmpty()) {
-                ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple);
+                ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple, archivoFirma);
                 beneficiariosList.add(p);
                 guardaDatosViewModel();
                 agregarPersonaaAContenedorBene(binding.containerBeneficiarios, p, beneficiariosList);
@@ -423,7 +452,8 @@ public class TitularesFragment extends Fragment {
             resetBotones(
                     binding.btnLimpiar,
                     binding.btnAgregar,
-                    binding.btnFirma
+                    binding.btnFirma,
+                    binding.btnINE
             );
         });
 
@@ -466,7 +496,8 @@ public class TitularesFragment extends Fragment {
             resetBotones(
                     binding.btnLimpiarBene,
                     binding.btnAgregarBene,
-                    binding.btnFirmaBene
+                    binding.btnFirmaBene,
+                    binding.btnINEBene
             );
         });
     }
@@ -475,6 +506,51 @@ public class TitularesFragment extends Fragment {
         return Locale.getDefault().getLanguage().equals("en");
     }
 
+    private void muestraConfirmacionID(){
+        LayoutInflater inflater = getLayoutInflater();
+
+        View dialogView = inflater.inflate(R.layout.modal_id, null);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        ImageButton botonINE = dialogView.findViewById(R.id.btnIneModal);
+        ImageButton botonPasaporte = dialogView.findViewById(R.id.btnPasaporteModal);
+        ImageButton botonRegresa = dialogView.findViewById(R.id.btnRegresa);
+
+
+        botonINE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navegaINE();
+                dialog.dismiss();
+            }
+        });
+        botonPasaporte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navegaPasaporte();
+                dialog.dismiss();
+            }
+        });
+        botonRegresa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+    private void navegaINE(){
+        Navigation.findNavController(this.requireView())
+                .navigate(R.id.action_titulares_a_INE);
+    }
+    private void navegaPasaporte(){
+        Navigation.findNavController(this.requireView())
+                .navigate(R.id.action_titulares_a_Pasaporte);
+    }
     private void setupFormatoFecha(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
             private boolean actualizandose = false;
@@ -671,70 +747,152 @@ public class TitularesFragment extends Fragment {
             }
         } catch (Exception ignored) {}
         bindingItem.textParentesco.setText(parentescoDisplay);
+
         bindingItem.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
             if (isChecked) {
-
                 titularSeleccionado = true;
-
                 titularPersonaSeleccionada = p;
                 titularViewSeleccionada = bindingItem.getRoot();
-
                 setupBotonesTitular();
 
-                if(titularPersonaSeleccionada.imagenFirmaBase64 != null &&
-                        !titularPersonaSeleccionada.imagenFirmaBase64.isEmpty()){
-
+                // --- Botón Firma ---
+                if (titularPersonaSeleccionada.imagenFirmaBase64 != null &&
+                        !titularPersonaSeleccionada.imagenFirmaBase64.isEmpty()) {
 
                     bindingItem.btnFirma.setVisibility(View.VISIBLE);
-
-
                     bindingItem.btnFirma.setOnClickListener(v -> {
-
                         byte[] bytes = Base64.decode(titularPersonaSeleccionada.imagenFirmaBase64, Base64.DEFAULT);
                         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         ImageView imageView = new ImageView(getContext());
                         imageView.setImageBitmap(bitmap);
                         imageView.setAdjustViewBounds(true);
-                        imageView.setPadding(20,20,20,20);
+                        imageView.setPadding(20, 20, 20, 20);
 
-                        new AlertDialog.Builder(getContext()).setTitle("Firma").setView(imageView).setNegativeButton("", null)
-                                .setNeutralButton("Rehacer", (dialog, which) -> {titularPersonaSeleccionada.imagenFirmaBase64 = "";
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Firma")
+                                .setView(imageView)
+                                .setNegativeButton("Cerrar", null)
+                                .setNeutralButton("Rehacer", (dialog, which) -> {
+                                    titularPersonaSeleccionada.imagenFirmaBase64 = "";
                                     Bundle bundle = new Bundle();
                                     bundle.putSerializable("persona", titularPersonaSeleccionada);
-
-                                    bundle.putSerializable(
-                                            "persona",
-                                            titularPersonaSeleccionada
-                                    );
-
-                                    NavHostFragment
-                                            .findNavController(this)
-                                            .navigate(
-                                                    R.id.action_titulares_a_firmas,
-                                                    bundle
-                                            );                                        }
-                                ).setPositiveButton("Quitar", (dialog, which) -> {
+                                    NavHostFragment.findNavController(this)
+                                            .navigate(R.id.action_titulares_a_firmas, bundle);
+                                })
+                                .setPositiveButton("Quitar", (dialog, which) -> {
                                     titularPersonaSeleccionada.imagenFirmaBase64 = "";
                                     guardaDatosViewModel();
                                     bindingItem.btnFirma.setVisibility(View.GONE);
-                                }).show();
+                                })
+                                .show();
                     });
-                }else{
+                } else {
                     bindingItem.btnFirma.setVisibility(View.GONE);
                 }
 
-            } else {
+                // --- Botón INE / Pasaporte ---
+                boolean tienePasaporte = titularPersonaSeleccionada.imagenPasaporte != null &&
+                        !titularPersonaSeleccionada.imagenPasaporte.isEmpty();
+                boolean tieneINE = titularPersonaSeleccionada.imagenINEFrente != null &&
+                        !titularPersonaSeleccionada.imagenINEFrente.isEmpty();
 
+                if (tienePasaporte || tieneINE) {
+                    bindingItem.btnINELista.setVisibility(View.VISIBLE);
+                    bindingItem.btnINELista.setOnClickListener(v -> {
+                        // Read fresh every time the button is tapped
+                        boolean tienePasaporteAhora = titularPersonaSeleccionada.imagenPasaporte != null &&
+                                !titularPersonaSeleccionada.imagenPasaporte.isEmpty();
+
+                        if (tienePasaporteAhora) {
+                            byte[] bytes = Base64.decode(titularPersonaSeleccionada.imagenPasaporte, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ImageView imageView = new ImageView(getContext());
+                            imageView.setImageBitmap(bitmap);
+                            imageView.setAdjustViewBounds(true);
+                            imageView.setPadding(20, 20, 20, 20);
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Pasaporte")
+                                    .setView(imageView)
+                                    .setNegativeButton("Cerrar", null)
+                                    .setNeutralButton("Rehacer", (dialog, which) -> {
+                                        titularPersonaSeleccionada.imagenPasaporte = "";
+                                        muestraConfirmacionID();
+                                    })
+                                    .setPositiveButton("Quitar", (dialog, which) -> {
+                                        titularPersonaSeleccionada.imagenPasaporte = "";
+                                        guardaDatosViewModel();
+                                        bindingItem.btnINELista.setVisibility(View.GONE);
+                                    })
+                                    .show();
+                        }else {
+                        byte[] bytesFrente = Base64.decode(titularPersonaSeleccionada.imagenINEFrente, Base64.DEFAULT);
+                        Bitmap bitmapFrente = BitmapFactory.decodeByteArray(bytesFrente, 0, bytesFrente.length);
+
+                        Bitmap bitmapReverso = null;
+                        if (titularPersonaSeleccionada.imagenINEReverso != null &&
+                                !titularPersonaSeleccionada.imagenINEReverso.isEmpty()) {
+                            byte[] bytesReverso = Base64.decode(titularPersonaSeleccionada.imagenINEReverso, Base64.DEFAULT);
+                            bitmapReverso = BitmapFactory.decodeByteArray(bytesReverso, 0, bytesReverso.length);
+                        }
+
+                        ScrollView scrollView = new ScrollView(getContext());
+
+                        LinearLayout layout = new LinearLayout(getContext());
+                        layout.setOrientation(LinearLayout.VERTICAL);
+                        layout.setPadding(20, 20, 20, 20);
+
+                        ImageView imageViewFrente = new ImageView(getContext());
+                        imageViewFrente.setImageBitmap(bitmapFrente);
+                        imageViewFrente.setAdjustViewBounds(true);
+                        imageViewFrente.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT, 400);  // 400px tall
+                        params.setMargins(0, 0, 0, 16);
+                        imageViewFrente.setLayoutParams(params);
+                        layout.addView(imageViewFrente);
+
+                        if (bitmapReverso != null) {
+                            ImageView imageViewReverso = new ImageView(getContext());
+                            imageViewReverso.setImageBitmap(bitmapReverso);
+                            imageViewReverso.setAdjustViewBounds(true);
+                            imageViewReverso.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            imageViewReverso.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT, 400));  // 400px tall
+                            layout.addView(imageViewReverso);
+                        }
+
+                        scrollView.addView(layout);
+
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("INE")
+                                .setView(scrollView)
+                                .setNegativeButton("Cerrar", null)
+                                .setNeutralButton("Rehacer", (dialog, which) -> {
+                                    titularPersonaSeleccionada.imagenINEFrente = "";
+                                    titularPersonaSeleccionada.imagenINEReverso = "";
+                                    muestraConfirmacionID();
+                                })
+                                .setPositiveButton("Quitar", (dialog, which) -> {
+                                    titularPersonaSeleccionada.imagenINEFrente = "";
+                                    titularPersonaSeleccionada.imagenINEReverso = "";
+                                    guardaDatosViewModel();
+                                    bindingItem.btnINELista.setVisibility(View.GONE);
+                                })
+                                .show();
+                    }
+                    });
+                } else {
+                    bindingItem.btnINELista.setVisibility(View.GONE);
+                }
+
+            } else {
                 if (titularPersonaSeleccionada == p) {
                     titularPersonaSeleccionada = null;
                     titularViewSeleccionada = null;
                 }
-
                 titularSeleccionado = false;
-                resetBotones(binding.btnLimpiar,
-                        binding.btnAgregar,
-                        binding.btnFirma);
+                resetBotones(binding.btnLimpiar, binding.btnAgregar, binding.btnFirma, binding.btnINE);
             }
         });
 
@@ -757,29 +915,137 @@ public class TitularesFragment extends Fragment {
             }
         } catch (Exception ignored) {}
         bindingItem.textParentesco.setText(parentescoDisplay);
+
         bindingItem.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-
             if (isChecked) {
-
                 beneSeleccionado = true;
-
                 benePersonaSeleccionada = p;
                 beneViewSeleccionada = bindingItem.getRoot();
-
                 setupBotonesBene();
 
-            } else {
+                // --- Botón Firma ---
+                if (benePersonaSeleccionada.imagenFirmaBase64 != null &&
+                        !benePersonaSeleccionada.imagenFirmaBase64.isEmpty()) {
 
+                    bindingItem.btnFirma.setVisibility(View.VISIBLE);
+                    bindingItem.btnFirma.setOnClickListener(v -> {
+                        byte[] bytes = Base64.decode(benePersonaSeleccionada.imagenFirmaBase64, Base64.DEFAULT);
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        ImageView imageView = new ImageView(getContext());
+                        imageView.setImageBitmap(bitmap);
+                        imageView.setAdjustViewBounds(true);
+                        imageView.setPadding(20, 20, 20, 20);
+
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Firma")
+                                .setView(imageView)
+                                .setNegativeButton("Cerrar", null)
+                                .setNeutralButton("Rehacer", (dialog, which) -> {
+                                    benePersonaSeleccionada.imagenFirmaBase64 = "";
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("persona", benePersonaSeleccionada);
+                                    NavHostFragment.findNavController(this)
+                                            .navigate(R.id.action_titulares_a_firmas, bundle);
+                                })
+                                .setPositiveButton("Quitar", (dialog, which) -> {
+                                    benePersonaSeleccionada.imagenFirmaBase64 = "";
+                                    guardaDatosViewModel();
+                                    bindingItem.btnFirma.setVisibility(View.GONE);
+                                })
+                                .show();
+                    });
+                } else {
+                    bindingItem.btnFirma.setVisibility(View.GONE);
+                }
+
+                // --- Botón INE / Pasaporte ---
+                boolean tienePasaporte = benePersonaSeleccionada.imagenPasaporte != null &&
+                        !benePersonaSeleccionada.imagenPasaporte.isEmpty();
+                boolean tieneINE = benePersonaSeleccionada.imagenINEFrente != null &&
+                        !benePersonaSeleccionada.imagenINEFrente.isEmpty();
+
+                if (tienePasaporte || tieneINE) {
+                    bindingItem.btnINELista.setVisibility(View.VISIBLE);
+                    bindingItem.btnINELista.setOnClickListener(v -> {
+                        if (tienePasaporte) {
+                            byte[] bytes = Base64.decode(benePersonaSeleccionada.imagenPasaporte, Base64.DEFAULT);
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ImageView imageView = new ImageView(getContext());
+                            imageView.setImageBitmap(bitmap);
+                            imageView.setAdjustViewBounds(true);
+                            imageView.setPadding(20, 20, 20, 20);
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("Pasaporte")
+                                    .setView(imageView)
+                                    .setNegativeButton("Cerrar", null)
+                                    .setNeutralButton("Rehacer", (dialog, which) -> {
+                                        benePersonaSeleccionada.imagenPasaporte = "";
+                                        muestraConfirmacionID();
+                                    })
+                                    .setPositiveButton("Quitar", (dialog, which) -> {
+                                        benePersonaSeleccionada.imagenPasaporte = "";
+                                        guardaDatosViewModel();
+                                        bindingItem.btnINELista.setVisibility(View.GONE);
+                                    })
+                                    .show();
+                        } else {
+                            byte[] bytesFrente = Base64.decode(benePersonaSeleccionada.imagenINEFrente, Base64.DEFAULT);
+                            Bitmap bitmapFrente = BitmapFactory.decodeByteArray(bytesFrente, 0, bytesFrente.length);
+
+                            Bitmap bitmapReverso = null;
+                            if (benePersonaSeleccionada.imagenINEReverso != null &&
+                                    !benePersonaSeleccionada.imagenINEReverso.isEmpty()) {
+                                byte[] bytesReverso = Base64.decode(benePersonaSeleccionada.imagenINEReverso, Base64.DEFAULT);
+                                bitmapReverso = BitmapFactory.decodeByteArray(bytesReverso, 0, bytesReverso.length);
+                            }
+
+                            LinearLayout layout = new LinearLayout(getContext());
+                            layout.setOrientation(LinearLayout.VERTICAL);
+
+                            ImageView imageViewFrente = new ImageView(getContext());
+                            imageViewFrente.setImageBitmap(bitmapFrente);
+                            imageViewFrente.setAdjustViewBounds(true);
+                            imageViewFrente.setPadding(20, 20, 20, 20);
+                            layout.addView(imageViewFrente);
+
+                            if (bitmapReverso != null) {
+                                ImageView imageViewReverso = new ImageView(getContext());
+                                imageViewReverso.setImageBitmap(bitmapReverso);
+                                imageViewReverso.setAdjustViewBounds(true);
+                                imageViewReverso.setPadding(20, 20, 20, 20);
+                                layout.addView(imageViewReverso);
+                            }
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("INE")
+                                    .setView(layout)
+                                    .setNegativeButton("Cerrar", null)
+                                    .setNeutralButton("Rehacer", (dialog, which) -> {
+                                        benePersonaSeleccionada.imagenINEFrente = "";
+                                        benePersonaSeleccionada.imagenINEReverso = "";
+                                        muestraConfirmacionID();
+                                    })
+                                    .setPositiveButton("Quitar", (dialog, which) -> {
+                                        benePersonaSeleccionada.imagenINEFrente = "";
+                                        benePersonaSeleccionada.imagenINEReverso = "";
+                                        guardaDatosViewModel();
+                                        bindingItem.btnINELista.setVisibility(View.GONE);
+                                    })
+                                    .show();
+                        }
+                    });
+                } else {
+                    bindingItem.btnINELista.setVisibility(View.GONE);
+                }
+
+            } else {
                 if (benePersonaSeleccionada == p) {
                     benePersonaSeleccionada = null;
                     beneViewSeleccionada = null;
                 }
-
                 beneSeleccionado = false;
-
-                resetBotones(binding.btnLimpiarBene,
-                        binding.btnAgregarBene,
-                        binding.btnFirmaBene);
+                resetBotones(binding.btnLimpiarBene, binding.btnAgregarBene, binding.btnFirmaBene, binding.btnINEBene);
             }
         });
 
@@ -836,6 +1102,8 @@ public class TitularesFragment extends Fragment {
             binding.btnLimpiar.setText("Editar");
         }
         binding.btnFirma.setVisibility(VISIBLE);
+        binding.btnINE.setVisibility(VISIBLE);
+
 
         binding.btnLimpiar.setIcon(getResources().getDrawable(R.drawable.ic_editar));
         binding.btnLimpiar.setIconTint(getResources().getColorStateList(R.color.white));
@@ -846,7 +1114,7 @@ public class TitularesFragment extends Fragment {
         binding.btnLimpiarBene.setIcon(getResources().getDrawable(R.drawable.ic_editar));
         binding.btnLimpiarBene.setIconTint(getResources().getColorStateList(R.color.white));
         binding.btnFirmaBene.setVisibility(VISIBLE);
-
+        binding.btnINE.setVisibility(VISIBLE);
         binding.btnAgregarBene.setBackgroundTintList(getResources().getColorStateList(R.color.botonEliminar));
         if (esIngles()) {
             binding.btnAgregarBene.setText("Delete");
@@ -862,7 +1130,7 @@ public class TitularesFragment extends Fragment {
         }
 
     }
-    private void resetBotones(MaterialButton limpiar, MaterialButton agregar, MaterialButton firma){
+    private void resetBotones(MaterialButton limpiar, MaterialButton agregar, MaterialButton firma, MaterialButton ine){
         beneSeleccionado = false;
         titularSeleccionado = false;
 
@@ -885,7 +1153,7 @@ public class TitularesFragment extends Fragment {
 
 
         firma.setVisibility(View.INVISIBLE);
-
+        ine.setVisibility(View.INVISIBLE);
     }
 
 

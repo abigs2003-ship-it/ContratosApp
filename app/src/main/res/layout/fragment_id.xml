@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/pacificagris">
+
+
+        <!-- HEADER -->
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded">
+
+
+            <ImageButton
+
+                android:id="@+id/regresa"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/pacificaazul"
+                android:padding="15dp"
+                app:srcCompat="@drawable/ic_regresar_firma"
+                app:tint="@color/white"/>
+
+
+
+            <TextView
+                android:id="@+id/TVtitulo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:gravity="center"
+                android:text="Capture su INE"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="serif"
+                android:background="@color/pacificaazul"/>
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:gravity="end"
+                android:text="@string/frente"
+                android:layout_marginEnd="280dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="10dp"
+                android:gravity="start"
+                android:text="@string/reverso"
+                android:textColor="@color/white"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+
+
+
+
+
+        <!-- CAMERAS -->
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+
+            <!-- FRONT -->
+
+            <FrameLayout
+
+                android:layout_width="320dp"
+                android:layout_height="202dp"
+                android:layout_marginEnd="20dp">
+
+
+                <androidx.camera.view.PreviewView
+
+                    android:id="@+id/INE1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_card"/>
+
+
+
+                <com.example.contrato.Id.IDOverlayView
+
+                    android:id="@+id/overlay1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/imgINE1"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+
+            </FrameLayout>
+
+
+
+
+
+
+            <!-- BACK -->
+
+            <FrameLayout
+
+                android:layout_width="320dp"
+                android:layout_height="202dp">
+
+
+                <androidx.camera.view.PreviewView
+
+                    android:id="@+id/INE2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_card"/>
+
+                <com.example.contrato.Id.IDOverlayView
+
+                    android:id="@+id/overlay2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+                <ImageView
+                    android:id="@+id/imgINE2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+
+        </LinearLayout>
+
+
+        <!-- BUTTONS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="320dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnINE1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:backgroundTint="@color/pacificaazul"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:cornerRadius="4dp"
+                    app:icon="@drawable/ic_camara"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="320dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnINE2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:backgroundTint="@color/pacificaazul"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    app:cornerRadius="4dp"
+                    app:icon="@drawable/ic_camara"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/white"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

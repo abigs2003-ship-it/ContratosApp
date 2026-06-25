@@ -36,7 +36,7 @@ public class VentasInventarioRepository {
                 || !Objects.equals(a.totalPagoSala,            n.totalPagoSala)
                 || !Objects.equals(a.costoMembresia,           n.costoMembresia)
                 || !Objects.equals(a.tipoPagoDiferido,           n.tipoPagoDiferido)
-
+                || !Objects.equals(a.primerPagoDiferido,        n.primerPagoDiferido)
                 || !Objects.equals(a.comentariosRegalos,       n.comentariosRegalos);
     }
     private VentasInventario mapResultSet(ResultSet rs) throws SQLException {
@@ -74,8 +74,10 @@ public class VentasInventarioRepository {
         i.idUsuarioAlta            = rs.getLong("IdUsuarioAlta");
         i.estatus                  = rs.getString("Estatus");
         i.tipoPagoDiferido         =rs.getString("TipoPagoDiferido");
+        i.primerPagoDiferido       = rs.getDate("PrimerPagoDiferido");
         return i;
     }
+
 
     private void cargarIdsCatalogos(Connection conn, VentasInventario i) throws SQLException {
 
@@ -111,6 +113,7 @@ public class VentasInventarioRepository {
         }
         return lista;
     }
+
 
     public String getTipoCambio() throws SQLException {
         List<String> lista = new ArrayList<>();
@@ -179,12 +182,12 @@ public void insert(VentasInventario i) throws SQLException {
 
     private String buildInsertCall() {
         // sp_App_Inventario_Insert has 31 params
-        return "{call sp_App_Inventario_Insert(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call sp_App_Inventario_Insert(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
     private String buildReplaceCall() {
         // sp_App_Inventario_ReplaceByContrato has 30 params (no IdCondicionesVenta)
-        return "{call sp_App_Inventario_ReplaceByContrato(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
+        return "{call sp_App_Inventario_ReplaceByContrato(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
     }
 
 
@@ -220,6 +223,7 @@ public void insert(VentasInventario i) throws SQLException {
         cs.setString(29, i.comentariosRegalos);
         cs.setLong(30,   i.idUsuarioAlta);
         cs.setString(31, i.tipoPagoDiferido);
+        cs.setDate(32,   i.primerPagoDiferido);
     }
 
 
@@ -256,11 +260,11 @@ public void insert(VentasInventario i) throws SQLException {
         cs.setString(28, i.comentariosRegalos);
         cs.setLong(29,   idUsuario);
         cs.setString(30, i.tipoPagoDiferido);
+        cs.setDate(31,   i.primerPagoDiferido);
     }
 
-
-
- /*   //aqui empieza cintas
+/*
+    //aqui empieza cintas
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdCondicionesVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Datos_Inventario";
         try (Connection conn = DbConnection.getConnection();
@@ -300,9 +304,9 @@ public void insert(VentasInventario i) throws SQLException {
                             "EngancheDiferido, NoPagosEngancheDiferido, SaldoEnganche, MontoFinanciar, " +
                             "CostoContrato, TotalPagoSala, CostoMembresia, ComentariosRegalos, " +
                             "FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion, " +
-                            "IdUnidad, IdTemporada, IdTipoOcupacion, TipoPagoDiferido) " +
+                            "IdUnidad, IdTemporada, IdTipoOcupacion, TipoPagoDiferido, PrimerPagoDiferido) " +
                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-                            "GETDATE(), ?, 'A', NULL, NULL, ?, ?, ?, ?)";
+                            "GETDATE(), ?, 'A', NULL, NULL, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -329,9 +333,9 @@ public void insert(VentasInventario i) throws SQLException {
                         "EngancheDiferido, NoPagosEngancheDiferido, SaldoEnganche, MontoFinanciar, " +
                         "CostoContrato, TotalPagoSala, CostoMembresia, ComentariosRegalos, " +
                         "FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion, " +
-                        "IdUnidad, IdTemporada, IdTipoOcupacion, TipoPagoDiferido) " +
+                        "IdUnidad, IdTemporada, IdTipoOcupacion, TipoPagoDiferido, PrimerPagoDiferido) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
-                        "GETDATE(), ?, 'A', NULL, NULL, ?, ?, ?, ?)";
+                        "GETDATE(), ?, 'A', NULL, NULL, ?, ?, ?, ?, ?)";
         String sqlTest = "UPDATE PMT_App_Ventas_Datos_Inventario " +
                 "SET Estatus='C', IdUsuarioModificacion=" + idUsuario +
                 ", FechaModificacion=GETDATE() " +
@@ -416,7 +420,8 @@ public void insert(VentasInventario i) throws SQLException {
                         "\nidUnidad=" + i.idUnidad +
                         "\nidTemporada=" + i.idTemporada +
                         "\nidTipoOcupacion=" + i.idTipoOcupacion +
-                        "\ntipoPagoDiferido=" + i.tipoPagoDiferido
+                        "\ntipoPagoDiferido=" + i.tipoPagoDiferido +
+                        "\nprimerPagoDiferido=" + i.primerPagoDiferido
         );
 
         ps.setLong(1, i.idCondicionesVenta);
@@ -470,6 +475,7 @@ public void insert(VentasInventario i) throws SQLException {
         ps.setObject(32, i.idTemporada);
         ps.setString(33, i.idTipoOcupacion);
         ps.setString(34, i.tipoPagoDiferido);
+        ps.setDate(35, i.primerPagoDiferido);
     }
 // */
 }

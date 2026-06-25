@@ -326,4 +326,12 @@
     <string name="ver">Ver</string>
     <string name="firmas">Firma</string>
     <string name="financiamiento2">Financiamiento 2</string>
+    <string name="celular3">📱 Celular 3</string>
+    <string name="ine">INE</string>
+    <string name="reverso">Reverso</string>
+    <string name="frente">Frente</string>
+    <string name="pasaporte">Pasaporte</string>
+    <string name="tipoid">Tipo de Identificación</string>
+    <string name="captureine">Capture su INE</string>
+    <string name="capturepasaporte">Capture su pasaporte</string>
 </resources>

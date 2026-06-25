@@ -70,13 +70,13 @@ public class PestañaDireccionFragment extends Fragment {
         EditText[] camposLada = {
                 binding.etLadaCasa1, binding.etLadaCasa2,
                 binding.etLadaOficina1, binding.etLadaOficina2,
-                binding.etLadaCel1, binding.etLadaCel2,
+                binding.etLadaCel1, binding.etLadaCel2, binding.etLadaCel3,
                 binding.etLadaMensajes
         };
 
         EditText[] camposNumero = {
                 binding.etNumeroCasa1, binding.etNumeroCasa2,
-                binding.etNumeroOficina1, binding.etNumeroOficina2,
+                binding.etNumeroOficina1, binding.etNumeroOficina2, binding.etNumeroCel3,
                 binding.etNumeroCel1, binding.etNumeroCel2,
                 binding.etNumeroMensajes
         };
@@ -261,6 +261,11 @@ public class PestañaDireccionFragment extends Fragment {
                 binding.etNumeroCel2.setText(p.numero);
                 binding.cbWsCel2.setChecked(p.isWhatsApp);
                 binding.rbCelular2.setChecked(p.esPrincipal);
+            } else if (p.etiqueta.equals("Celular 3")) {
+                    binding.etLadaCel3.setText(p.lada);
+                    binding.etNumeroCel3.setText(p.numero);
+                    binding.cbWsCel3.setChecked(p.isWhatsApp);
+                    binding.rbCelular3.setChecked(p.esPrincipal);
             } else if (p.etiqueta.equals("Mensajes")) {
                 binding.etLadaMensajes.setText(p.lada);
                 binding.etNumeroMensajes.setText(p.numero);
@@ -401,7 +406,7 @@ public class PestañaDireccionFragment extends Fragment {
         CheckBox[] wsCheckboxes = {
                 binding.cbWsCasa1, binding.cbWsCasa2,
                 binding.cbWsOficina1, binding.cbWsOficina2,
-                binding.cbWsCel1, binding.cbWsCel2,
+                binding.cbWsCel1, binding.cbWsCel2, binding.cbWsCel3,
                 binding.cbWsMensajes
         };
 
@@ -447,6 +452,8 @@ public class PestañaDireccionFragment extends Fragment {
         phoneRadioButtons.add(binding.rbOficina2);
         phoneRadioButtons.add(binding.rbCelular1);
         phoneRadioButtons.add(binding.rbCelular2);
+        phoneRadioButtons.add(binding.rbCelular3);
+
         phoneRadioButtons.add(binding.rbMensajes);
 
         for (RadioButton rb : phoneRadioButtons) {
@@ -517,6 +524,8 @@ public class PestañaDireccionFragment extends Fragment {
         agregaTelefono(phones, "Oficina 2", binding.etLadaOficina2.getText().toString(), binding.etNumeroOficina2.getText().toString(), binding.cbWsOficina2.isChecked(), binding.rbOficina2.isChecked());
         agregaTelefono(phones, "Celular 1", binding.etLadaCel1.getText().toString(), binding.etNumeroCel1.getText().toString(), binding.cbWsCel1.isChecked(), binding.rbCelular1.isChecked());
         agregaTelefono(phones, "Celular 2", binding.etLadaCel2.getText().toString(), binding.etNumeroCel2.getText().toString(), binding.cbWsCel2.isChecked(), binding.rbCelular2.isChecked());
+        agregaTelefono(phones, "Celular 3", binding.etLadaCel3.getText().toString(), binding.etNumeroCel3.getText().toString(), binding.cbWsCel3.isChecked(), binding.rbCelular3.isChecked());
+
         agregaTelefono(phones, "Mensajes", binding.etLadaMensajes.getText().toString(), binding.etNumeroMensajes.getText().toString(), binding.cbWsMensajes.isChecked(), binding.rbMensajes.isChecked());
         Contrato.setTelefonos(phones);
 

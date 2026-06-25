@@ -870,49 +870,5 @@ private void actualizarResumen(int pagos, double pagoFijo, double ultimoPago) {
             binding.etFechaPrimerPago.setText(formateada);
         }
     }
-    private void setupComasMontos(EditText editText) {
-        editText.addTextChangedListener(new TextWatcher() {
 
-            private boolean actualizando;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (actualizando) return;
-
-                actualizando = true;
-
-                String texto = s.toString();
-
-                // quita comas
-                String limpio = texto.replace(",", "");
-
-                try {
-                    if (!limpio.isEmpty()) {
-
-                        // permite decimales
-                        double numero = Double.parseDouble(limpio);
-
-                        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
-                        formatter.setMaximumFractionDigits(2);
-                        formatter.setMinimumFractionDigits(0);
-
-                        String formateado = formatter.format(numero);
-
-                        editText.setText(formateado);
-                        editText.setSelection(formateado.length());
-                    }
-                } catch (NumberFormatException e) {
-                    // ignora inputs invalidas
-                }
-
-                actualizando = false;
-            }
-        });
-    }
 }

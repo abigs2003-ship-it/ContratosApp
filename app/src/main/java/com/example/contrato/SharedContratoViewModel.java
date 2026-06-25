@@ -56,15 +56,24 @@ public class SharedContratoViewModel extends ViewModel {
     private boolean modoMensual = false;
     private String fechaInicialMensual = null;
     private ContratoModelo.Persona personaParaFirma;
+    private ContratoModelo.Persona personaParaINE;
+
 
 
     public void setPersonaParaFirma(ContratoModelo.Persona persona) {
         personaParaFirma = persona;
     }
 
+    public void setPersonaParaINE(ContratoModelo.Persona persona) {
+        personaParaINE = persona;
+    }
+
 
     public ContratoModelo.Persona getPersonaParaFirma() {
         return personaParaFirma;
+    }
+    public ContratoModelo.Persona getPersonaParaINE() {
+        return personaParaINE;
     }
 
     public boolean isModoMensual() { return modoMensual; }
@@ -85,6 +94,7 @@ public class SharedContratoViewModel extends ViewModel {
     private final VentasMontoCtaRepository montoCtaRepo = new VentasMontoCtaRepository();
     private final VentasFinanciamientosRepository financiamientoRepo = new VentasFinanciamientosRepository();
     private final VentasRegalosRepository regalosRepo = new VentasRegalosRepository();
+    private final VentasRedesSocialesRepository regalosRegRepo = new VentasRedesSocialesRepository();
     private final VentasRedesSocialesRepository redesSocialesRepo = new VentasRedesSocialesRepository();
 
     public LiveData<ContratoModelo> getContrato() {
@@ -229,6 +239,7 @@ public class SharedContratoViewModel extends ViewModel {
                     else if (p.etiqueta.contains("Casa 2"))    { vigNuevo.ladaCasa2      = truncate(cleanLada, 5); vigNuevo.telefonoCasa2      = truncate(cleanNum, 15); vigNuevo.whatsAppCasa2      = p.isWhatsApp; }
                     else if (p.etiqueta.contains("Celular 1")) { vigNuevo.ladaCelular1   = truncate(cleanLada, 5); vigNuevo.telefonoCelular1   = truncate(cleanNum, 15); vigNuevo.whatsAppCelular1   = p.isWhatsApp; }
                     else if (p.etiqueta.contains("Celular 2")) { vigNuevo.ladaCelular2   = truncate(cleanLada, 5); vigNuevo.telefonoCelular2   = truncate(cleanNum, 15); vigNuevo.whatsAppCelular2   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Celular 3")) { vigNuevo.ladaCelular3   = truncate(cleanLada, 5); vigNuevo.telefonoCelular3  = truncate(cleanNum, 15); vigNuevo.whatsAppCelular3   = p.isWhatsApp; }
                     else if (p.etiqueta.contains("Oficina 1")) { vigNuevo.ladaOficina1   = truncate(cleanLada, 5); vigNuevo.telefonoOficina1   = truncate(cleanNum, 15); vigNuevo.whatsAppOficina1   = p.isWhatsApp; }
                     else if (p.etiqueta.contains("Oficina 2")) { vigNuevo.ladaOficina2   = truncate(cleanLada, 5); vigNuevo.telefonoOficina2   = truncate(cleanNum, 15); vigNuevo.whatsAppOficina2   = p.isWhatsApp; }
                     else if (p.etiqueta.contains("Mensajes"))  { vigNuevo.ladaMensajes   = truncate(cleanLada, 5); vigNuevo.telefonoMensajes   = truncate(cleanNum, 15); vigNuevo.whatsAppMensajes   = p.isWhatsApp; }
@@ -251,11 +262,11 @@ public class SharedContratoViewModel extends ViewModel {
 
                 if (titularesCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Titular", idUsuario);
-                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta);
+                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta, null);
                 }
                 if (beneficiariosCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Beneficiario", idUsuario);
-                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta);
+                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta, null);
                 }
                 // ── Inventario ───────────────────────────────────────────────────
                 VentasInventario viActual = inventarioRepo.getByContratoId(idContrato);
@@ -291,6 +302,8 @@ public class SharedContratoViewModel extends ViewModel {
                 viNuevo.totalPagoSala           = parseDouble(model.getPagoSala());
                 viNuevo.costoMembresia          = parseDouble(model.getCostoMembresia());
                 viNuevo.comentariosRegalos      = model.getComentarios();
+                viNuevo.primerPagoDiferido      = parseSqlDate(convertirMesANumero(model.getPrimerPagoDiferido()));
+
                 viNuevo.idUsuarioAlta           = originalIdUsuarioAlta;
 
                 if (viActual == null || inventarioRepo.huboCambios(viActual, viNuevo)) {
@@ -343,6 +356,7 @@ public class SharedContratoViewModel extends ViewModel {
                 List<VentasEngancheDiferido> engancheActuales = engancheDiferidoRepo.getByContratoId(idContrato);
                 if (engancheDiferidoRepo.huboCambios(engancheActuales, model.getPagosDiferidos())) {
                     engancheDiferidoRepo.desactivarPorContrato(idContrato, idUsuario);
+                    int i = 1;
                     for (ContratoModelo.PagoDiferido pd : model.getPagosDiferidos()) {
                         VentasEngancheDiferido ved = new VentasEngancheDiferido();
                         ved.idPago        = engancheDiferidoRepo.getNextId();
@@ -350,6 +364,7 @@ public class SharedContratoViewModel extends ViewModel {
                         ved.cantidadPago  = parseDouble(pd.monto);
                         ved.fechaPago     = parseSqlDate(convertirMesANumero(pd.fecha));
                         ved.idUsuarioAlta = originalIdUsuarioAlta;
+                        ved.noPago        = i++;
                         engancheDiferidoRepo.insert(ved);
                     }
                 }
@@ -413,6 +428,7 @@ public class SharedContratoViewModel extends ViewModel {
         vig.telefonoCasa2 = vig.ladaCasa2 = null; vig.whatsAppCasa2 = false;
         vig.telefonoCelular1 = vig.ladaCelular1 = null; vig.whatsAppCelular1 = false;
         vig.telefonoCelular2 = vig.ladaCelular2 = null; vig.whatsAppCelular2 = false;
+        vig.telefonoCelular3 = vig.ladaCelular3 = null; vig.whatsAppCelular3 = false;
         vig.telefonoOficina1 = vig.ladaOficina1 = null; vig.whatsAppOficina1 = false;
         vig.telefonoOficina2 = vig.ladaOficina2 = null; vig.whatsAppOficina2 = false;
         vig.telefonoMensajes = vig.ladaMensajes = null; vig.whatsAppMensajes = false;
@@ -500,6 +516,11 @@ public class SharedContratoViewModel extends ViewModel {
                         vig.telefonoCelular2 = truncate(cleanNum, 15); 
                         vig.whatsAppCelular2 = p.isWhatsApp; 
                     }
+                    else if (p.etiqueta.contains("Celular 3")) {
+                        vig.ladaCelular3 = truncate(cleanLada, 5);
+                        vig.telefonoCelular3 = truncate(cleanNum, 15);
+                        vig.whatsAppCelular3 = p.isWhatsApp;
+                    }
                     else if (p.etiqueta.contains("Oficina 1")) { 
                         vig.ladaOficina1 = truncate(cleanLada, 5); 
                         vig.telefonoOficina1 = truncate(cleanNum, 15); 
@@ -528,8 +549,8 @@ public class SharedContratoViewModel extends ViewModel {
                 vig.idUsuarioAlta = idUsuario;
                 infoGralRepo.insert(vig);
 
-                guardaTitulares(model.getTitulares(), idContrato, "Titular", idUsuario);
-                guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", idUsuario);
+                guardaTitulares(model.getTitulares(), idContrato, "Titular", idUsuario, null);
+                guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", idUsuario, null);
 
                 VentasInventario vi = new VentasInventario();
                 vi.idCondicionesVenta = inventarioRepo.getNextId();
@@ -561,6 +582,8 @@ public class SharedContratoViewModel extends ViewModel {
                 vi.costoContrato = parseDouble(model.getCostoContrato());
                 vi.totalPagoSala = parseDouble(model.getPagoSala());
                 vi.costoMembresia = parseDouble(model.getCostoMembresia());
+                vi.primerPagoDiferido = parseSqlDate(convertirMesANumero(model.getPrimerPagoDiferido()));
+
                 vi.comentariosRegalos = model.getComentarios();
                 vi.fechaAlta = now;
                 vi.idUsuarioAlta = idUsuario;
@@ -577,6 +600,7 @@ public class SharedContratoViewModel extends ViewModel {
                     descuentosRepo.insert(vd);
                 }
 
+                int i = 1;
                 for (ContratoModelo.PagoDiferido pd : model.getPagosDiferidos()) {
                     VentasEngancheDiferido ved = new VentasEngancheDiferido();
                     ved.idPago = engancheDiferidoRepo.getNextId();
@@ -585,6 +609,7 @@ public class SharedContratoViewModel extends ViewModel {
                     ved.fechaPago = parseSqlDate(convertirMesANumero(pd.fecha));
                     ved.fechaAlta = now;
                     ved.idUsuarioAlta = idUsuario;
+                    ved.noPago = i++;
                     engancheDiferidoRepo.insert(ved);
                 }
 
@@ -643,7 +668,7 @@ public class SharedContratoViewModel extends ViewModel {
         }).start();
     }
 
-    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo, long idUsuarioAlta) throws SQLException {
+    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo, long idUsuarioAlta, String archivoFirma) throws SQLException {
         int tipoRegistro = "Titular".equals(tipo) ? 0 : 1;
         int orden = 1;
         for (ContratoModelo.Persona p : personas) {
@@ -660,19 +685,32 @@ public class SharedContratoViewModel extends ViewModel {
             vt.fechaCumpleaños = parseSqlDate(convertirMesANumero(p.cumple));
             vt.parentesco      = parseLong(p.parentesco);
             vt.idUsuarioAlta   = idUsuarioAlta;
+            vt.archivoFirma = archivoFirma;
+
+            if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
+                String extension = ".jpg";
+                String nombreCompletoParaArchivo = (p.nombre + (p.paterno != null ? p.paterno : "") + (p.materno != null ? p.materno : "")).trim();
+                vt.archivoFirma = "idApp-" + idContrato + "-" + nombreCompletoParaArchivo.toUpperCase().replaceAll(" ", "") + extension;
+            }
+
             titularesRepo.insert(vt);
 
             p.idTitularBD = vt.idTitular;
+            String contratoid = String.valueOf(idContrato);
 
             if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
                 String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
-                subirFirmaAlBackend(vt.idTitular, nombreCompleto, p.imagenFirmaBase64);
+                subirFirmaAlBackend(vt.idTitular, nombreCompleto, contratoid, p.imagenFirmaBase64);
+            }
+            if (p.imagenINEFrente != null && !p.imagenINEFrente.isEmpty()) {
+                String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
+               // subirFirmaAlBackend(vt.idTitular, nombreCompleto, contratoid, p.imagenFirmaBase64);
             }
         }
     }
 
-    private void subirFirmaAlBackend(long idTitular, String nombreCompleto, String base64) {
-        FotoTitularRequest request = new FotoTitularRequest((int) idTitular, nombreCompleto, base64, "png");
+    private void subirFirmaAlBackend(long idTitular, String nombreCompleto, String idContrato, String base64) {
+        FotoTitularRequest request = new FotoTitularRequest((int) idTitular, nombreCompleto, idContrato, base64, "jpg");
         TitularApiService api = RetrofitClient.getTitularApiService();
         api.guardarFotoTitular(request).enqueue(new Callback<ApiResponse>() {
             @Override
@@ -698,17 +736,11 @@ public class SharedContratoViewModel extends ViewModel {
 
 
 
-    private String mapeaIdiomaBD(String idioma) {
-        if (idioma == null) return "ESP";
-        // idioma viene del ContratoModelo, que se setea desde el fragment
-        if (idioma.equalsIgnoreCase("en") || idioma.equalsIgnoreCase("English")
-                || idioma.equalsIgnoreCase("ING")) return "ING";
-        return "ESP";
-    }
 
     private String mapIdiomaFromDb(String dbIdioma) {
         if (dbIdioma == null) return "Español";
-        if (dbIdioma.equalsIgnoreCase("ing")) return "English";
+        String clean = dbIdioma.trim();
+        if (clean.equalsIgnoreCase("ing") || clean.equalsIgnoreCase("en")) return "English";
         return "Español";
     }
 
@@ -789,6 +821,19 @@ public class SharedContratoViewModel extends ViewModel {
         }
         return null;
     }
+    private String mapeaIdiomaBD(String idioma) {
+        if (idioma == null) return "ESP";
+        String clean = idioma.trim();
+        if (clean.equalsIgnoreCase("en")
+                || clean.equalsIgnoreCase("English")
+                || clean.equalsIgnoreCase("ING")) return "ING";
+        if (clean.equalsIgnoreCase("es")
+                || clean.equalsIgnoreCase("Español")
+                || clean.equalsIgnoreCase("ESP")) return "ESP";
+        Log.w("IDIOMA", "Valor de idioma inesperado al guardar: '" + clean + "'");
+        return "ESP";
+    }
+
     public void setIdiomaActual(String lang) {
         ContratoModelo contrato = getContratoValue();
         if (contrato == null) return;

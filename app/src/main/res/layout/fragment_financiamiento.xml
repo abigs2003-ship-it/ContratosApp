@@ -204,6 +204,8 @@
                                 android:paddingHorizontal="14dp"
                                 android:inputType="number"
                                 android:hint="0" />
+
+
                         </LinearLayout>
 
                         <LinearLayout

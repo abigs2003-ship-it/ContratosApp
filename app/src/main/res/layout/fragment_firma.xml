@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/btnRegresaTitulares"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_regresar_firma"

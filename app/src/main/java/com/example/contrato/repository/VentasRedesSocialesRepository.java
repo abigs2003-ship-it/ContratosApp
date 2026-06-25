@@ -71,9 +71,9 @@ public class VentasRedesSocialesRepository {
         }
         return null;
     }
-
+/*
     //Cintas
-    /*
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdRedSocial), 0) + 1 AS NextId FROM PMT_App_Ventas_Redes_Sociales";
         try (Connection conn = DbConnection.getConnection();

@@ -51,6 +51,21 @@ public class VentasContratoRepository {
         }
         return resultado;
     }
+    private Date parseSqlDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            java.util.Date utilDate = sdf.parse(dateStr);
+            if (utilDate != null) return new Date(utilDate.getTime());
+        } catch (Exception e) {
+            try {
+                SimpleDateFormat sdfUS = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                java.util.Date utilDate = sdfUS.parse(dateStr);
+                if (utilDate != null) return new Date(utilDate.getTime());
+            } catch (Exception e2) { e2.printStackTrace(); }
+        }
+        return null;
+    }
 
     private boolean esIngles() {
         return Locale.getDefault().getLanguage().equals("en");
@@ -90,11 +105,13 @@ public class VentasContratoRepository {
 
     private String mapIdiomaFromDb(String dbIdioma) {
         if (dbIdioma == null) return "Español";
-        if (dbIdioma.equalsIgnoreCase("ING")) return "English";
+        String clean = dbIdioma.trim();
+        if (clean.equalsIgnoreCase("ING") || clean.equalsIgnoreCase("EN") || clean.equalsIgnoreCase("English")) return "English";
         return "Español";
     }
 
     // aqui empieza sp
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Contrato_GetNextId}");
@@ -284,6 +301,8 @@ public class VentasContratoRepository {
                             String ocupacion = rs.getString("Ocupacion");
                             long parentesco = rs.getLong("Parentesco");
                             java.sql.Date fechaCumple = rs.getDate("FechaCumpleaños");
+                            String archivoFirma = rs.getString("ArchivoFirma");
+
 
                             String key = tipoTitular + "|" + nombre + "|" + paterno + "|" + materno;
                             if (!titularesYaAgregados.contains(key)) {
@@ -291,7 +310,7 @@ public class VentasContratoRepository {
                                 ContratoModelo.Persona p = new ContratoModelo.Persona(
                                         nombre, paterno, materno, ocupacion,
                                         String.valueOf(parentesco),
-                                        fechaCumple != null ? convertirMesANombreString(dateOnlySdf.format(fechaCumple)) : ""
+                                        fechaCumple != null ? convertirMesANombreString(dateOnlySdf.format(fechaCumple)) : "", archivoFirma
                                 );
                                 if ("Titular".equalsIgnoreCase(tipoTitular)) {
                                     m.getTitulares().add(p);
@@ -428,6 +447,7 @@ public class VentasContratoRepository {
         addTelefono(m, "Casa 2", rs.getString("LadaCasa2"), rs.getString("TelefonoCasa2"), rs.getString("WhatsAppCasa2"), telDefault);
         addTelefono(m, "Celular 1", rs.getString("LadaCelular1"), rs.getString("TelefonoCelular1"), rs.getString("WhatsAppCelular1"), telDefault);
         addTelefono(m, "Celular 2", rs.getString("LadaCelular2"), rs.getString("TelefonoCelular2"), rs.getString("WhatsAppCelular2"), telDefault);
+        addTelefono(m, "Celular 3", rs.getString("LadaCelular3"), rs.getString("TelefonoCelular3"), rs.getString("WhatsAppCelular3"), telDefault);
         addTelefono(m, "Oficina 1", rs.getString("LadaOficina1"), rs.getString("TelefonoOficina1"), rs.getString("WhatsAppOficina1"), telDefault);
         addTelefono(m, "Oficina 2", rs.getString("LadaOficina2"), rs.getString("TelefonoOficina2"), rs.getString("WhatsAppOficina2"), telDefault);
         addTelefono(m, "Mensajes", rs.getString("LadaMensajes"), rs.getString("TelefonoMensajes"), rs.getString("WhatsAppMensajes"), telDefault);
@@ -477,6 +497,7 @@ public class VentasContratoRepository {
         m.setComentarios(rs.getString("ComentariosRegalos"));
         m.setTipoVenta(rs.getString("TipoVenta"));
         m.setTipoPagoEnganche(rs.getString("TipoPagoDiferido"));
+        m.setPrimerPagoDiferido(convertirMesANombreString(rs.getString("PrimerPagoDiferido")));
     }
 
     private void mapFinanciamiento(ResultSet rs, ContratoModelo m,
@@ -636,7 +657,7 @@ public class VentasContratoRepository {
 
         String sql =
                 "SELECT " +
-                        "t.Nombre, t.Paterno, t.Materno, t.TipoTitular, t.Ocupacion, t.Parentesco, t.FechaCumpleaños, " +
+                        "t.Nombre, t.Paterno, t.Materno, t.TipoTitular, t.Ocupacion, t.Parentesco, t.FechaCumpleaños, t.ArchivoFirma, " +
                         "ig.Pais, ig.Nacionalidad, ig.TipoDir, ig.Email1, ig.Email2, ig.Email3, ig.Email4, " +
                         "ig.Calle, ig.NoExt, ig.NoInt, ig.Colonia, ig.Delegacion, ig.Ciudad, ig.Estado, ig.CP, " +
                         "ig.PoBox, ig.Box, ig.Cmr, ig.Apo, ig.Linea1, ig.Linea2, ig.Linea3, ig.Linea4, ig.Linea5, " +
@@ -644,6 +665,7 @@ public class VentasContratoRepository {
                         "ig.LadaCasa2, ig.TelefonoCasa2, ig.WhatsAppCasa2, " +
                         "ig.LadaCelular1, ig.TelefonoCelular1, ig.WhatsAppCelular1, " +
                         "ig.LadaCelular2, ig.TelefonoCelular2, ig.WhatsAppCelular2, " +
+                        "ig.LadaCelular3, ig.TelefonoCelular3, ig.WhatsAppCelular3, " +
                         "ig.LadaOficina1, ig.TelefonoOficina1, ig.WhatsAppOficina1, " +
                         "ig.LadaOficina2, ig.TelefonoOficina2, ig.WhatsAppOficina2, " +
                         "ig.LadaMensajes, ig.TelefonoMensajes, ig.WhatsAppMensajes, ig.TelefonoDefault, " +
@@ -656,7 +678,7 @@ public class VentasContratoRepository {
                         "f.TipoPeriodo, f.FechaPrimerPago, f.NumeroPagos, f.TasaInteres, " +
                         "rs.UsuarioFacebook, rs.UsuarioInstagram, rs.UsuarioTwitter " +
                         "FROM PMT_App_Ventas_Titulares t " +
-                        "LEFT JOIN PMT_App_Ventas_Informacion_General ig  ON ig.IdContrato  = t.IdContrato AND ig.Estatus = 'A'" +
+                        "LEFT JOIN PMT_App_Ventas_Informacion_General ig  ON ig.IdContrato  = t.IdContrato AND ig.Estatus = 'A' " +
                         "LEFT JOIN PMT_App_Ventas_Datos_Inventario inv   ON inv.IdContrato = t.IdContrato AND inv.Estatus = 'A' " +
                         "LEFT JOIN PMT_App_Ventas_Financiamientos f      ON f.IdContrato   = t.IdContrato AND f.Estatus = 'A' " +
                         "LEFT JOIN PMT_App_Ventas_Redes_Sociales rs      ON rs.IdContrato  = t.IdContrato AND inv.Estatus = 'A' " +
@@ -666,6 +688,7 @@ public class VentasContratoRepository {
         String sqlEnganche   = "SELECT CantidadPago, FechaPago FROM PMT_App_Ventas_EngancheDiferido WHERE IdContrato = ? AND Estatus = 'A'";
         String sqlMontoCta   = "SELECT Xref FROM PMT_App_Ventas_Monto_Cta WHERE IdContrato = ? AND Estatus = 'A'";
         String sqlRegalos    = "SELECT Descripcion FROM PMT_App_Ventas_Regalos WHERE IdContrato = ? AND Estatus = 'A'";
+
 
         try (Connection conn = DbConnection.getConnection()) {
 
@@ -684,6 +707,7 @@ public class VentasContratoRepository {
                         String ocupacion   = rs.getString("Ocupacion");
                         long   parentesco  = rs.getLong("Parentesco");
                         java.sql.Date fechaCumple = rs.getDate("FechaCumpleaños");
+                        String archivoFirma  = rs.getString("ArchivoFirma");
 
                         String key = tipoTitular + "|" + nombre + "|" + paterno + "|" + materno;
                         if (!titularesYaAgregados.contains(key)) {
@@ -692,6 +716,7 @@ public class VentasContratoRepository {
                                     nombre, paterno, materno, ocupacion,
                                     String.valueOf(parentesco),
                                     fechaCumple != null ? convertirMesANombreString(dateOnlySdf.format(fechaCumple)) : ""
+                                    , archivoFirma
                             );
                             if ("Titular".equalsIgnoreCase(tipoTitular)) {
                                 m.getTitulares().add(p);
@@ -754,6 +779,7 @@ public class VentasContratoRepository {
                             String tc2   = rs.getString("TelefonoCasa2");    if (tc2   != null && !tc2.isEmpty())   m.getTelefonos().add(new ContratoModelo.InfoTelefono("Casa 2",    rs.getString("LadaCasa2"),    tc2,   "1".equals(rs.getString("WhatsAppCasa2")),    "Casa 2".equals(telDefault)));
                             String tcel1 = rs.getString("TelefonoCelular1"); if (tcel1 != null && !tcel1.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 1", rs.getString("LadaCelular1"), tcel1, "1".equals(rs.getString("WhatsAppCelular1")), "Celular 1".equals(telDefault)));
                             String tcel2 = rs.getString("TelefonoCelular2"); if (tcel2 != null && !tcel2.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 2", rs.getString("LadaCelular2"), tcel2, "1".equals(rs.getString("WhatsAppCelular2")), "Celular 2".equals(telDefault)));
+                            String tcel3 = rs.getString("TelefonoCelular3"); if (tcel3 != null && !tcel3.isEmpty()) m.getTelefonos().add(new ContratoModelo.InfoTelefono("Celular 3", rs.getString("LadaCelular3"), tcel3, "1".equals(rs.getString("WhatsAppCelular3")), "Celular 3".equals(telDefault)));
                             String tof1  = rs.getString("TelefonoOficina1"); if (tof1  != null && !tof1.isEmpty())  m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 1", rs.getString("LadaOficina1"), tof1,  "1".equals(rs.getString("WhatsAppOficina1")), "Oficina 1".equals(telDefault)));
                             String tof2  = rs.getString("TelefonoOficina2"); if (tof2  != null && !tof2.isEmpty())  m.getTelefonos().add(new ContratoModelo.InfoTelefono("Oficina 2", rs.getString("LadaOficina2"), tof2,  "1".equals(rs.getString("WhatsAppOficina2")), "Oficina 2".equals(telDefault)));
                             String tms   = rs.getString("TelefonoMensajes");  if (tms  != null && !tms.isEmpty())   m.getTelefonos().add(new ContratoModelo.InfoTelefono("Mensajes",  rs.getString("LadaMensajes"),  tms,   "1".equals(rs.getString("WhatsAppMensajes")),  "Mensajes".equals(telDefault)));
@@ -841,9 +867,13 @@ public class VentasContratoRepository {
             }
         }
 
+
+
         m.setDatosListos(true);
         return m;
+
     }
 
 
-}*/
+}
+//*/

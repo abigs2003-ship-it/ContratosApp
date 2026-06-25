@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/pacificagris"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+
+        <!-- HEADER -->
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded">
+
+
+            <ImageButton
+
+                android:id="@+id/btnRegresaTitulares2"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:backgroundTint="@color/pacificaazul"
+                android:padding="15dp"
+                app:srcCompat="@drawable/ic_regresar_firma"
+                app:tint="@color/white" />
+
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:background="@color/pacificaazul"
+                android:fontFamily="serif"
+                android:gravity="center"
+                android:text="@string/capturepasaporte"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+        <!-- CAMERAS -->
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <FrameLayout
+
+                android:layout_width="320dp"
+                android:layout_height="222dp">
+
+
+                <androidx.camera.view.PreviewView
+
+                    android:id="@+id/PVpasaporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_card" />
+
+                <com.example.contrato.Id.PasaporteOverlayView
+
+                    android:id="@+id/overlay3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/imgPasaporte"
+                    android:layout_width="match_parent"
+                    android:layout_height="222dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
+
+
+        <!-- BUTTONS -->
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+
+            <com.google.android.material.button.MaterialButton
+
+                android:id="@+id/btnPasaporte"
+
+                android:layout_width="wrap_content"
+                android:layout_height="55dp"
+                android:backgroundTint="@color/pacificaazul"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                app:cornerRadius="4dp"
+
+                app:icon="@drawable/ic_camara"
+
+                app:iconGravity="textStart"
+                app:iconPadding="5dp"
+                app:iconSize="25dp"
+                app:iconTint="@color/white" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

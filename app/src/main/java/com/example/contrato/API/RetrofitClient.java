@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     // URL SERVIDOR SPRINGBOOT
-    private static final String BASE_URL = "http://187.243.243.220:5500/";
+    private static final String BASE_URL = "http://187.243.243.220:8080/";
 
     private static Retrofit retrofit;
 

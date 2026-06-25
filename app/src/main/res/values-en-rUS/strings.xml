@@ -207,4 +207,12 @@
     <string name="ver">View</string>
     <string name="firmas">Signature</string>
     <string name="financiamiento2">Financing 2</string>
+    <string name="celular3">📱 Cellphone 3</string>
+    <string name="ine">ID</string>
+    <string name="reverso">Back</string>
+    <string name="frente">Front</string>
+    <string name="pasaporte">Passport</string>
+    <string name="tipoid">Type of Id</string>
+    <string name="captureine">Take a picture of your ID</string>
+    <string name="capturepasaporte">"Take a picture of your passport "</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.contrato.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class VentasInformacionGeneral {
@@ -47,6 +48,9 @@ public class VentasInformacionGeneral {
     public String ladaOficina2;
     public String telefonoOficina2;
     public boolean whatsAppOficina2;
+    public String ladaCelular3;
+    public String telefonoCelular3;
+    public boolean whatsAppCelular3;
     public String nacionalidad;
     public String email1;
     public String email2;

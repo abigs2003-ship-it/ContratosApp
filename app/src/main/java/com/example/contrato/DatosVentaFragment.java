@@ -232,10 +232,10 @@ public class DatosVentaFragment extends Fragment {
 
         setSpinnerValue(binding.spUnidad, Contrato.getUnidad());
         setSpinnerValue(binding.spTemporada, Contrato.getTemporada());
-        setSpinnerValue(binding.spTipoOcupacion, Contrato.getTipoOcupacion());
+        setSpinnerTipoOcupacion(Contrato.getTipoOcupacion());
         binding.spAnioUso.post(() -> {
             setSpinnerValue(binding.spAnioUso, Contrato.getAnioUso());
-            binding.spAnioUso.post(() -> cargandoDatos = false); // ← extra post to ensure it runs last
+            binding.spAnioUso.post(() -> cargandoDatos = false);
         });
         binding.editNoAnios.setText(Contrato.getNoAnios());
 
@@ -750,7 +750,15 @@ public class DatosVentaFragment extends Fragment {
             if (pos >= 0) spinner.setSelection(pos);
         }
     }
-
+    private void setSpinnerTipoOcupacion(String valorBD) {
+        if (valorBD == null) return;
+        String buscar;
+        if (valorBD.contains("Pares") || valorBD.contains("Even"))       buscar = esIngles() ? "Even Years"  : "Alternos Pares";
+        else if (valorBD.contains("Nones") || valorBD.contains("Odd"))   buscar = esIngles() ? "Odd Years"   : "Alternos Nones";
+        else if (valorBD.contains("Corridos") || valorBD.contains("Year")) buscar = esIngles() ? "Years"       : "Corridos";
+        else return;
+        setSpinnerValue(binding.spTipoOcupacion, buscar);
+    }
     @Override
     public void onPause() {
         super.onPause();
@@ -1590,6 +1598,7 @@ public class DatosVentaFragment extends Fragment {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (cargandoDatos) return;
                 calculaSaldoEnganche();
             }
         });
@@ -1600,6 +1609,8 @@ public class DatosVentaFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (isUpdating) return;
+                if (cargandoDatos) return;
+
 
                 String val = s.toString().trim();
                 if (!val.isEmpty()) {
@@ -2273,7 +2284,6 @@ public class DatosVentaFragment extends Fragment {
     private void LogicaTipodePago() {
 
         binding.btnContado.setOnClickListener(v -> {
-
             isContado = true;
             seleccionaBoton(binding.btnContado);
 
@@ -2282,6 +2292,18 @@ public class DatosVentaFragment extends Fragment {
             binding.AceptarTarea.setText("Enviar Contrato");
             binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_enviar));
             binding.EngacheColapsable.setVisibility(View.GONE);
+
+            // ← limpiar campos que no aplican en contado
+            binding.editEngancheSalaMonto.setText("");
+            binding.editEngancheSalaPorcentaje.setText("");
+            binding.editVarios.setText("");
+            binding.editNoDesc.setText("");
+            binding.containerDescuentosDinamicos.removeAllViews();
+            binding.editEngDiferido.setText("");
+            binding.editNoPagosEng.setText("");
+            binding.containerPagosDinamicos.removeAllViews();
+            binding.editSaldoEng.setText("");
+            seleccionaBoton(binding.btnAbierto); // resetea tipoPagoEnganche a default
 
             calculaMontoFinanciar();
             calculaEngancheDiferido();
@@ -2313,35 +2335,26 @@ public class DatosVentaFragment extends Fragment {
         int posTemporada = binding.spTemporada.getSelectedItemPosition();
         String temporada = "";
         switch (posTemporada) {
-            case 1:
-                temporada = "Platino";
-                break;
-            case 2:
-                temporada = "Oro";
-                break;
-            case 3:
-                temporada = "Plata";
-                break;
-            default:
-                temporada = "Seleccionar";
-                break;
+            case 1: temporada = "Platino"; break;
+            case 2: temporada = "Oro"; break;
+            case 3: temporada = "Plata"; break;
+            default: temporada = "Seleccionar"; break;
         }
-
         Contrato.setTemporada(temporada);
 
-
-        if (binding.spTipoOcupacion.getSelectedItem() != null){
+        if (binding.spTipoOcupacion.getSelectedItem() != null) {
             String elegido = binding.spTipoOcupacion.getSelectedItem().toString();
-            if(elegido.equalsIgnoreCase("Alternos Pares") || elegido.equalsIgnoreCase("Even Years")){
+            if (elegido.equalsIgnoreCase("Alternos Pares") || elegido.equalsIgnoreCase("Even Years")) {
                 Contrato.setTipoOcupacion("Años Alternos Pares");
-            }else if(elegido.equalsIgnoreCase("Alternos Nones") || elegido.equalsIgnoreCase("Odd Years")) {
+            } else if (elegido.equalsIgnoreCase("Alternos Nones") || elegido.equalsIgnoreCase("Odd Years")) {
                 Contrato.setTipoOcupacion("Años Alternos Nones");
-            }else if(elegido.equalsIgnoreCase("Corridos")|| elegido.equalsIgnoreCase("Years")){
+            } else if (elegido.equalsIgnoreCase("Corridos") || elegido.equalsIgnoreCase("Years")) {
                 Contrato.setTipoOcupacion("Años Corridos");
-            }else if(elegido.equalsIgnoreCase("Seleccionar")){
+            } else if (elegido.equalsIgnoreCase("Seleccionar")) {
                 Contrato.setTipoOcupacion(null);
             }
         }
+
         String anioUso = binding.spAnioUso.getSelectedItem() != null
                 ? binding.spAnioUso.getSelectedItem().toString() : "";
         if (!anioUso.equals("Seleccionar") && !anioUso.equals("Select")) {
@@ -2354,19 +2367,34 @@ public class DatosVentaFragment extends Fragment {
         Contrato.setPrecioBruto(binding.editPrecioBruto.getText().toString());
         Contrato.setMontoCuenta(binding.editMontoCuenta.getText().toString());
         Contrato.setNoContratosMC(binding.editNoContratosVenta.getText().toString());
-
         Contrato.setPrecioNeto(binding.editPrecioNeto.getText().toString());
         Contrato.setTipoPago(binding.btnContado.isChecked() ? "Contado" : "Financiado");
+
         Contrato.setEnganchePorcentaje(binding.editEnganchePorcentaje.getText().toString());
         Contrato.setEngancheTotal(binding.editEngancheMonto.getText().toString());
-        Contrato.setEngancheSalaMonto(binding.editEngancheSalaMonto.getText().toString());
-        Contrato.setEngancheSalaPorcentaje(binding.editEngancheSalaPorcentaje.getText().toString());
-        Contrato.setVariosMonto(binding.editVarios.getText().toString());
-        Contrato.setNoDesc(binding.editNoDesc.getText().toString());
-        Contrato.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
-        Contrato.setTipoPagoEnganche(binding.btnMensual.isChecked() ? "Mensual" : "Abierto");
-        Contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
-        Contrato.setSaldoEnganche(binding.editSaldoEng.getText().toString());
+
+        if (binding.btnContado.isChecked()) {
+            Contrato.setEngancheSalaMonto(null);
+            Contrato.setEngancheSalaPorcentaje(null);
+            Contrato.setVariosMonto(null);
+            Contrato.setNoDesc(null);
+            Contrato.setEngDiferidoMonto(null);
+            Contrato.setNoPagosEng(null);
+            Contrato.setTipoPagoEnganche(null);
+            Contrato.setSaldoEnganche(null);
+            Contrato.setDescuentosDetalle(new ArrayList<>());
+            Contrato.setPagosDiferidos(new ArrayList<>());
+        } else {
+            Contrato.setEngancheSalaMonto(binding.editEngancheSalaMonto.getText().toString());
+            Contrato.setEngancheSalaPorcentaje(binding.editEngancheSalaPorcentaje.getText().toString());
+            Contrato.setVariosMonto(binding.editVarios.getText().toString());
+            Contrato.setNoDesc(binding.editNoDesc.getText().toString());
+            Contrato.setEngDiferidoMonto(binding.editEngDiferido.getText().toString());
+            Contrato.setTipoPagoEnganche(binding.btnMensual.isChecked() ? "Mensual" : "Abierto");
+            Contrato.setNoPagosEng(binding.editNoPagosEng.getText().toString());
+            Contrato.setSaldoEnganche(binding.editSaldoEng.getText().toString());
+        }
+
         Contrato.setMontoFinanciar(binding.editMontoFinanciar.getText().toString());
         Contrato.setCostoContrato(binding.editCostoContrato.getText().toString());
         Contrato.setPagoSala(binding.editpagosala.getText().toString());
@@ -2381,98 +2409,82 @@ public class DatosVentaFragment extends Fragment {
         Contrato.setContratosMontoCuenta(Contratos);
 
         // guarda descuentos dinamicos
-        List<ContratoModelo.DescuentoDetalle> descuentos = new ArrayList<>();
-
-        for (int i = 0; i < binding.containerDescuentosDinamicos.getChildCount(); i++) {
-            View row = binding.containerDescuentosDinamicos.getChildAt(i);
-
-            if (row instanceof LinearLayout) {
-                String m = ((EditText) ((LinearLayout) row)
-                        .getChildAt(0))
-                        .getText()
-                        .toString();
-
-                String d = ((EditText) ((LinearLayout) row)
-                        .getChildAt(1))
-                        .getText()
-                        .toString();
-
-                if (!m.isEmpty() || !d.isEmpty()) {
-                    descuentos.add(
-                            new ContratoModelo.DescuentoDetalle(m, d)
-                    );
-                }
-            }
-        }
-
-        Contrato.setDescuentosDetalle(descuentos);
-
-        // guarda pagos diferidos
-        List<ContratoModelo.PagoDiferido> pagosReferidos = new ArrayList<>();
-
-        for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
-            View rowMontos = binding.containerPagosDinamicos.getChildAt(i);
-            View rowFechas = (i + 1 < binding.containerPagosDinamicos.getChildCount())
-                    ? binding.containerPagosDinamicos.getChildAt(i + 1) : null;
-
-            if (rowMontos instanceof LinearLayout && rowFechas instanceof LinearLayout) {
-                LinearLayout lmMontos = (LinearLayout) rowMontos;
-                LinearLayout lmFechas = (LinearLayout) rowFechas;
-
-                int montoCount = 0;
-
-                // Recorre cada elemento de la fila de montos
-                for (int col = 0; col < lmMontos.getChildCount(); col++) {
-                    View childM = lmMontos.getChildAt(col);
-
-                    // Solo procesa EditText (montos reales)
-                    if (childM instanceof EditText) {
-                        String monto = ((EditText) childM).getText().toString();
-
-                        // Busca el TextInputLayout en la fila de fechas en la misma posición relativa
-                        String fecha = "";
-                        int fechaCount = 0;
-                        for (int fc = 0; fc < lmFechas.getChildCount(); fc++) {
-                            View childF = lmFechas.getChildAt(fc);
-
-                            // Solo cuenta TextInputLayout
-                            if (childF instanceof TextInputLayout) {
-                                if (fechaCount == montoCount) {
-                                    EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
-                                    if (etF != null) {
-                                        String fechaRaw = etF.getText().toString().trim();
-                                        // Si el watcher ya limpió los dígitos, recupera el valor del tag
-                                        if (fechaRaw.isEmpty() && etF.getTag() != null) {
-                                            fechaRaw = etF.getTag().toString();
-                                        }
-                                        fecha = fechaRaw;
-                                    }
-                                    break;
-                                }
-                                fechaCount++;
-                            }
-                        }
-
-                        pagosReferidos.add(new ContratoModelo.PagoDiferido(monto, fecha));
-                        montoCount++;
+        if (!binding.btnContado.isChecked()) {
+            List<ContratoModelo.DescuentoDetalle> descuentos = new ArrayList<>();
+            for (int i = 0; i < binding.containerDescuentosDinamicos.getChildCount(); i++) {
+                View row = binding.containerDescuentosDinamicos.getChildAt(i);
+                if (row instanceof LinearLayout) {
+                    String m = ((EditText) ((LinearLayout) row).getChildAt(0)).getText().toString();
+                    String d = ((EditText) ((LinearLayout) row).getChildAt(1)).getText().toString();
+                    if (!m.isEmpty() || !d.isEmpty()) {
+                        descuentos.add(new ContratoModelo.DescuentoDetalle(m, d));
                     }
                 }
             }
+            Contrato.setDescuentosDetalle(descuentos);
         }
-        for (ContratoModelo.PagoDiferido pd : pagosReferidos) {
-            Log.d("DEBUG_PAGOS", "GUARDANDO → monto=" + pd.monto + " fecha=" + pd.fecha);
+
+        // guarda pagos diferidos
+        if (!binding.btnContado.isChecked()) {
+            List<ContratoModelo.PagoDiferido> pagosReferidos = new ArrayList<>();
+            for (int i = 0; i < binding.containerPagosDinamicos.getChildCount(); i += 2) {
+                View rowMontos = binding.containerPagosDinamicos.getChildAt(i);
+                View rowFechas = (i + 1 < binding.containerPagosDinamicos.getChildCount())
+                        ? binding.containerPagosDinamicos.getChildAt(i + 1) : null;
+
+                if (rowMontos instanceof LinearLayout && rowFechas instanceof LinearLayout) {
+                    LinearLayout lmMontos = (LinearLayout) rowMontos;
+                    LinearLayout lmFechas = (LinearLayout) rowFechas;
+                    int montoCount = 0;
+
+                    for (int col = 0; col < lmMontos.getChildCount(); col++) {
+                        View childM = lmMontos.getChildAt(col);
+                        if (childM instanceof EditText) {
+                            String monto = ((EditText) childM).getText().toString();
+                            String fecha = "";
+                            int fechaCount = 0;
+                            for (int fc = 0; fc < lmFechas.getChildCount(); fc++) {
+                                View childF = lmFechas.getChildAt(fc);
+                                if (childF instanceof TextInputLayout) {
+                                    if (fechaCount == montoCount) {
+                                        EditText etF = (EditText) ((TextInputLayout) childF).getEditText();
+                                        if (etF != null) {
+                                            String fechaRaw = etF.getText().toString().trim();
+                                            if (fechaRaw.isEmpty() && etF.getTag() != null) {
+                                                fechaRaw = etF.getTag().toString();
+                                            }
+                                            fecha = fechaRaw;
+                                        }
+                                        break;
+                                    }
+                                    fechaCount++;
+                                }
+                            }
+                            pagosReferidos.add(new ContratoModelo.PagoDiferido(monto, fecha));
+                            montoCount++;
+                        }
+                    }
+                }
+            }
+
+            for (ContratoModelo.PagoDiferido pd : pagosReferidos) {
+                Log.d("DEBUG_PAGOS", "GUARDANDO → monto=" + pd.monto + " fecha=" + pd.fecha);
+            }
+
+            Contrato.setPagosDiferidos(pagosReferidos);
+
+            if (!pagosReferidos.isEmpty()) {
+                Contrato.setUltimaFechaEnganche(pagosReferidos.get(pagosReferidos.size() - 1).fecha);
+                Contrato.setPrimerPagoDiferido(pagosReferidos.get(0).fecha);
+            } else {
+                Contrato.setUltimaFechaEnganche(null);
+            }
         }
-        Contrato.setPagosDiferidos(pagosReferidos);
-        if (!pagosReferidos.isEmpty()) {
-            String ultimaFecha = pagosReferidos.get(pagosReferidos.size() - 1).fecha;
-            Contrato.setUltimaFechaEnganche(ultimaFecha);
-        } else {
-            Contrato.setUltimaFechaEnganche(null);
-        }
+
         viewModel.setModoMensual(modoMensual);
         viewModel.setFechaInicialMensual(fechaInicialMensual);
-        viewModel.setContrato(Contrato
-        );}
+        viewModel.setContrato(Contrato);
+    }
 
     private void limpiarInventario() {
         binding.editNoAnios.setText("");
@@ -2581,8 +2593,7 @@ public class DatosVentaFragment extends Fragment {
         guardaDatosViewModel();
         ContratoModelo Contrato = viewModel.getContratoValue();
 
-        boolean esEdicion = binding.AceptarTarea.getText().equals("Actualizar contrato");
-
+        boolean esEdicion = Contrato.getModoEdicion();
         if (!esEdicion && (Contrato.getId() == null || Contrato.getId().isEmpty())) {
             Contrato.setId(String.valueOf(System.currentTimeMillis()));
         }

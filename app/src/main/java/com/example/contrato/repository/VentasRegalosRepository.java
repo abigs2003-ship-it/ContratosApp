@@ -58,20 +58,21 @@ public class VentasRegalosRepository {
             try (ResultSet rs = cs.executeQuery()) {
                 while (rs.next()) {
                     VentasRegalos r = new VentasRegalos();
-                    r.idRegalo      = rs.getLong("IdRegalo");
-                    r.idContrato    = rs.getLong("IdContrato");
-                    r.descripcion   = rs.getString("Descripcion");
-                    r.fechaAlta     = rs.getTimestamp("FechaAlta");
+                    r.idRegalo = rs.getLong("IdRegalo");
+                    r.idContrato = rs.getLong("IdContrato");
+                    r.descripcion = rs.getString("Descripcion");
+                    r.fechaAlta = rs.getTimestamp("FechaAlta");
                     r.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     list.add(r);
                 }
             }
         }
         return list;
-    }
+    }}
+    /*
 
     //Aqui empieza cintas
-    /*
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdRegalo), 0) + 1 AS NextId FROM PMT_App_Ventas_Regalos";
         try (Connection conn = DbConnection.getConnection();
@@ -127,5 +128,6 @@ public class VentasRegalosRepository {
         }
         return list;
     }
-// */
+//
 }
+*/

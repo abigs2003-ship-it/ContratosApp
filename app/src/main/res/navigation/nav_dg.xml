@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_titulares_a_firmas"
             app:destination="@id/nav_firmas" />
+        <action
+            android:id="@+id/action_titulares_a_INE"
+            app:destination="@id/nav_INE" />
+        <action
+            android:id="@+id/action_titulares_a_Pasaporte"
+            app:destination="@id/nav_Pasaporte" />
     </fragment>
 
     <fragment
@@ -20,11 +26,33 @@
         android:name="com.example.contrato.PestañaDireccion.PestañaDireccionFragment"
         android:label="@string/condicionesbot"
         tools:layout="@layout/fragment_direccion" />
+    <fragment
+        android:id="@+id/nav_Pasaporte"
+        android:name="com.example.contrato.Id.PasaporteFragment"
+        tools:layout="@layout/fragment_pasaporte">
+        <action
+            android:id="@+id/action_pasaporte_a_titulares"
+            app:destination="@id/nav_titulares" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_firmas"
         android:name="com.example.contrato.FirmasFragment"
-        android:label="Firma"/>
+        android:label="Firma">
+        <action
+            android:id="@+id/action_firmas_a_titulares"
+            app:destination="@id/nav_titulares" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_INE"
+        android:name="com.example.contrato.Id.INEFragment"
+        android:label="INE"
+        tools:layout="@layout/fragment_id">
+        <action
+            android:id="@+id/action_ine_a_titulares"
+            app:destination="@id/nav_titulares" />
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_redes_sociales"

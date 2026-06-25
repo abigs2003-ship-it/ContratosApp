@@ -53,6 +53,9 @@ public class VentasInformacionGeneralRepository {
         g.ladaOficina2 = rs.getString("LadaOficina2");
         g.telefonoOficina2 = rs.getString("TelefonoOficina2");
         g.whatsAppOficina2 = rs.getBoolean("WhatsAppOficina2");
+        g.ladaCelular3 = rs.getString("LadaCelular3");
+        g.telefonoCelular3 = rs.getString("TelefonoCelular3");
+        g.whatsAppCelular3 = rs.getBoolean("WhatsAppCelular3");
         g.nacionalidad = rs.getString("Nacionalidad");
         g.email1 = rs.getString("Email1");
         g.email2 = rs.getString("Email2");
@@ -98,6 +101,9 @@ public class VentasInformacionGeneralRepository {
                 || !Objects.equals(a.ladaCelular2, n.ladaCelular2)
                 || !Objects.equals(a.telefonoCelular2, n.telefonoCelular2)
                 || a.whatsAppCelular2 != n.whatsAppCelular2
+                || !Objects.equals(a.ladaCelular3, n.ladaCelular3)
+                || !Objects.equals(a.telefonoCelular3, n.telefonoCelular3)
+                || a.whatsAppCelular3 != n.whatsAppCelular3
                 || !Objects.equals(a.ladaMensajes, n.ladaMensajes)
                 || !Objects.equals(a.telefonoMensajes, n.telefonoMensajes)
                 || a.whatsAppMensajes != n.whatsAppMensajes
@@ -200,27 +206,30 @@ public class VentasInformacionGeneralRepository {
         cs.setString(26, g.ladaCasa2);
         cs.setString(27, g.telefonoCasa2);
         cs.setBoolean(28, g.whatsAppCasa2);
-        cs.setString(29, g.ladaCelular1);
-        cs.setString(30, g.telefonoCelular1);
-        cs.setBoolean(31, g.whatsAppCelular1);
-        cs.setString(32, g.ladaCelular2);
-        cs.setString(33, g.telefonoCelular2);
-        cs.setBoolean(34, g.whatsAppCelular2);
-        cs.setString(35, g.ladaMensajes);
-        cs.setString(36, g.telefonoMensajes);
-        cs.setBoolean(37, g.whatsAppMensajes);
-        cs.setString(38, g.ladaOficina1);
-        cs.setString(39, g.telefonoOficina1);
-        cs.setBoolean(40, g.whatsAppOficina1);
-        cs.setString(41, g.ladaOficina2);
-        cs.setString(42, g.telefonoOficina2);
-        cs.setBoolean(43, g.whatsAppOficina2);
-        cs.setString(44, g.nacionalidad);
-        cs.setString(45, g.email1);
-        cs.setString(46, g.email2);
-        cs.setString(47, g.email3);
-        cs.setString(48, g.email4);
-        cs.setLong(49, idUsuarioAlta);
+        cs.setString(29, g.ladaOficina1);
+        cs.setString(30, g.telefonoOficina1);
+        cs.setBoolean(31, g.whatsAppOficina1);
+        cs.setString(32, g.ladaOficina2);
+        cs.setString(33, g.telefonoOficina2);
+        cs.setBoolean(34, g.whatsAppOficina2);
+        cs.setString(35, g.ladaCelular1);
+        cs.setString(36, g.telefonoCelular1);
+        cs.setBoolean(37, g.whatsAppCelular1);
+        cs.setString(38, g.ladaCelular2);
+        cs.setString(39, g.telefonoCelular2);
+        cs.setBoolean(40, g.whatsAppCelular2);
+        cs.setString(41, g.ladaCelular3);
+        cs.setString(42, g.telefonoCelular3);
+        cs.setBoolean(43, g.whatsAppCelular3);
+        cs.setString(44, g.ladaMensajes);
+        cs.setString(45, g.telefonoMensajes);
+        cs.setBoolean(46, g.whatsAppMensajes);
+        cs.setString(47, g.nacionalidad);
+        cs.setString(48, g.email1);
+        cs.setString(49, g.email2);
+        cs.setString(50, g.email3);
+        cs.setString(51, g.email4);
+        cs.setLong(52, idUsuarioAlta);
     }
 
 
@@ -254,32 +263,35 @@ public class VentasInformacionGeneralRepository {
         cs.setString(25, g.ladaCasa2);
         cs.setString(26, g.telefonoCasa2);
         cs.setBoolean(27, g.whatsAppCasa2);
-        cs.setString(28, g.ladaCelular1);
-        cs.setString(29, g.telefonoCelular1);
-        cs.setBoolean(30, g.whatsAppCelular1);
-        cs.setString(31, g.ladaCelular2);
-        cs.setString(32, g.telefonoCelular2);
-        cs.setBoolean(33, g.whatsAppCelular2);
-        cs.setString(34, g.ladaMensajes);
-        cs.setString(35, g.telefonoMensajes);
-        cs.setBoolean(36, g.whatsAppMensajes);
-        cs.setString(37, g.ladaOficina1);
-        cs.setString(38, g.telefonoOficina1);
-        cs.setBoolean(39, g.whatsAppOficina1);
-        cs.setString(40, g.ladaOficina2);
-        cs.setString(41, g.telefonoOficina2);
-        cs.setBoolean(42, g.whatsAppOficina2);
-        cs.setString(43, g.nacionalidad);
-        cs.setString(44, g.email1);
-        cs.setString(45, g.email2);
-        cs.setString(46, g.email3);
-        cs.setString(47, g.email4);
-        cs.setLong(48, idUsuario);
+         cs.setString(28, g.ladaOficina1);
+        cs.setString(29, g.telefonoOficina1);
+        cs.setBoolean(30, g.whatsAppOficina1);
+        cs.setString(31, g.ladaOficina2);
+        cs.setString(32, g.telefonoOficina2);
+        cs.setBoolean(33, g.whatsAppOficina2);
+        cs.setString(34, g.ladaCelular1);
+        cs.setString(35, g.telefonoCelular1);
+        cs.setBoolean(36, g.whatsAppCelular1);
+        cs.setString(37, g.ladaCelular2);
+        cs.setString(38, g.telefonoCelular2);
+        cs.setBoolean(39, g.whatsAppCelular2);
+        cs.setString(41, g.ladaCelular3);
+        cs.setString(42, g.telefonoCelular3);
+        cs.setBoolean(43, g.whatsAppCelular3);
+        cs.setString(44, g.ladaMensajes);
+        cs.setString(45, g.telefonoMensajes);
+        cs.setBoolean(46, g.whatsAppMensajes);
+        cs.setString(47, g.nacionalidad);
+        cs.setString(48, g.email1);
+        cs.setString(49, g.email2);
+        cs.setString(50, g.email3);
+        cs.setString(51, g.email4);
+        cs.setLong(52, idUsuario);
     }
 
 }
     //Aqui empieza cintas
-   /*
+/*
 
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDatosVenta), 0) + 1 AS NextId FROM PMT_App_Ventas_Informacion_General";
@@ -311,11 +323,12 @@ public class VentasInformacionGeneralRepository {
                         "LadaCasa2, TelefonoCasa2, WhatsAppCasa2," +
                         "LadaCelular1, TelefonoCelular1, WhatsAppCelular1," +
                         "LadaCelular2, TelefonoCelular2, WhatsAppCelular2," +
+                        "LadaCelular3, TelefonoCelular3, WhatsAppCelular3," +
                         "LadaMensajes, TelefonoMensajes, WhatsAppMensajes," +
                         "LadaOficina1, TelefonoOficina1, WhatsAppOficina1," +
                         "LadaOficina2, TelefonoOficina2, WhatsAppOficina2," +
                         "Nacionalidad, Email1, Email2, Email3, Email4," +
-                        "FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion) " +
+                        "FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion ) " +
                         "VALUES (" +
                         "?, ?, ?, ?, ?, ?, ?, ?, ?, ?," +
                         "?, ?, ?, ?, ?, ?," +
@@ -327,12 +340,13 @@ public class VentasInformacionGeneralRepository {
                         "?, ?, ?," +
                         "?, ?, ?," +
                         "?, ?, ?," +
+                        "?, ?, ?," +
                         "?, ?, ?, ?, ?," +
                         "GETDATE(), ?, 'A', NULL, NULL)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             fillPreparedStatement(ps, g);
-            ps.setLong(49, g.idUsuarioAlta);
+            ps.setLong(52, g.idUsuarioAlta);
             ps.executeUpdate();
         }
     }
@@ -353,6 +367,7 @@ public class VentasInformacionGeneralRepository {
                         "LadaCasa2, TelefonoCasa2, WhatsAppCasa2," +
                         "LadaCelular1, TelefonoCelular1, WhatsAppCelular1," +
                         "LadaCelular2, TelefonoCelular2, WhatsAppCelular2," +
+                        "LadaCelular3, TelefonoCelular3, WhatsAppCelular3," +
                         "LadaMensajes, TelefonoMensajes, WhatsAppMensajes," +
                         "LadaOficina1, TelefonoOficina1, WhatsAppOficina1," +
                         "LadaOficina2, TelefonoOficina2, WhatsAppOficina2," +
@@ -363,6 +378,7 @@ public class VentasInformacionGeneralRepository {
                         "?, ?, ?, ?, ?, ?," +
                         "?, ?, ?, ?, ?," +
                         "?, ?, ?, ?," +
+                        "?, ?, ?," +
                         "?, ?, ?," +
                         "?, ?, ?," +
                         "?, ?, ?," +
@@ -383,13 +399,13 @@ public class VentasInformacionGeneralRepository {
                 }
 
                 // 2. Obtener siguiente ID usando la MISMA conexión (evita el lock)
-                g.idDatosVenta  = getNextIdConConexion(conn);
+                g.idDatosVenta = getNextIdConConexion(conn);
                 g.idUsuarioAlta = idUsuario;
 
                 // 3. Insertar nuevo registro activo
                 try (PreparedStatement ps = conn.prepareStatement(sqlInsert)) {
                     fillPreparedStatement(ps, g);
-                    ps.setLong(49, idUsuario);
+                    ps.setLong(52, idUsuario);
                     ps.executeUpdate();
                 }
 
@@ -420,6 +436,7 @@ public class VentasInformacionGeneralRepository {
         }
         return null;
     }
+
     private void fillPreparedStatement(PreparedStatement ps, VentasInformacionGeneral g) throws SQLException {
         ps.setLong(1, g.idDatosVenta);
         ps.setLong(2, g.idContrato);
@@ -455,20 +472,23 @@ public class VentasInformacionGeneralRepository {
         ps.setString(32, g.ladaCelular2);
         ps.setString(33, g.telefonoCelular2);
         ps.setBoolean(34, g.whatsAppCelular2);
-        ps.setString(35, g.ladaMensajes);
-        ps.setString(36, g.telefonoMensajes);
-        ps.setBoolean(37, g.whatsAppMensajes);
-        ps.setString(38, g.ladaOficina1);
-        ps.setString(39, g.telefonoOficina1);
-        ps.setBoolean(40, g.whatsAppOficina1);
-        ps.setString(41, g.ladaOficina2);
-        ps.setString(42, g.telefonoOficina2);
-        ps.setBoolean(43, g.whatsAppOficina2);
-        ps.setString(44, g.nacionalidad);
-        ps.setString(45, g.email1);
-        ps.setString(46, g.email2);
-        ps.setString(47, g.email3);
-        ps.setString(48, g.email4);
-        // índice 49 = IdUsuarioAlta → se setea fuera de este método
+        ps.setString(35, g.ladaCelular3);//36 37 38
+        ps.setString(36, g.telefonoCelular3);
+        ps.setBoolean(37, g.whatsAppCelular3);
+        ps.setString(38, g.ladaMensajes);//36 37 38
+        ps.setString(39, g.telefonoMensajes);
+        ps.setBoolean(40, g.whatsAppMensajes);
+        ps.setString(41, g.ladaOficina1);
+        ps.setString(42, g.telefonoOficina1);
+        ps.setBoolean(43, g.whatsAppOficina1);
+        ps.setString(44, g.ladaOficina2);
+        ps.setString(45, g.telefonoOficina2);
+        ps.setBoolean(46, g.whatsAppOficina2);
+        ps.setString(47, g.nacionalidad);
+        ps.setString(48, g.email1);
+        ps.setString(49, g.email2);
+        ps.setString(50, g.email3);
+        ps.setString(51, g.email4);
+        // índice 52 = IdUsuarioAlta → se setea fuera de este método
     }
-  */
+}*/

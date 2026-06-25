@@ -9,15 +9,17 @@ public class FotoTitularRequest {
 
     @SerializedName("nombreCompleto")
     private final String nombreCompleto;
-
+    @SerializedName("idContrato")
+    private final String idContrato;
     @SerializedName("imagenBase64")
     private final String imagenBase64;
 
     @SerializedName("extension")
     private final String extension;
 
-    public FotoTitularRequest(int idTitular, String nombreCompleto, String imagenBase64, String extension) {
+    public FotoTitularRequest(int idTitular, String nombreCompleto, String idContrato, String imagenBase64, String extension) {
         this.idTitular = idTitular;
+        this.idContrato = idContrato;
         this.nombreCompleto = nombreCompleto;
         this.imagenBase64 = imagenBase64;
         this.extension = extension;
@@ -30,6 +32,7 @@ public class FotoTitularRequest {
     public String getNombreCompleto() {
         return nombreCompleto;
     }
+
 
     public String getImagenBase64() {
         return imagenBase64;

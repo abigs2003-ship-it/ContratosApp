@@ -3,6 +3,7 @@ package com.example.contrato;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,8 +16,7 @@ public class ContratoModelo implements Serializable {
     private String fechaModificacion;
 
     private String estatus;
-    private String idioma = "Español";
-    
+
     // Titulares y Beneficiarios
     private List<Persona> titulares = new ArrayList<>();
     private List<Persona> beneficiarios = new ArrayList<>();
@@ -38,6 +38,7 @@ public class ContratoModelo implements Serializable {
     private String MexEstado;
     private String USAState;
 
+    private String idioma;
     private String MexCP;
     private String USACP;
     private String CanCP;
@@ -92,6 +93,8 @@ public class ContratoModelo implements Serializable {
     private String costoMembresia;
     private String comentarios;
     private String tipoPagoDiferido;
+    private String primerPagoDiferido;
+
 
     private List<PagoDiferido> pagosDiferidos = new ArrayList<>();
     private List<DescuentoDetalle> descuentosDetalle = new ArrayList<>();
@@ -116,16 +119,20 @@ public class ContratoModelo implements Serializable {
     }
 
     public static class Persona implements Serializable {
-        public String nombre, paterno, materno, ocupacion, parentesco, cumple;
+        public String nombre, paterno, materno, ocupacion, parentesco, cumple, archivoFirma;
         //imagen de la firma del titular en base 64
         public String imagenFirmaBase64;
+        public String imagenINEFrente;
+        public String imagenINEReverso;
+        public String imagenPasaporte;
+
         public String id;
         public long idTitularBD = -1; // se llena después de insertar en BD
         public Persona() {}
-        public Persona(String n, String p, String m, String o, String par, String c) {
+        public Persona(String n, String p, String m, String o, String par, String c, String archivo) {
             this.id = UUID.randomUUID().toString();
             this.nombre = n; this.paterno = p; this.materno = m;
-            this.ocupacion = o; this.parentesco = par; this.cumple = c;
+            this.ocupacion = o; this.parentesco = par; this.cumple = c; this.archivoFirma = archivo;
         }
     }
     @Override
@@ -172,6 +179,9 @@ public class ContratoModelo implements Serializable {
     }
 
     // Getters y Setters
+    public void setPrimerPagoDiferido(String primerPagoDiferido) {this.primerPagoDiferido = primerPagoDiferido;}
+    public String getPrimerPagoDiferido(){return primerPagoDiferido;}
+
     public boolean isDatosListos() { return datosListos; }
     public void setDatosListos(boolean datosListos) { this.datosListos = datosListos; }
 

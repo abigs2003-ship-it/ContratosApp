@@ -1,5 +1,6 @@
 package com.example.contrato.model;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class VentasInventario {
@@ -43,6 +44,7 @@ public class VentasInventario {
     public Long idTemporada;
     public String idTipoOcupacion;
 
+    public Date primerPagoDiferido;
 
     public VentasInventario() {}
 }

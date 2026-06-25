@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.contrato.databinding.FragmentFirmaBinding;
@@ -76,6 +77,13 @@ public class FirmasFragment extends Fragment {
 
             binding.nombreTitular.setText(nombre);
         }
+
+        binding.btnRegresaTitulares.setOnClickListener(v -> {navegaRegreso();});
+    }
+
+    private void navegaRegreso(){
+        Navigation.findNavController(this.requireView())
+                .navigate(R.id.action_firmas_a_titulares);
     }
     private void guardarFirma(Bitmap bitmap){
 
@@ -86,7 +94,7 @@ public class FirmasFragment extends Fragment {
                 new ByteArrayOutputStream();
 
         bitmap.compress(
-                Bitmap.CompressFormat.PNG,
+                Bitmap.CompressFormat.JPEG,
                 100,
                 stream
         );
@@ -146,6 +154,7 @@ public class FirmasFragment extends Fragment {
                 .findNavController(this)
                 .popBackStack();
     }
+
 
     @Override
     public void onDestroyView() {

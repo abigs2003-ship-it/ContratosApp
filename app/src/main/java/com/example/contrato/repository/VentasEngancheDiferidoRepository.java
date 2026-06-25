@@ -91,12 +91,13 @@ public class VentasEngancheDiferidoRepository {
     // 3.2
     public void insert(VentasEngancheDiferido p) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
-             CallableStatement cs = conn.prepareCall("{call sp_App_EngancheDiferido_Insert(?,?,?,?,?)}")) {
+             CallableStatement cs = conn.prepareCall("{call sp_App_EngancheDiferido_Insert(?,?,?,?,?,?)}")) {
             cs.setLong(1, p.idPago);
             cs.setLong(2, p.idContrato);
-            cs.setObject(3, p.cantidadPago);
-            cs.setDate(4, p.fechaPago);
-            cs.setLong(5, p.idUsuarioAlta);
+            cs.setLong(3, p.noPago);
+            cs.setObject(4, p.cantidadPago);
+            cs.setDate(5, p.fechaPago);
+            cs.setLong(6, p.idUsuarioAlta);
             cs.executeUpdate();
         }
     }
@@ -149,7 +150,7 @@ public class VentasEngancheDiferidoRepository {
 
     public List<VentasEngancheDiferido> getByContratoId(long idContrato) throws SQLException {
         List<VentasEngancheDiferido> list = new ArrayList<>();
-        String sql = "SELECT * FROM PMT_App_Ventas_EngancheDiferido WHERE IdContrato = ? AND Estatus = 'A'";
+        String sql = "SELECT * FROM PMT_App_Ventas_EngancheDiferido WHERE IdContrato = ? AND Estatus = 'A' ORDER BY NoPago ASC";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, idContrato);
@@ -162,6 +163,7 @@ public class VentasEngancheDiferidoRepository {
                     p.fechaPago    = rs.getDate("FechaPago");
                     p.fechaAlta    = rs.getTimestamp("FechaAlta");
                     p.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
+                    p.noPago       = rs.getInt("NoPago");
                     list.add(p);
                 }
             }
@@ -170,7 +172,7 @@ public class VentasEngancheDiferidoRepository {
     }
 
     public void insert(VentasEngancheDiferido p) throws SQLException {
-        String sql = "INSERT INTO PMT_App_Ventas_EngancheDiferido (IdPago, IdContrato, CantidadPago, FechaPago, FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion) VALUES (?, ?, ?, ?, GETDATE(), ?, 'A', NULL, NULL)";
+        String sql = "INSERT INTO PMT_App_Ventas_EngancheDiferido (IdPago, IdContrato, CantidadPago, FechaPago, FechaAlta, IdUsuarioAlta, Estatus, IdUsuarioModificacion, FechaModificacion, NoPago) VALUES (?, ?, ?, ?, GETDATE(), ?, 'A', NULL, NULL, ?)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, p.idPago);
@@ -178,6 +180,7 @@ public class VentasEngancheDiferidoRepository {
             ps.setObject(3, p.cantidadPago);
             ps.setDate(4, p.fechaPago);
             ps.setLong(5, p.idUsuarioAlta);
+            ps.setInt(6, p.noPago);
             ps.executeUpdate();
         }
     }
@@ -192,6 +195,5 @@ public class VentasEngancheDiferidoRepository {
             ps.executeUpdate();
         }
     }
-
-// */
-
+}
+*/

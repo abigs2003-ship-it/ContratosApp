@@ -16,6 +16,7 @@ public class VentasFinanciamientosRepository {
     }
 
     // aqui empieza 104
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Financiamientos_GetNextId}");
@@ -91,8 +92,9 @@ public class VentasFinanciamientosRepository {
         }
     }
 }
+/*
     //aqui empieza cintas
-     /*
+
 
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdFinanciamiento), 0) + 1 AS NextId FROM PMT_App_Ventas_Financiamientos";
@@ -205,7 +207,7 @@ public class VentasFinanciamientosRepository {
             }
         }
         return null;
-    }
+    }}
 
 // */
 

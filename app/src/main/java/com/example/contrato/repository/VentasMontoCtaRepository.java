@@ -70,9 +70,9 @@ public class VentasMontoCtaRepository {
         }
         return list;
     }
-
+/*
     //Aqui empieza cointas
- /*
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdMontoCta), 0) + 1 AS NextId FROM PMT_App_Ventas_Monto_Cta";
         try (Connection conn = DbConnection.getConnection();

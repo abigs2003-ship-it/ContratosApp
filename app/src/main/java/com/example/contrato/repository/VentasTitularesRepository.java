@@ -50,7 +50,7 @@ public class VentasTitularesRepository {
     // 7.2
     public void insert(VentasTitulares t) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
-             CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_Insert(?,?,?,?,?,?,?,?,?,?,?,?)}")) {
+             CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_Insert(?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
             cs.setLong(1,    t.idTitular);
             cs.setLong(2,    t.idContrato);
             cs.setString(3,  t.nombre);
@@ -63,6 +63,7 @@ public class VentasTitularesRepository {
             cs.setDate(10,   t.fechaCumpleaños);
             cs.setString(11, t.ocupacion);
             cs.setLong(12,   t.parentesco);
+            cs.setString(13, t.archivoFirma);
             cs.executeUpdate();
         }
     }
@@ -111,6 +112,8 @@ public class VentasTitularesRepository {
                     t.ocupacion      = rs.getString("Ocupacion");
                     t.parentesco     = rs.getLong("Parentesco");
                     t.estatus        = rs.getString("Estatus");
+                    t.archivoFirma    =rs.getString("ArchivoFirma");
+
                     list.add(t);
                 }
             }
@@ -118,9 +121,9 @@ public class VentasTitularesRepository {
         return list;
     }
 
-
+/*
 //cintas
-    /*
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdTitular), 0) + 1 AS NextId FROM PMT_App_Ventas_Titulares";
         try (Connection conn = DbConnection.getConnection();
@@ -135,8 +138,8 @@ public class VentasTitularesRepository {
         String sql = "INSERT INTO PMT_App_Ventas_Titulares " +
                 "(IdTitular, IdContrato, Nombre, Paterno, Materno, TipoTitular, TipoRegistro, OrdenTitulares, " +
                 "IdUsuarioAlta, FechaAlta, FechaCumpleaños, Ocupacion, Parentesco, " +
-                "Estatus, IdUsuarioModificacion, FechaModificacion) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, ?, ?, 'A', NULL, NULL)";
+                "Estatus, IdUsuarioModificacion, FechaModificacion, ArchivoFirma) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, ?, ?, 'A', NULL, NULL, ?)";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1,    t.idTitular);
@@ -148,10 +151,10 @@ public class VentasTitularesRepository {
             ps.setInt(7,     t.tipoRegistro);
             ps.setInt(8,     t.ordenTitulares);
             ps.setLong(9,    t.idUsuarioAlta);
-            // índice 10 = FechaAlta → GETDATE() en el SQL
             ps.setDate(10,   t.fechaCumpleaños);
             ps.setString(11, t.ocupacion);
             ps.setLong(12,   t.parentesco);
+            ps.setString(13, t.archivoFirma);
             ps.executeUpdate();
         }
     }
@@ -183,6 +186,7 @@ public class VentasTitularesRepository {
                     t.ocupacion       = rs.getString("Ocupacion");
                     t.parentesco      = rs.getLong("Parentesco");
                     t.estatus         = rs.getString("Estatus");
+                    t.archivoFirma    =rs.getString("ArchivoFirma");
                     list.add(t);
                 }
             }

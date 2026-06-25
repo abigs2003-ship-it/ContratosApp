@@ -26,6 +26,7 @@ public class VentasDescuentosRepository {
     }
     // aqui empieza 104
 
+
     public long getNextId() throws SQLException {
         try (Connection conn = DbConnection.getConnection();
              CallableStatement cs = conn.prepareCall("{call sp_App_Descuentos_GetNextId}");
@@ -93,9 +94,10 @@ public class VentasDescuentosRepository {
         return list;
     }
 }
+/*
 
     //Aqui empieza cintas
- /*
+
     public long getNextId() throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDescuento), 0) + 1 AS NextId FROM PMT_App_Ventas_Descuentos";
         try (Connection conn = DbConnection.getConnection();
@@ -143,6 +145,7 @@ public class VentasDescuentosRepository {
             }
         }
     }
+
     // Reutiliza una conexión existente para ejecutarse dentro de la transacción de actualizar()
     private long obtenerSiguienteIdConConexion(Connection conexion) throws SQLException {
         String sql = "SELECT ISNULL(MAX(IdDescuento), 0) + 1 AS SiguienteId FROM PMT_App_Ventas_Descuentos";
@@ -152,8 +155,6 @@ public class VentasDescuentosRepository {
         }
         return 1;
     }
-
-
 
 
     public void insert(VentasDescuentos d) throws SQLException {
@@ -168,7 +169,6 @@ public class VentasDescuentosRepository {
             ps.executeUpdate();
         }
     }
-
 
 
     // Desactiva todos los registros activos de un contrato (para usar antes del loop)
@@ -191,17 +191,17 @@ public class VentasDescuentosRepository {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     VentasDescuentos d = new VentasDescuentos();
-                    d.idDescuento    = rs.getLong("IdDescuento");
-                    d.idContrato     = rs.getLong("IdContrato");
+                    d.idDescuento = rs.getLong("IdDescuento");
+                    d.idContrato = rs.getLong("IdContrato");
                     d.montoDescuento = rs.getDouble("MontoDescuento");
-                    d.descripcion    = rs.getString("Descripcion");
-                    d.fechaAlta      = rs.getTimestamp("FechaAlta");
-                    d.idUsuarioAlta  = rs.getLong("IdUsuarioAlta");
+                    d.descripcion = rs.getString("Descripcion");
+                    d.fechaAlta = rs.getTimestamp("FechaAlta");
+                    d.idUsuarioAlta = rs.getLong("IdUsuarioAlta");
                     list.add(d);
                 }
             }
         }
         return list;
-    }
-    */
+    }*/
+
 
