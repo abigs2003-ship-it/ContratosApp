@@ -707,11 +707,11 @@ public class FinanciamientoFragment2 extends Fragment {
             ContratoModelo.FilaAmortizacion fa = new ContratoModelo.FilaAmortizacion();
             fa.no           = i;
             fa.fecha        = formatFecha(calPago);
-            fa.monto        = montoFila;
-            fa.capital      = capital;
-            fa.interes      = interes;
-            fa.capAcumulado = capitalAcumulado;
-            fa.saldo        = saldo;
+            fa.monto        = Math.round(montoFila * 100.0) / 100.0;
+            fa.capital      = Math.round(capital  * 100.0) / 100.0;
+            fa.interes      = Math.round(interes  * 100.0) / 100.0;
+            fa.capAcumulado = Math.round(capitalAcumulado * 100.0) / 100.0;
+            fa.saldo        = Math.round(saldo    * 100.0) / 100.0;
             filasCapturadas.add(fa);
             // ────────────────────────────────────────────────────────
 
@@ -851,9 +851,27 @@ private void actualizarResumen(int pagos, double pagoFijo, double ultimoPago) {
     @Override
     public void onResume() {
         super.onResume();
+        actualizarMontoFinanciarSiCambio();
         actualizarPrimerPagoSiCambioEnganche();
     }
 
+    private void actualizarMontoFinanciarSiCambio() {
+        ContratoModelo contrato = viewModel.getContratoValue();
+        if (contrato == null) return;
+
+        String montoNuevo = contrato.getMontoFinanciar();
+        if (montoNuevo == null) return;
+
+        String montoActualEnPantalla = binding.etMontoFinanciar.getText().toString();
+
+        // Compara solo los dígitos para no pelear con el formateo de $ y comas
+        String digitosNuevo  = montoNuevo.replaceAll("[^\\d.]", "");
+        String digitosActual = montoActualEnPantalla.replaceAll("[^\\d.]", "");
+
+        if (!digitosNuevo.equals(digitosActual)) {
+            binding.etMontoFinanciar.setText(montoNuevo);
+        }
+    }
     private void actualizarPrimerPagoSiCambioEnganche() {
         ContratoModelo contrato = viewModel.getContratoValue();
         if (contrato == null) return;
@@ -865,9 +883,7 @@ private void actualizarResumen(int pagos, double pagoFijo, double ultimoPago) {
         Calendar cal = Calendar.getInstance();
         parseFechaEnCalendario(ultimaFechaEnganche, cal);
 
-        // +1 mes
         cal.add(Calendar.MONTH, 1);
-
 
         // si pasa de día 20, dejar en 20
         if (cal.get(Calendar.DAY_OF_MONTH) > 20) {

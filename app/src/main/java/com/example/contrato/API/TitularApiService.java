@@ -11,13 +11,19 @@ import retrofit2.http.POST;
 
 public interface TitularApiService {
 
-    /**
-     * Envia la foto del titular (en Base64) al backend.
-     * El backend la guarda en la carpeta compartida y registra la ruta
-     * en PMT_App_Ventas_Titulares.RutaFirma
-     */
     @Headers("Content-Type: application/json")
     @POST("api/titulares/foto")
     Call<ApiResponse> guardarFotoTitular(@Body FotoTitularRequest request);
 
+    @Headers("Content-Type: application/json")
+    @POST("api/titulares/ine/frente")
+    Call<ApiResponse> guardarINEFrente(@Body FotoINERequest request);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/titulares/ine/reverso")
+    Call<ApiResponse> guardarINEReverso(@Body FotoINERequest request);
+
+    @Headers("Content-Type: application/json")
+    @POST("api/titulares/pasaporte")
+    Call<ApiResponse> guardarPasaporteTitular(@Body FotoPasaporteRequest request);
 }

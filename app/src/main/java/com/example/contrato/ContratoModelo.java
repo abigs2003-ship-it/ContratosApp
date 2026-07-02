@@ -120,6 +120,7 @@ public class ContratoModelo implements Serializable {
 
     public static class Persona implements Serializable {
         public String nombre, paterno, materno, ocupacion, parentesco, cumple, archivoFirma;
+        public String archivoINEFrente, archivoPasaporte;
         //imagen de la firma del titular en base 64
         public String imagenFirmaBase64;
         public String imagenINEFrente;

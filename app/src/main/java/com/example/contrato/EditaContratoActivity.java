@@ -19,7 +19,6 @@ import android.print.PrintManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.CheckBox;
-import android.widget.TextView;
 import com.google.android.material.button.MaterialButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -329,6 +328,13 @@ public class EditaContratoActivity extends AppCompatActivity {
         } else {
             ((TextView) fila.findViewById(R.id.tvFirma)).setText("Sin Firma");
         }
+
+        if (p.archivoINEFrente != null || p.archivoPasaporte != null) {
+            ((TextView) fila.findViewById(R.id.tvId)).setText("Con Id");
+        } else {
+            ((TextView) fila.findViewById(R.id.tvId)).setText("Sin Id");
+        }
+    
         String parentescoDisplay = p.parentesco;
         try {
             int pos = Integer.parseInt(p.parentesco);
@@ -830,7 +836,8 @@ public class EditaContratoActivity extends AppCompatActivity {
                     .append(trow("Parentesco", textOf(fila, R.id.textParentesco),
                             "Cumpleaños", textOf(fila, R.id.textCumple)))
                     .append(trow("Ocupación",  textOf(fila, R.id.textOcupacion),
-                            "Firma",     textOf(fila, R.id.tvFirma)));
+                            "Firma",     textOf(fila, R.id.tvFirma)))
+                    .append(trow("Identificación", textOf(fila, R.id.tvId), null, null));
         }
         return sb.toString();
     }

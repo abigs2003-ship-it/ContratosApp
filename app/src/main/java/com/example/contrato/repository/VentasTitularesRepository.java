@@ -25,6 +25,8 @@ public class VentasTitularesRepository {
 
             // Si hay una nueva firma en memoria, consideramos que hubo cambios
             if (n.imagenFirmaBase64 != null && !n.imagenFirmaBase64.isEmpty()) return true;
+            if (n.imagenINEFrente != null && !n.imagenINEFrente.isEmpty() || n.imagenPasaporte != null && !n.imagenPasaporte.isEmpty()) return true;
+
 
             if (!Objects.equals(a.nombre,    n.nombre)
                     || !Objects.equals(a.paterno,   n.paterno)

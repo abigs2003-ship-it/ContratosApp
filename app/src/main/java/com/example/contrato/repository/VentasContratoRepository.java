@@ -24,17 +24,17 @@ public class VentasContratoRepository {
     private static final String[] MESES_EN = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dec"};
 
     private String convertirMesANombreString(String s) {
+        if (s == null) return "";
 
         String resultado = "";
         if (s.length() == 10) {
             try {
-
                 if (esIngles()) {
                     String mesStr = s.substring(0, 2);
                     int mes = Integer.parseInt(mesStr);
                     if (mes >= 1 && mes <= 12) {
                         String mesPalabra = MESES_EN[mes - 1];
-                        String fechaFinal = mesPalabra + s.substring(2); // "Mar/15/2025"
+                        String fechaFinal = mesPalabra + s.substring(2);
                         resultado = fechaFinal;
                     }
                 } else {
@@ -43,7 +43,7 @@ public class VentasContratoRepository {
                     if (mes >= 1 && mes <= 12) {
                         String mesPalabra = MESES_ES[mes - 1];
                         String fechaFinal = s.substring(0, 3) + mesPalabra + s.substring(5);
-                        resultado = fechaFinal; // "15/mar/2025"
+                        resultado = fechaFinal;
                     }
                 }
             } catch (NumberFormatException e) {
@@ -302,6 +302,8 @@ public class VentasContratoRepository {
                             long parentesco = rs.getLong("Parentesco");
                             java.sql.Date fechaCumple = rs.getDate("FechaCumpleaños");
                             String archivoFirma = rs.getString("ArchivoFirma");
+                            String archivoPasaporte = rs.getString("ArchivoPasaporte");
+                            String archivoINEFrente = rs.getString("ArchivoINEFrente");
 
 
                             String key = tipoTitular + "|" + nombre + "|" + paterno + "|" + materno;
@@ -313,6 +315,8 @@ public class VentasContratoRepository {
                                         fechaCumple != null ? convertirMesANombreString(dateOnlySdf.format(fechaCumple)) : "", archivoFirma
                                 );
                                 if ("Titular".equalsIgnoreCase(tipoTitular)) {
+                                    p.archivoINEFrente = archivoINEFrente;
+                                    p.archivoPasaporte = archivoPasaporte;
                                     m.getTitulares().add(p);
                                     if (mainTitular == null) {
                                         mainTitular = new VentasTitulares();

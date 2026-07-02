@@ -236,6 +236,7 @@ public class VentasInformacionGeneralRepository {
     private void fillReplaceCallableStatement(CallableStatement cs,
                                               VentasInformacionGeneral g,
                                               long idUsuario) throws SQLException {
+
         cs.setLong(1, g.idContrato);
         cs.setString(2, g.tipoDir);
         cs.setString(3, g.calle);
@@ -257,38 +258,54 @@ public class VentasInformacionGeneralRepository {
         cs.setString(19, g.linea4);
         cs.setString(20, g.linea5);
         cs.setString(21, g.telefonoDefault);
+
+        // Casa
         cs.setString(22, g.ladaCasa1);
         cs.setString(23, g.telefonoCasa1);
         cs.setBoolean(24, g.whatsAppCasa1);
+
         cs.setString(25, g.ladaCasa2);
         cs.setString(26, g.telefonoCasa2);
         cs.setBoolean(27, g.whatsAppCasa2);
-         cs.setString(28, g.ladaOficina1);
-        cs.setString(29, g.telefonoOficina1);
-        cs.setBoolean(30, g.whatsAppOficina1);
-        cs.setString(31, g.ladaOficina2);
-        cs.setString(32, g.telefonoOficina2);
-        cs.setBoolean(33, g.whatsAppOficina2);
-        cs.setString(34, g.ladaCelular1);
-        cs.setString(35, g.telefonoCelular1);
-        cs.setBoolean(36, g.whatsAppCelular1);
-        cs.setString(37, g.ladaCelular2);
-        cs.setString(38, g.telefonoCelular2);
-        cs.setBoolean(39, g.whatsAppCelular2);
-        cs.setString(41, g.ladaCelular3);
-        cs.setString(42, g.telefonoCelular3);
-        cs.setBoolean(43, g.whatsAppCelular3);
-        cs.setString(44, g.ladaMensajes);
-        cs.setString(45, g.telefonoMensajes);
-        cs.setBoolean(46, g.whatsAppMensajes);
-        cs.setString(47, g.nacionalidad);
-        cs.setString(48, g.email1);
-        cs.setString(49, g.email2);
-        cs.setString(50, g.email3);
-        cs.setString(51, g.email4);
-        cs.setLong(52, idUsuario);
-    }
 
+        // Celular 1
+        cs.setString(28, g.ladaCelular1);
+        cs.setString(29, g.telefonoCelular1);
+        cs.setBoolean(30, g.whatsAppCelular1);
+
+        // Celular 2
+        cs.setString(31, g.ladaCelular2);
+        cs.setString(32, g.telefonoCelular2);
+        cs.setBoolean(33, g.whatsAppCelular2);
+
+        // Celular 3
+        cs.setString(34, g.ladaCelular3);
+        cs.setString(35, g.telefonoCelular3);
+        cs.setBoolean(36, g.whatsAppCelular3);
+
+        // Mensajes
+        cs.setString(37, g.ladaMensajes);
+        cs.setString(38, g.telefonoMensajes);
+        cs.setBoolean(39, g.whatsAppMensajes);
+
+        // Oficina 1
+        cs.setString(40, g.ladaOficina1);
+        cs.setString(41, g.telefonoOficina1);
+        cs.setBoolean(42, g.whatsAppOficina1);
+
+        // Oficina 2
+        cs.setString(43, g.ladaOficina2);
+        cs.setString(44, g.telefonoOficina2);
+        cs.setBoolean(45, g.whatsAppOficina2);
+
+        // Restantes
+        cs.setString(46, g.nacionalidad);
+        cs.setString(47, g.email1);
+        cs.setString(48, g.email2);
+        cs.setString(49, g.email3);
+        cs.setString(50, g.email4);
+        cs.setLong(51, idUsuario);
+    }
 }
     //Aqui empieza cintas
 /*

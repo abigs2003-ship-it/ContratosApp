@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.contrato.API.ApiResponse;
+import com.example.contrato.API.FotoINERequest;
+import com.example.contrato.API.FotoPasaporteRequest;
 import com.example.contrato.API.FotoTitularRequest;
 import com.example.contrato.API.RetrofitClient;
 import com.example.contrato.API.TitularApiService;
@@ -38,8 +40,10 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -194,7 +198,7 @@ public class SharedContratoViewModel extends ViewModel {
 
                 // ── Información General ──────────────────────────────────────────
                 VentasInformacionGeneral vigActual = infoGralRepo.getByContratoId(idContrato);
-                VentasInformacionGeneral vigNuevo  = new VentasInformacionGeneral(); // ✅ siempre nuevo
+                VentasInformacionGeneral vigNuevo  = new VentasInformacionGeneral();
                 vigNuevo.idContrato   = idContrato;
                 vigNuevo.pais         = truncate(model.getPais(), 50);
                 vigNuevo.nacionalidad = truncate(model.getNacionalidad(), 50);
@@ -262,13 +266,21 @@ public class SharedContratoViewModel extends ViewModel {
                 boolean titularesCambiaron     = titularesRepo.huboCambios(titularesActuales, model.getTitulares(),     "Titular");
                 boolean beneficiariosCambiaron = titularesRepo.huboCambios(titularesActuales, model.getBeneficiarios(), "Beneficiario");
 
+                // Captura los archivoFirma existentes antes de desactivar, para no perderlos
+                Map<String, String> firmasExistentes = new HashMap<>();
+                for (VentasTitulares vt : titularesActuales) {
+                    if (vt.archivoFirma != null && !vt.archivoFirma.isEmpty()) {
+                        firmasExistentes.put(clavePersona(vt.nombre, vt.paterno, vt.materno), vt.archivoFirma);
+                    }
+                }
+
                 if (titularesCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Titular", idUsuario);
-                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta, null);
+                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta, firmasExistentes);
                 }
                 if (beneficiariosCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Beneficiario", idUsuario);
-                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta, null);
+                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta, firmasExistentes);
                 }
                 // ── Inventario ───────────────────────────────────────────────────
                 VentasInventario viActual = inventarioRepo.getByContratoId(idContrato);
@@ -434,6 +446,7 @@ public class SharedContratoViewModel extends ViewModel {
                             df.interes       = fa.interes;
                             df.capAcumulado  = fa.capAcumulado;
                             df.saldo         = fa.saldo;
+
                             df.idUsuarioAlta = originalIdUsuarioAlta;
                             paraInsertar.add(df);
                         }
@@ -699,6 +712,7 @@ public class SharedContratoViewModel extends ViewModel {
                         df.interes      = fa.interes;
                         df.capAcumulado = fa.capAcumulado;
                         df.saldo        = fa.saldo;
+                        df.idUsuarioAlta = idUsuario; // idUsuario ya viene de: long idUsuario = currentUserId != -1 ? currentUserId : 1;
                         detalleFinRepo.insert(df);
                     }
                 }
@@ -710,25 +724,27 @@ public class SharedContratoViewModel extends ViewModel {
             }
         }).start();
     }
-
-    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo, long idUsuarioAlta, String archivoFirma) throws SQLException {
+    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo, long idUsuarioAlta, Map<String, String> firmasExistentes) throws SQLException {
         int tipoRegistro = "Titular".equals(tipo) ? 0 : 1;
         int orden = 1;
         for (ContratoModelo.Persona p : personas) {
             VentasTitulares vt = new VentasTitulares();
-            vt.idTitular       = titularesRepo.getNextId();
-            vt.idContrato      = idContrato;
-            vt.nombre          = truncate(p.nombre, 50);
-            vt.paterno         = truncate(p.paterno, 50);
-            vt.materno         = truncate(p.materno, 50);
-            vt.tipoTitular     = tipo;
-            vt.tipoRegistro    = tipoRegistro;
-            vt.ordenTitulares  = orden++;
-            vt.ocupacion       = truncate(p.ocupacion, 50);
+            vt.idTitular = titularesRepo.getNextId();
+            vt.idContrato = idContrato;
+            vt.nombre = truncate(p.nombre, 50);
+            vt.paterno = truncate(p.paterno, 50);
+            vt.materno = truncate(p.materno, 50);
+            vt.tipoTitular = tipo;
+            vt.tipoRegistro = tipoRegistro;
+            vt.ordenTitulares = orden++;
+            vt.ocupacion = truncate(p.ocupacion, 50);
             vt.fechaCumpleaños = parseSqlDate(convertirMesANumero(p.cumple));
-            vt.parentesco      = parseLong(p.parentesco);
-            vt.idUsuarioAlta   = idUsuarioAlta;
-            vt.archivoFirma = archivoFirma;
+            vt.parentesco = parseLong(p.parentesco);
+            vt.idUsuarioAlta = idUsuarioAlta;
+            String claveNombre = clavePersona(p.nombre, p.paterno, p.materno);
+
+            // Por defecto, conserva el archivoFirma ya existente en BD (si lo hay)
+            vt.archivoFirma = (firmasExistentes != null) ? firmasExistentes.get(claveNombre) : null;
 
             if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
                 String extension = ".jpg";
@@ -746,11 +762,91 @@ public class SharedContratoViewModel extends ViewModel {
                 subirFirmaAlBackend(vt.idTitular, nombreCompleto, contratoid, p.imagenFirmaBase64);
             }
             if (p.imagenINEFrente != null && !p.imagenINEFrente.isEmpty()) {
-                String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
-               // subirFirmaAlBackend(vt.idTitular, nombreCompleto, contratoid, p.imagenFirmaBase64);
+                String nombreCompleto = (p.nombre + " "
+                        + (p.paterno != null ? p.paterno : "") + " "
+                        + (p.materno != null ? p.materno : "")).trim();
+
+                subirImagenAlBackend("ine/frente", vt.idTitular, nombreCompleto, contratoid, "FRENTE", p.imagenINEFrente);
+
+                if (p.imagenINEReverso != null && !p.imagenINEReverso.isEmpty()) {
+                    subirImagenAlBackend("ine/reverso", vt.idTitular, nombreCompleto, contratoid, "REVERSO", p.imagenINEReverso);
+                }
+            }
+
+            if (p.imagenPasaporte != null && !p.imagenPasaporte.isEmpty()) {
+                String nombreCompleto = (p.nombre + " "
+                        + (p.paterno != null ? p.paterno : "") + " "
+                        + (p.materno != null ? p.materno : "")).trim();
+
+                subirImagenAlBackend("pasaporte", vt.idTitular, nombreCompleto, contratoid, null, p.imagenPasaporte);
             }
         }
     }
+    private String clavePersona(String nombre, String paterno, String materno) {
+        return ((nombre != null ? nombre : "") + "|"
+                + (paterno != null ? paterno : "") + "|"
+                + (materno != null ? materno : ""))
+                .trim().toUpperCase(Locale.ROOT);
+    }
+
+    private void subirImagenAlBackend(String endpoint, long idTitular,
+                                      String nombreCompleto, String idContrato,
+                                      String lado,
+                                      String base64) {
+
+
+        FotoINERequest ineRequest = new FotoINERequest(
+                (int) idTitular,
+                nombreCompleto,
+                idContrato,
+                lado,
+                base64,
+                "jpg"
+        );
+        FotoPasaporteRequest pasRequest = new FotoPasaporteRequest(
+                (int) idTitular,
+                nombreCompleto,
+                idContrato,
+                base64,
+                "jpg"
+        );
+
+        TitularApiService api = RetrofitClient.getInstance()
+                .newBuilder()
+                .build()
+                .create(TitularApiService.class);
+
+        Call<ApiResponse> call;
+        switch (endpoint) {
+            case "ine/frente":
+                call = RetrofitClient.getTitularApiService().guardarINEFrente(ineRequest);
+                break;
+            case "ine/reverso":
+                call = RetrofitClient.getTitularApiService().guardarINEReverso(ineRequest);
+                break;
+            case "pasaporte":
+                call = RetrofitClient.getTitularApiService().guardarPasaporteTitular(pasRequest);
+                break;
+            default:
+                return;
+        }
+
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
+                    Log.d("IMG_UPLOAD", "[" + endpoint + "] Subida OK: " + response.body().getRutaFirma());
+                } else {
+                    Log.e("IMG_UPLOAD", "[" + endpoint + "] Error para titular " + idTitular);
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e("IMG_UPLOAD", "[" + endpoint + "] Fallo de red", t);
+            }
+        });
+    }
+
 
     private void subirFirmaAlBackend(long idTitular, String nombreCompleto, String idContrato, String base64) {
         FotoTitularRequest request = new FotoTitularRequest((int) idTitular, nombreCompleto, idContrato, base64, "jpg");

@@ -535,7 +535,8 @@ public class FinanciamientoFragment extends Fragment {
         ContratoModelo Contrato = viewModel.getContratoValue();
 
         // Use button text as source of truth, not modoEdicion
-        boolean esEdicion = binding.btnEnviar.getText().equals("Actualizar contrato");
+        boolean esEdicion = Contrato.getModoEdicion();
+
 
         if (!esEdicion && (Contrato.getId() == null || Contrato.getId().isEmpty())) {
             Contrato.setId(String.valueOf(System.currentTimeMillis()));
@@ -706,11 +707,11 @@ public class FinanciamientoFragment extends Fragment {
             ContratoModelo.FilaAmortizacion fa = new ContratoModelo.FilaAmortizacion();
             fa.no           = i;
             fa.fecha        = formatFecha(calPago);
-            fa.monto        = montoFila;
-            fa.capital      = capital;
-            fa.interes      = interes;
-            fa.capAcumulado = capitalAcumulado;
-            fa.saldo        = saldo;
+            fa.monto        = Math.round(montoFila * 100.0) / 100.0;
+            fa.capital      = Math.round(capital  * 100.0) / 100.0;
+            fa.interes      = Math.round(interes  * 100.0) / 100.0;
+            fa.capAcumulado = Math.round(capitalAcumulado * 100.0) / 100.0;
+            fa.saldo        = Math.round(saldo    * 100.0) / 100.0;
             filasCapturadas.add(fa);
             // ────────────────────────────────────────────────────────
 
