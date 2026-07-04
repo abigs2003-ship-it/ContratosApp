@@ -476,7 +476,16 @@
                 </HorizontalScrollView>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
-
+        <CheckBox
+            android:id="@+id/cbElegirFinanciamiento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:layout_gravity="center"
+            android:text="Elegir este financiamiento"
+            android:textSize="16sp"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEnviar"
             android:layout_width="wrap_content"

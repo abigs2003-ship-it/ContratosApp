@@ -67,7 +67,7 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
         binding.editBox.addTextChangedListener(watcher);
         binding.editAPO.addTextChangedListener(watcher);
         binding.editCity.addTextChangedListener(watcher);
-        binding.zipcode.addTextChangedListener(watcher);
+        setupZipCodeFormatter(watcher);
         binding.spinnerEstadoUSA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -76,6 +76,53 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+    private void setupZipCodeFormatter(TextWatcher autoSaveWatcher) {
+
+        binding.zipcode.addTextChangedListener(new TextWatcher() {
+
+            private boolean isFormatting;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (isFormatting) return;
+
+                isFormatting = true;
+
+                // Solo números
+                String digits = editable.toString().replaceAll("[^\\d]", "");
+
+                // Máximo 9 dígitos (ZIP+4)
+                if (digits.length() > 9) {
+                    digits = digits.substring(0, 9);
+                }
+
+                String formatted;
+
+                if (digits.length() > 5) {
+                    formatted = digits.substring(0, 5) + "-" + digits.substring(5);
+                } else {
+                    formatted = digits;
+                }
+
+                if (!formatted.equals(editable.toString())) {
+                    binding.zipcode.setText(formatted);
+                    binding.zipcode.setSelection(formatted.length());
+                }
+
+                isFormatting = false;
+
+                // Guarda en el ViewModel
+                autoSaveWatcher.onTextChanged(formatted, 0, 0, formatted.length());
             }
         });
     }

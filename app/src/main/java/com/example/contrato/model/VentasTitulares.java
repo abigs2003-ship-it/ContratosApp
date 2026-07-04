@@ -22,5 +22,8 @@ public class VentasTitulares {
     public int ordenTitulares;   // posición en la lista (1, 2, 3...)
     public String rutaFirma;
     public String archivoFirma;
+    public String archivoINEFrente;
+    public String archivoINEReverso;
+    public String archivoPasaporte;
     public VentasTitulares() {}
 }

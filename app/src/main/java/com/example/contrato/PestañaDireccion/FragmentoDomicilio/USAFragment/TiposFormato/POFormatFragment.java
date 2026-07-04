@@ -75,9 +75,55 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        binding.editZipCode2.addTextChangedListener(watcher);
+        setupZipCodeFormatter(watcher);
     }
+    private void setupZipCodeFormatter(TextWatcher autoSaveWatcher) {
 
+        binding.editZipCode2.addTextChangedListener(new TextWatcher() {
+
+            private boolean isFormatting;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (isFormatting) return;
+
+                isFormatting = true;
+
+                // Solo números
+                String digits = editable.toString().replaceAll("[^\\d]", "");
+
+                // Máximo 9 dígitos (ZIP+4)
+                if (digits.length() > 9) {
+                    digits = digits.substring(0, 9);
+                }
+
+                String formatted;
+
+                if (digits.length() > 5) {
+                    formatted = digits.substring(0, 5) + "-" + digits.substring(5);
+                } else {
+                    formatted = digits;
+                }
+
+                if (!formatted.equals(editable.toString())) {
+                    binding.editZipCode2.setText(formatted);
+                    binding.editZipCode2.setSelection(formatted.length());
+                }
+
+                isFormatting = false;
+
+                // Guarda en el ViewModel
+                autoSaveWatcher.onTextChanged(formatted, 0, 0, formatted.length());
+            }
+        });
+    }
     private void guardaDatosViewModel() {
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();

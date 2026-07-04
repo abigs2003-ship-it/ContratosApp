@@ -14,6 +14,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +117,6 @@ public class DatosVentaFragment extends Fragment {
                 guardaDatosViewModel();
                 irAFinanciamiento();
             }else if(validarCampos() && binding.btnContado.isChecked()){
-
                 mostrarConfirmacionEnvio();
             }
         });
@@ -137,6 +137,19 @@ public class DatosVentaFragment extends Fragment {
             }
             return false;
         });
+
+        viewModel.getContrato().observe(getViewLifecycleOwner(), contratoActualizado -> {
+            if (contratoActualizado == null) return;
+            String tipoPago = contratoActualizado.getTipoPago();
+
+            boolean contado = "Contado".equalsIgnoreCase(tipoPago != null ? tipoPago : "");
+
+            if (contado) {
+                binding.AceptarTarea.setText(contratoActualizado.getModoEdicion() ? "Actualizar Contrato" : "Enviar Contrato");
+                binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_enviar));
+            }
+        });
+
     }
     private void irAFinanciamiento() {
         if (getActivity() instanceof MainActivity) {
@@ -1318,19 +1331,15 @@ public class DatosVentaFragment extends Fragment {
                             requireActivity().runOnUiThread(() -> {
                                 if (estatus == null) { //si el contrato no existe pintamos de amarillo
                                     et.setBackgroundTintList(
-                                            ColorStateList.valueOf(Color.parseColor("#ADF6ECAB")));
+                                            ColorStateList.valueOf(Color.parseColor("#7FF6ADAD")));//ahora es rojo
 
                                 } else if (!estatus.equals("2")) {
                                     et.setBackgroundTintList(
-                                            ColorStateList.valueOf(Color.parseColor("#7FF6ADAD")));
+                                            ColorStateList.valueOf(Color.parseColor("#ADF6ECAB")));
 
                                 } else if (estatus.equals("2")) {
                                     et.setBackgroundTintList(
-                                    ColorStateList.valueOf(Color.parseColor("#9E8BC34A")));
-
-                                }else{
-                                    et.setBackgroundTintList(
-                                            ColorStateList.valueOf(Color.parseColor("#AAA7E6EF")));
+                                            ColorStateList.valueOf(Color.parseColor("#9E8BC34A")));
 
                                 }
                             });
@@ -2293,7 +2302,6 @@ public class DatosVentaFragment extends Fragment {
             binding.AceptarTarea.setIcon(ContextCompat.getDrawable(getContext(), R.drawable.ic_enviar));
             binding.EngacheColapsable.setVisibility(View.GONE);
 
-            // ← limpiar campos que no aplican en contado
             binding.editEngancheSalaMonto.setText("");
             binding.editEngancheSalaPorcentaje.setText("");
             binding.editVarios.setText("");
@@ -2303,15 +2311,16 @@ public class DatosVentaFragment extends Fragment {
             binding.editNoPagosEng.setText("");
             binding.containerPagosDinamicos.removeAllViews();
             binding.editSaldoEng.setText("");
-            seleccionaBoton(binding.btnAbierto); // resetea tipoPagoEnganche a default
+            seleccionaBoton(binding.btnAbierto);
 
             calculaMontoFinanciar();
             calculaEngancheDiferido();
             calculaTotalPagoSala();
+
+            guardaDatosViewModel();
         });
 
         binding.btnFinanciado.setOnClickListener(v -> {
-
             isContado = false;
             seleccionaBoton(binding.btnFinanciado);
 
@@ -2324,6 +2333,8 @@ public class DatosVentaFragment extends Fragment {
             calculaMontoFinanciar();
             calculaEngancheDiferido();
             calculaTotalPagoSala();
+
+            guardaDatosViewModel();
         });
     }
     private void guardaDatosViewModel() {
@@ -2636,6 +2647,7 @@ public class DatosVentaFragment extends Fragment {
             }
 
             Toast.makeText(requireContext(), "Contrato guardado correctamente", Toast.LENGTH_SHORT).show();
+
             viewModel.resetSaveState();
             requireActivity().finish();
         });

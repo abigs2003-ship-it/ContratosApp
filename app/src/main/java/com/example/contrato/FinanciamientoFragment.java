@@ -1,5 +1,7 @@
 package com.example.contrato;
 
+import static android.content.Intent.getIntent;
+
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -445,6 +448,9 @@ public class FinanciamientoFragment extends Fragment {
     private void guardaDatosViewModel() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
+        String idiomaDetectado = getIdiomaActual();
+        Log.d("IDIOMA_DEBUG", "guardaDatosViewModel: idioma detectado = " + idiomaDetectado);
+        Contrato.setIdioma(idiomaDetectado);
 
         int pos = binding.spinnerTipoPeriodo.getSelectedItemPosition();
         String tipoPeriodo = "";
@@ -560,6 +566,7 @@ public class FinanciamientoFragment extends Fragment {
         } else {
             viewModel.guardaContratoBaseDatos();
         }
+
     }
     private void actualizarContrato() {
         guardaDatosViewModel();

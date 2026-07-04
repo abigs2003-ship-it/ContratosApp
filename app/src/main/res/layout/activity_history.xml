@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:text="EDITAR"
             android:textColor="@color/white"
+            android:checkable="true"
             android:textSize="14sp"
             android:minHeight="0dp"
             android:paddingHorizontal="10dp" />

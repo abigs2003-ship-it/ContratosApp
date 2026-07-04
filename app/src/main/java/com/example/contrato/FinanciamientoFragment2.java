@@ -71,7 +71,6 @@ public class FinanciamientoFragment2 extends Fragment {
         setupObservers();
         formateaMontos(binding.etMontoFinanciar);
 
-        binding.btnEnviar.setVisibility(View.INVISIBLE);
 
         binding.textInputLayoutFechaPrimerpago.setEndIconOnClickListener(v -> {
             muestraDatePicker(binding.etFechaPrimerPago);

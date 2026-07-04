@@ -134,7 +134,7 @@
                 android:background="@drawable/bg_input"
                 android:paddingStart="12dp"
                 android:imeOptions="actionDone"
-                android:maxLength="5"
+                android:maxLength="10"
                 android:inputType="number" />
         </LinearLayout>
 

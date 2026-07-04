@@ -147,8 +147,7 @@ public class SharedContratoViewModel extends ViewModel {
     }
 
     public void fetchContratoPorId(long idContrato) {
-        Log.d("HISTORIAL",
-                "Buscando contrato en BD. ID = " + idContrato);
+        Log.d("HISTORIAL", "Buscando contrato en BD. ID = " + idContrato);
         new Thread(() -> {
             try {
                 ContratoModelo m = contratoRepo.getContratoCompleto(idContrato);
@@ -159,8 +158,6 @@ public class SharedContratoViewModel extends ViewModel {
             }
         }).start();
     }
-
-
 
     public void cargaHistorialBaseDatos(long usuarioId) {
         new Thread(() -> {
@@ -191,6 +188,7 @@ public class SharedContratoViewModel extends ViewModel {
                     if (vc.fechaAlta != null) originalFechaAlta = vc.fechaAlta;
                     originalIdUsuarioAlta = vc.idUsuarioAlta;
                     vc.fechaModificacion = now;
+                    Log.d("IDIOMA_DEBUG", "actualizaContratoBaseDatos: model.getIdioma()=" + model.getIdioma() + " -> mapeado=" + mapeaIdiomaBD(model.getIdioma()));
                     vc.idioma = mapeaIdiomaBD(model.getIdioma());
                     vc.estatus = "M";
                     contratoRepo.update(vc);
@@ -266,21 +264,18 @@ public class SharedContratoViewModel extends ViewModel {
                 boolean titularesCambiaron     = titularesRepo.huboCambios(titularesActuales, model.getTitulares(),     "Titular");
                 boolean beneficiariosCambiaron = titularesRepo.huboCambios(titularesActuales, model.getBeneficiarios(), "Beneficiario");
 
-                // Captura los archivoFirma existentes antes de desactivar, para no perderlos
-                Map<String, String> firmasExistentes = new HashMap<>();
+                Map<Long, VentasTitulares> archivosExistentes = new HashMap<>();
                 for (VentasTitulares vt : titularesActuales) {
-                    if (vt.archivoFirma != null && !vt.archivoFirma.isEmpty()) {
-                        firmasExistentes.put(clavePersona(vt.nombre, vt.paterno, vt.materno), vt.archivoFirma);
-                    }
+                    archivosExistentes.put(vt.idTitular, vt);
                 }
 
                 if (titularesCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Titular", idUsuario);
-                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta, firmasExistentes);
+                    guardaTitulares(model.getTitulares(), idContrato, "Titular", originalIdUsuarioAlta, archivosExistentes);
                 }
                 if (beneficiariosCambiaron) {
                     titularesRepo.desactivarPorTipo(idContrato, "Beneficiario", idUsuario);
-                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta, firmasExistentes);
+                    guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", originalIdUsuarioAlta, archivosExistentes);
                 }
                 // ── Inventario ───────────────────────────────────────────────────
                 VentasInventario viActual = inventarioRepo.getByContratoId(idContrato);
@@ -724,7 +719,9 @@ public class SharedContratoViewModel extends ViewModel {
             }
         }).start();
     }
-    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo, long idUsuarioAlta, Map<String, String> firmasExistentes) throws SQLException {
+
+    private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo,
+                                 long idUsuarioAlta, Map<Long, VentasTitulares> archivosExistentes) throws SQLException {
         int tipoRegistro = "Titular".equals(tipo) ? 0 : 1;
         int orden = 1;
         for (ContratoModelo.Persona p : personas) {
@@ -741,43 +738,48 @@ public class SharedContratoViewModel extends ViewModel {
             vt.fechaCumpleaños = parseSqlDate(convertirMesANumero(p.cumple));
             vt.parentesco = parseLong(p.parentesco);
             vt.idUsuarioAlta = idUsuarioAlta;
-            String claveNombre = clavePersona(p.nombre, p.paterno, p.materno);
 
-            // Por defecto, conserva el archivoFirma ya existente en BD (si lo hay)
-            vt.archivoFirma = (firmasExistentes != null) ? firmasExistentes.get(claveNombre) : null;
+            // Busca el registro anterior por idTitular (estable), no por nombre
+            VentasTitulares anterior = (p.idTitularBD > 0 && archivosExistentes != null)
+                    ? archivosExistentes.get(p.idTitularBD)
+                    : null;
 
-            if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
-                String extension = ".jpg";
-                String nombreCompletoParaArchivo = (p.nombre + (p.paterno != null ? p.paterno : "") + (p.materno != null ? p.materno : "")).trim();
-                vt.archivoFirma = "idApp-" + idContrato + "-" + nombreCompletoParaArchivo.toUpperCase().replaceAll(" ", "") + extension;
-            }
+            // Por default conserva lo que ya había en BD
+            vt.archivoFirma      = (anterior != null) ? anterior.archivoFirma      : null;
+            vt.archivoINEFrente  = (anterior != null) ? anterior.archivoINEFrente  : null;
+            vt.archivoINEReverso = (anterior != null) ? anterior.archivoINEReverso : null;
+            vt.archivoPasaporte  = (anterior != null) ? anterior.archivoPasaporte  : null;
+
+            String base = (p.nombre + (p.paterno != null ? p.paterno : "") + (p.materno != null ? p.materno : ""))
+                    .trim().toUpperCase().replaceAll(" ", "");
+
+            boolean firmaNueva      = p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty();
+            boolean ineFrenteNueva  = p.imagenINEFrente    != null && !p.imagenINEFrente.isEmpty();
+            boolean ineReversoNueva = p.imagenINEReverso   != null && !p.imagenINEReverso.isEmpty();
+            boolean pasaporteNueva  = p.imagenPasaporte    != null && !p.imagenPasaporte.isEmpty();
+
+            // Solo se genera nombre nuevo si de verdad hay imagen nueva capturada
+            if (firmaNueva)      vt.archivoFirma      = "idApp-" + idContrato + "-" + base + ".jpg";
+            if (ineFrenteNueva)  vt.archivoINEFrente   = "idApp-" + idContrato + "-" + base + "-INE-FRENTE.jpg";
+            if (ineReversoNueva) vt.archivoINEReverso  = "idApp-" + idContrato + "-" + base + "-INE-REVERSO.jpg";
+            if (pasaporteNueva)  vt.archivoPasaporte   = "idApp-" + idContrato + "-" + base + "-PASAPORTE.jpg";
 
             titularesRepo.insert(vt);
+            p.idTitularBD = vt.idTitular; // se actualiza para la próxima edición
 
-            p.idTitularBD = vt.idTitular;
             String contratoid = String.valueOf(idContrato);
+            String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
 
-            if (p.imagenFirmaBase64 != null && !p.imagenFirmaBase64.isEmpty()) {
-                String nombreCompleto = (p.nombre + " " + (p.paterno != null ? p.paterno : "") + " " + (p.materno != null ? p.materno : "")).trim();
+            if (firmaNueva) {
                 subirFirmaAlBackend(vt.idTitular, nombreCompleto, contratoid, p.imagenFirmaBase64);
             }
-            if (p.imagenINEFrente != null && !p.imagenINEFrente.isEmpty()) {
-                String nombreCompleto = (p.nombre + " "
-                        + (p.paterno != null ? p.paterno : "") + " "
-                        + (p.materno != null ? p.materno : "")).trim();
-
+            if (ineFrenteNueva) {
                 subirImagenAlBackend("ine/frente", vt.idTitular, nombreCompleto, contratoid, "FRENTE", p.imagenINEFrente);
-
-                if (p.imagenINEReverso != null && !p.imagenINEReverso.isEmpty()) {
-                    subirImagenAlBackend("ine/reverso", vt.idTitular, nombreCompleto, contratoid, "REVERSO", p.imagenINEReverso);
-                }
             }
-
-            if (p.imagenPasaporte != null && !p.imagenPasaporte.isEmpty()) {
-                String nombreCompleto = (p.nombre + " "
-                        + (p.paterno != null ? p.paterno : "") + " "
-                        + (p.materno != null ? p.materno : "")).trim();
-
+            if (ineReversoNueva) {
+                subirImagenAlBackend("ine/reverso", vt.idTitular, nombreCompleto, contratoid, "REVERSO", p.imagenINEReverso);
+            }
+            if (pasaporteNueva) {
                 subirImagenAlBackend("pasaporte", vt.idTitular, nombreCompleto, contratoid, null, p.imagenPasaporte);
             }
         }
@@ -794,27 +796,12 @@ public class SharedContratoViewModel extends ViewModel {
                                       String lado,
                                       String base64) {
 
-
         FotoINERequest ineRequest = new FotoINERequest(
-                (int) idTitular,
-                nombreCompleto,
-                idContrato,
-                lado,
-                base64,
-                "jpg"
+                (int) idTitular, nombreCompleto, idContrato, base64, lado, "jpg"
         );
         FotoPasaporteRequest pasRequest = new FotoPasaporteRequest(
-                (int) idTitular,
-                nombreCompleto,
-                idContrato,
-                base64,
-                "jpg"
+                (int) idTitular, nombreCompleto, idContrato, base64, "jpg"
         );
-
-        TitularApiService api = RetrofitClient.getInstance()
-                .newBuilder()
-                .build()
-                .create(TitularApiService.class);
 
         Call<ApiResponse> call;
         switch (endpoint) {
@@ -835,7 +822,14 @@ public class SharedContratoViewModel extends ViewModel {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
-                    Log.d("IMG_UPLOAD", "[" + endpoint + "] Subida OK: " + response.body().getRutaFirma());
+                    String ruta = response.body().getRutaFirma();
+                    Log.d("IMG_UPLOAD", "[" + endpoint + "] Subida OK: " + ruta);
+                    String tipoArchivo = "ine/frente".equals(endpoint) ? "INE_FRENTE"
+                            : "ine/reverso".equals(endpoint) ? "INE_REVERSO" : "PASAPORTE";
+                    new Thread(() -> {
+                        try { titularesRepo.actualizaArchivo(idTitular, tipoArchivo, ruta); }
+                        catch (Exception e) { Log.e("IMG_UPLOAD", "No se pudo persistir la ruta", e); }
+                    }).start();
                 } else {
                     Log.e("IMG_UPLOAD", "[" + endpoint + "] Error para titular " + idTitular);
                 }
@@ -847,15 +841,18 @@ public class SharedContratoViewModel extends ViewModel {
         });
     }
 
-
     private void subirFirmaAlBackend(long idTitular, String nombreCompleto, String idContrato, String base64) {
         FotoTitularRequest request = new FotoTitularRequest((int) idTitular, nombreCompleto, idContrato, base64, "jpg");
-        TitularApiService api = RetrofitClient.getTitularApiService();
-        api.guardarFotoTitular(request).enqueue(new Callback<ApiResponse>() {
+        RetrofitClient.getTitularApiService().guardarFotoTitular(request).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isExito()) {
-                    Log.d("FIRMA_UPLOAD", "Firma subida: " + response.body().getRutaFirma());
+                    String ruta = response.body().getRutaFirma();
+                    Log.d("FIRMA_UPLOAD", "Firma subida: " + ruta);
+                    new Thread(() -> {
+                        try { titularesRepo.actualizaArchivo(idTitular, "FIRMA", ruta); }
+                        catch (Exception e) { Log.e("FIRMA_UPLOAD", "No se pudo persistir la ruta", e); }
+                    }).start();
                 } else {
                     Log.e("FIRMA_UPLOAD", "Error al subir firma para titular " + idTitular);
                 }
@@ -874,7 +871,13 @@ public class SharedContratoViewModel extends ViewModel {
     }
 
 
-
+    public void limpiarModoEdicion() {
+        ContratoModelo contrato = Contrato.getValue();
+        if (contrato != null) {
+            contrato.setModoEdicion(false);
+            Contrato.setValue(contrato);
+        }
+    }
 
     private String mapIdiomaFromDb(String dbIdioma) {
         if (dbIdioma == null) return "Español";
@@ -964,7 +967,7 @@ public class SharedContratoViewModel extends ViewModel {
         if (idioma == null) return "ESP";
         String clean = idioma.trim();
         if (clean.equalsIgnoreCase("en")
-                || clean.equalsIgnoreCase("English")
+                || clean.equalsIgnoreCase("Inglés")
                 || clean.equalsIgnoreCase("ING")) return "ING";
         if (clean.equalsIgnoreCase("es")
                 || clean.equalsIgnoreCase("Español")

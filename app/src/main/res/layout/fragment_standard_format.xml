@@ -119,7 +119,7 @@
                 android:nextFocusForward="@id/editNeighborhood"
                 android:imeOptions="actionDone"
                 android:paddingStart="12dp"
-                android:maxLength="5"
+                android:maxLength="10"
                 android:inputType="number" />
         </LinearLayout>
 

@@ -6,8 +6,10 @@ import com.example.contrato.ContratoModelo;
 import com.example.contrato.data.DbConnection;
 import com.example.contrato.model.VentasTitulares;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class VentasTitularesRepository {
@@ -32,12 +34,28 @@ public class VentasTitularesRepository {
                     || !Objects.equals(a.paterno,   n.paterno)
                     || !Objects.equals(a.materno,   n.materno)
                     || !Objects.equals(a.ocupacion, n.ocupacion)
-                    ||  a.parentesco != parseLong(n.parentesco))
+                    ||  a.parentesco != parseLong(n.parentesco)
+                    ||  a.fechaCumpleaños != parseSqlDate(n.cumple)
+            )
                 return true;
         }
         return false;
     }
-
+    private Date parseSqlDate(String dateStr) {
+        if (dateStr == null || dateStr.isEmpty()) return null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            java.util.Date utilDate = sdf.parse(dateStr);
+            if (utilDate != null) return new Date(utilDate.getTime());
+        } catch (Exception e) {
+            try {
+                SimpleDateFormat sdfUS = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                java.util.Date utilDate = sdfUS.parse(dateStr);
+                if (utilDate != null) return new Date(utilDate.getTime());
+            } catch (Exception e2) { e2.printStackTrace(); }
+        }
+        return null;
+    }
     // 104
 
     public long getNextId() throws SQLException {
@@ -49,10 +67,10 @@ public class VentasTitularesRepository {
         return 1;
     }
 
-    // 7.2
+    // 7.2 — ahora con ArchivoINEFrente, ArchivoINEReverso, ArchivoPasaporte
     public void insert(VentasTitulares t) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
-             CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_Insert(?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
+             CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_Insert(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}")) {
             cs.setLong(1,    t.idTitular);
             cs.setLong(2,    t.idContrato);
             cs.setString(3,  t.nombre);
@@ -66,6 +84,9 @@ public class VentasTitularesRepository {
             cs.setString(11, t.ocupacion);
             cs.setLong(12,   t.parentesco);
             cs.setString(13, t.archivoFirma);
+            cs.setString(14, t.archivoINEFrente);
+            cs.setString(15, t.archivoINEReverso);
+            cs.setString(16, t.archivoPasaporte);
             cs.executeUpdate();
         }
     }
@@ -91,7 +112,7 @@ public class VentasTitularesRepository {
         }
     }
 
-    // 7.5
+    // 7.5 — ahora también lee ArchivoINEFrente, ArchivoINEReverso, ArchivoPasaporte
     public List<VentasTitulares> getByContratoId(long idContrato) throws SQLException {
         List<VentasTitulares> list = new ArrayList<>();
         try (Connection conn = DbConnection.getConnection();
@@ -114,7 +135,10 @@ public class VentasTitularesRepository {
                     t.ocupacion      = rs.getString("Ocupacion");
                     t.parentesco     = rs.getLong("Parentesco");
                     t.estatus        = rs.getString("Estatus");
-                    t.archivoFirma    =rs.getString("ArchivoFirma");
+                    t.archivoFirma   = rs.getString("ArchivoFirma");
+                    t.archivoINEFrente  = rs.getString("ArchivoINEFrente");
+                    t.archivoINEReverso = rs.getString("ArchivoINEReverso");
+                    t.archivoPasaporte  = rs.getString("ArchivoPasaporte");
 
                     list.add(t);
                 }
@@ -123,92 +147,14 @@ public class VentasTitularesRepository {
         return list;
     }
 
-/*
-//cintas
-
-    public long getNextId() throws SQLException {
-        String sql = "SELECT ISNULL(MAX(IdTitular), 0) + 1 AS NextId FROM PMT_App_Ventas_Titulares";
+    // Persiste la ruta/URL definitiva que regresa el backend tras la primera subida
+    public void actualizaArchivo(long idTitular, String tipoArchivo, String ruta) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) return rs.getLong("NextId");
-        }
-        return 1;
-    }
-
-    public void insert(VentasTitulares t) throws SQLException {
-        String sql = "INSERT INTO PMT_App_Ventas_Titulares " +
-                "(IdTitular, IdContrato, Nombre, Paterno, Materno, TipoTitular, TipoRegistro, OrdenTitulares, " +
-                "IdUsuarioAlta, FechaAlta, FechaCumpleaños, Ocupacion, Parentesco, " +
-                "Estatus, IdUsuarioModificacion, FechaModificacion, ArchivoFirma) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, GETDATE(), ?, ?, ?, 'A', NULL, NULL, ?)";
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1,    t.idTitular);
-            ps.setLong(2,    t.idContrato);
-            ps.setString(3,  t.nombre);
-            ps.setString(4,  t.paterno);
-            ps.setString(5,  t.materno);
-            ps.setString(6,  t.tipoTitular);
-            ps.setInt(7,     t.tipoRegistro);
-            ps.setInt(8,     t.ordenTitulares);
-            ps.setLong(9,    t.idUsuarioAlta);
-            ps.setDate(10,   t.fechaCumpleaños);
-            ps.setString(11, t.ocupacion);
-            ps.setLong(12,   t.parentesco);
-            ps.setString(13, t.archivoFirma);
-            ps.executeUpdate();
+             CallableStatement cs = conn.prepareCall("{call sp_App_Titulares_ActualizaArchivo(?,?,?)}")) {
+            cs.setLong(1, idTitular);
+            cs.setString(2, tipoArchivo); // 'FIRMA' | 'INE_FRENTE' | 'INE_REVERSO' | 'PASAPORTE'
+            cs.setString(3, ruta);
+            cs.executeUpdate();
         }
     }
-
-
-
-    // Solo devuelve registros activos (Estatus = 'A') para mostrar en pantalla
-    public List<VentasTitulares> getByContratoId(long idContrato) throws SQLException {
-        List<VentasTitulares> list = new ArrayList<>();
-        String sql = "SELECT * FROM PMT_App_Ventas_Titulares WHERE IdContrato=? AND Estatus='A' " +
-                "ORDER BY TipoTitular, OrdenTitulares";
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, idContrato);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    VentasTitulares t = new VentasTitulares();
-                    t.idTitular       = rs.getLong("IdTitular");
-                    t.idContrato      = rs.getLong("IdContrato");
-                    t.nombre          = rs.getString("Nombre");
-                    t.paterno         = rs.getString("Paterno");
-                    t.materno         = rs.getString("Materno");
-                    t.tipoTitular     = rs.getString("TipoTitular");
-                    t.tipoRegistro    = rs.getInt("TipoRegistro");
-                    t.ordenTitulares  = rs.getInt("OrdenTitulares");
-                    t.idUsuarioAlta   = rs.getLong("IdUsuarioAlta");
-                    t.fechaAlta       = rs.getTimestamp("FechaAlta");
-                    t.fechaCumpleaños = rs.getDate("FechaCumpleaños");
-                    t.ocupacion       = rs.getString("Ocupacion");
-                    t.parentesco      = rs.getLong("Parentesco");
-                    t.estatus         = rs.getString("Estatus");
-                    t.archivoFirma    =rs.getString("ArchivoFirma");
-                    list.add(t);
-                }
-            }
-        }
-        return list;
-    }
-
-
-    public void desactivarPorTipo(long idContrato, String tipo, long idUsuarioModificacion) throws SQLException {
-        String sql = "UPDATE PMT_App_Ventas_Titulares " +
-                "SET Estatus='C', IdUsuarioModificacion=?, FechaModificacion=GETDATE() " +
-                "WHERE IdContrato=? AND TipoTitular=? AND Estatus='A'";
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, idUsuarioModificacion);
-            ps.setLong(2, idContrato);
-            ps.setString(3, tipo);
-            ps.executeUpdate();
-        }
-    }
-   // */
-
 }

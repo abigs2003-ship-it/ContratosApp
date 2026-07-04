@@ -19,10 +19,20 @@ public class VentasDescuentosRepository {
             VentasDescuentos a = actuales.get(i);
             ContratoModelo.DescuentoDetalle n = nuevos.get(i);
             if (!Objects.equals(a.descripcion, n.descripcion)
-                    || !Objects.equals(a.montoDescuento, parseDouble(n.monto)))
+                    || !Objects.equals(a.montoDescuento, parseMontoSeguro(n.monto)))
                 return true;
         }
         return false;
+    }
+
+    private Double parseMontoSeguro(String monto) {
+        if (monto == null || monto.isEmpty()) return 0.0;
+        try {
+            String limpio = monto.replaceAll("[^\\d.]", "");
+            return limpio.isEmpty() ? 0.0 : Double.parseDouble(limpio);
+        } catch (NumberFormatException e) {
+            return 0.0;
+         }
     }
     // aqui empieza 104
 

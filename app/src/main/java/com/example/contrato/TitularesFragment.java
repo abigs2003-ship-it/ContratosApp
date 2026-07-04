@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,6 +50,8 @@ import java.util.Locale;
 public class TitularesFragment extends Fragment {
 
     private FragmentTitularesBinding binding;
+    private CheckBox checkboxTitularActivo;
+    private CheckBox checkboxBeneActivo;
     private SharedContratoViewModel viewModel;
     private List<ContratoModelo.Persona> titularesList = new ArrayList<>();
     private List<ContratoModelo.Persona> beneficiariosList = new ArrayList<>();
@@ -61,6 +64,8 @@ public class TitularesFragment extends Fragment {
 
     private ContratoModelo.Persona benePersonaSeleccionada;
     private View beneViewSeleccionada;
+    private ContratoModelo.Persona titularEnEdicion;
+    private ContratoModelo.Persona beneEnEdicion;
 
 
     // Flag que indica si las listas locales ya fueron inicializadas desde el ViewModel.
@@ -322,29 +327,29 @@ public class TitularesFragment extends Fragment {
 
                 ContratoModelo.Persona p =
                         new ContratoModelo.Persona(
-                                nombre,
-                                paterno,
-                                materno,
-                                ocupacion,
-                                parentesco,
-                                cumple, archivoFirma);
+                                nombre, paterno, materno, ocupacion, parentesco, cumple, archivoFirma);
+
+                if (titularEnEdicion != null) {
+                    p.id = titularEnEdicion.id;
+                    p.idTitularBD = titularEnEdicion.idTitularBD;
+                    p.archivoFirma = titularEnEdicion.archivoFirma;
+                    p.archivoINEFrente = titularEnEdicion.archivoINEFrente;
+                    p.archivoINEReverso = titularEnEdicion.archivoINEReverso;
+                    p.archivoPasaporte = titularEnEdicion.archivoPasaporte;
+                    p.imagenFirmaBase64 = titularEnEdicion.imagenFirmaBase64;
+                    p.imagenINEFrente = titularEnEdicion.imagenINEFrente;
+                    p.imagenINEReverso = titularEnEdicion.imagenINEReverso;
+                    p.imagenPasaporte = titularEnEdicion.imagenPasaporte;
+                    titularEnEdicion = null;
+                }
 
                 titularesList.add(p);
-
                 guardaDatosViewModel();
-
-                agregarPersonaaAContenedorTitular(
-                        binding.containerTitulares,
-                        p,
-                        titularesList);
-
+                agregarPersonaaAContenedorTitular(binding.containerTitulares, p, titularesList);
                 limpiarCamposTitular();
 
             } else {
-
-                Toast.makeText(requireContext(),
-                        "El nombre es obligatorio",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
             }
         });
         //boton agregar presionado en modo no seleccionado (beneficiarios)
@@ -393,13 +398,28 @@ public class TitularesFragment extends Fragment {
 
             if (!nombre.isEmpty()) {
                 ContratoModelo.Persona p = new ContratoModelo.Persona(nombre, paterno, materno, ocupacion, parentesco, cumple, archivoFirma);
+
+                if (beneEnEdicion != null) {
+                    p.id = beneEnEdicion.id;
+                    p.idTitularBD = beneEnEdicion.idTitularBD;
+                    p.archivoFirma = beneEnEdicion.archivoFirma;
+                    p.archivoINEFrente = beneEnEdicion.archivoINEFrente;
+                    p.archivoINEReverso = beneEnEdicion.archivoINEReverso;
+                    p.archivoPasaporte = beneEnEdicion.archivoPasaporte;
+                    p.imagenFirmaBase64 = beneEnEdicion.imagenFirmaBase64;
+                    p.imagenINEFrente = beneEnEdicion.imagenINEFrente;
+                    p.imagenINEReverso = beneEnEdicion.imagenINEReverso;
+                    p.imagenPasaporte = beneEnEdicion.imagenPasaporte;
+                    beneEnEdicion = null;
+                }
+
                 beneficiariosList.add(p);
                 guardaDatosViewModel();
                 agregarPersonaaAContenedorBene(binding.containerBeneficiarios, p, beneficiariosList);
                 limpiarCamposBene();
             } else {
                 Toast.makeText(requireContext(), "El nombre es obligatorio", Toast.LENGTH_SHORT).show();
-            }        });
+            }      });
 
         binding.btnLimpiarBene.setOnClickListener(v -> limpiarCamposBene());
 
@@ -444,6 +464,7 @@ public class TitularesFragment extends Fragment {
             titularesList.remove(p);
 
             guardaDatosViewModel();
+            titularEnEdicion = p;
 
             titularPersonaSeleccionada = null;
             titularViewSeleccionada = null;
@@ -488,6 +509,8 @@ public class TitularesFragment extends Fragment {
             beneficiariosList.remove(p);
 
             guardaDatosViewModel();
+
+            beneEnEdicion = p;
 
             benePersonaSeleccionada = null;
             beneViewSeleccionada = null;
@@ -750,6 +773,12 @@ public class TitularesFragment extends Fragment {
 
         bindingItem.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+                // Desmarca cualquier otro titular seleccionado previamente (selección única)
+                if (checkboxTitularActivo != null && checkboxTitularActivo != buttonView) {
+                    checkboxTitularActivo.setChecked(false);
+                }
+                checkboxTitularActivo = (CheckBox) buttonView;
+
                 titularSeleccionado = true;
                 titularPersonaSeleccionada = p;
                 titularViewSeleccionada = bindingItem.getRoot();
@@ -825,62 +854,62 @@ public class TitularesFragment extends Fragment {
                                         bindingItem.btnINELista.setVisibility(View.GONE);
                                     })
                                     .show();
-                        }else {
-                        byte[] bytesFrente = Base64.decode(titularPersonaSeleccionada.imagenINEFrente, Base64.DEFAULT);
-                        Bitmap bitmapFrente = BitmapFactory.decodeByteArray(bytesFrente, 0, bytesFrente.length);
+                        } else {
+                            byte[] bytesFrente = Base64.decode(titularPersonaSeleccionada.imagenINEFrente, Base64.DEFAULT);
+                            Bitmap bitmapFrente = BitmapFactory.decodeByteArray(bytesFrente, 0, bytesFrente.length);
 
-                        Bitmap bitmapReverso = null;
-                        if (titularPersonaSeleccionada.imagenINEReverso != null &&
-                                !titularPersonaSeleccionada.imagenINEReverso.isEmpty()) {
-                            byte[] bytesReverso = Base64.decode(titularPersonaSeleccionada.imagenINEReverso, Base64.DEFAULT);
-                            bitmapReverso = BitmapFactory.decodeByteArray(bytesReverso, 0, bytesReverso.length);
+                            Bitmap bitmapReverso = null;
+                            if (titularPersonaSeleccionada.imagenINEReverso != null &&
+                                    !titularPersonaSeleccionada.imagenINEReverso.isEmpty()) {
+                                byte[] bytesReverso = Base64.decode(titularPersonaSeleccionada.imagenINEReverso, Base64.DEFAULT);
+                                bitmapReverso = BitmapFactory.decodeByteArray(bytesReverso, 0, bytesReverso.length);
+                            }
+
+                            ScrollView scrollView = new ScrollView(getContext());
+
+                            LinearLayout layout = new LinearLayout(getContext());
+                            layout.setOrientation(LinearLayout.VERTICAL);
+                            layout.setPadding(20, 20, 20, 20);
+
+                            ImageView imageViewFrente = new ImageView(getContext());
+                            imageViewFrente.setImageBitmap(bitmapFrente);
+                            imageViewFrente.setAdjustViewBounds(true);
+                            imageViewFrente.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT, 400);
+                            params.setMargins(0, 0, 0, 16);
+                            imageViewFrente.setLayoutParams(params);
+                            layout.addView(imageViewFrente);
+
+                            if (bitmapReverso != null) {
+                                ImageView imageViewReverso = new ImageView(getContext());
+                                imageViewReverso.setImageBitmap(bitmapReverso);
+                                imageViewReverso.setAdjustViewBounds(true);
+                                imageViewReverso.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                                imageViewReverso.setLayoutParams(new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.MATCH_PARENT, 400));
+                                layout.addView(imageViewReverso);
+                            }
+
+                            scrollView.addView(layout);
+
+                            new AlertDialog.Builder(getContext())
+                                    .setTitle("INE")
+                                    .setView(scrollView)
+                                    .setNegativeButton("Cerrar", null)
+                                    .setNeutralButton("Rehacer", (dialog, which) -> {
+                                        titularPersonaSeleccionada.imagenINEFrente = "";
+                                        titularPersonaSeleccionada.imagenINEReverso = "";
+                                        muestraConfirmacionID();
+                                    })
+                                    .setPositiveButton("Quitar", (dialog, which) -> {
+                                        titularPersonaSeleccionada.imagenINEFrente = "";
+                                        titularPersonaSeleccionada.imagenINEReverso = "";
+                                        guardaDatosViewModel();
+                                        bindingItem.btnINELista.setVisibility(View.GONE);
+                                    })
+                                    .show();
                         }
-
-                        ScrollView scrollView = new ScrollView(getContext());
-
-                        LinearLayout layout = new LinearLayout(getContext());
-                        layout.setOrientation(LinearLayout.VERTICAL);
-                        layout.setPadding(20, 20, 20, 20);
-
-                        ImageView imageViewFrente = new ImageView(getContext());
-                        imageViewFrente.setImageBitmap(bitmapFrente);
-                        imageViewFrente.setAdjustViewBounds(true);
-                        imageViewFrente.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.MATCH_PARENT, 400);  // 400px tall
-                        params.setMargins(0, 0, 0, 16);
-                        imageViewFrente.setLayoutParams(params);
-                        layout.addView(imageViewFrente);
-
-                        if (bitmapReverso != null) {
-                            ImageView imageViewReverso = new ImageView(getContext());
-                            imageViewReverso.setImageBitmap(bitmapReverso);
-                            imageViewReverso.setAdjustViewBounds(true);
-                            imageViewReverso.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            imageViewReverso.setLayoutParams(new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT, 400));  // 400px tall
-                            layout.addView(imageViewReverso);
-                        }
-
-                        scrollView.addView(layout);
-
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("INE")
-                                .setView(scrollView)
-                                .setNegativeButton("Cerrar", null)
-                                .setNeutralButton("Rehacer", (dialog, which) -> {
-                                    titularPersonaSeleccionada.imagenINEFrente = "";
-                                    titularPersonaSeleccionada.imagenINEReverso = "";
-                                    muestraConfirmacionID();
-                                })
-                                .setPositiveButton("Quitar", (dialog, which) -> {
-                                    titularPersonaSeleccionada.imagenINEFrente = "";
-                                    titularPersonaSeleccionada.imagenINEReverso = "";
-                                    guardaDatosViewModel();
-                                    bindingItem.btnINELista.setVisibility(View.GONE);
-                                })
-                                .show();
-                    }
                     });
                 } else {
                     bindingItem.btnINELista.setVisibility(View.GONE);
@@ -891,6 +920,9 @@ public class TitularesFragment extends Fragment {
                     titularPersonaSeleccionada = null;
                     titularViewSeleccionada = null;
                 }
+                if (checkboxTitularActivo == buttonView) {
+                    checkboxTitularActivo = null;
+                }
                 titularSeleccionado = false;
                 resetBotones(binding.btnLimpiar, binding.btnAgregar, binding.btnFirma, binding.btnINE);
             }
@@ -898,6 +930,7 @@ public class TitularesFragment extends Fragment {
 
         contenedor.addView(bindingItem.getRoot());
     }
+
     private void agregarPersonaaAContenedorBene(LinearLayout contenedor, ContratoModelo.Persona p, List<ContratoModelo.Persona> list) {
         ListItemPersonBinding bindingItem = ListItemPersonBinding.inflate(getLayoutInflater(), contenedor, false);
 
@@ -918,6 +951,12 @@ public class TitularesFragment extends Fragment {
 
         bindingItem.checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
+                // Desmarca cualquier otro beneficiario seleccionado previamente (selección única)
+                if (checkboxBeneActivo != null && checkboxBeneActivo != buttonView) {
+                    checkboxBeneActivo.setChecked(false);
+                }
+                checkboxBeneActivo = (CheckBox) buttonView;
+
                 beneSeleccionado = true;
                 benePersonaSeleccionada = p;
                 beneViewSeleccionada = bindingItem.getRoot();
@@ -967,7 +1006,11 @@ public class TitularesFragment extends Fragment {
                 if (tienePasaporte || tieneINE) {
                     bindingItem.btnINELista.setVisibility(View.VISIBLE);
                     bindingItem.btnINELista.setOnClickListener(v -> {
-                        if (tienePasaporte) {
+                        // Read fresh every time the button is tapped
+                        boolean tienePasaporteAhora = benePersonaSeleccionada.imagenPasaporte != null &&
+                                !benePersonaSeleccionada.imagenPasaporte.isEmpty();
+
+                        if (tienePasaporteAhora) {
                             byte[] bytes = Base64.decode(benePersonaSeleccionada.imagenPasaporte, Base64.DEFAULT);
                             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             ImageView imageView = new ImageView(getContext());
@@ -1044,6 +1087,9 @@ public class TitularesFragment extends Fragment {
                     benePersonaSeleccionada = null;
                     beneViewSeleccionada = null;
                 }
+                if (checkboxBeneActivo == buttonView) {
+                    checkboxBeneActivo = null;
+                }
                 beneSeleccionado = false;
                 resetBotones(binding.btnLimpiarBene, binding.btnAgregarBene, binding.btnFirmaBene, binding.btnINEBene);
             }
@@ -1051,7 +1097,6 @@ public class TitularesFragment extends Fragment {
 
         contenedor.addView(bindingItem.getRoot());
     }
-
 
     private void limpiarCamposTitular() {
         if (binding.editNombre.getText() != null) binding.editNombre.getText().clear();

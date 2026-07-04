@@ -64,7 +64,7 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
         };
         binding.editCalle.addTextChangedListener(watcher);
         binding.editCity.addTextChangedListener(watcher);
-        binding.editZipCode.addTextChangedListener(watcher);
+        setupZipCodeFormatter(watcher);
         binding.editNeighborhood.addTextChangedListener(watcher);
         binding.editCountryUSA.addTextChangedListener(watcher);
         binding.spinnerEstadoUSA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -75,6 +75,53 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+    private void setupZipCodeFormatter(TextWatcher autoSaveWatcher) {
+
+        binding.editZipCode.addTextChangedListener(new TextWatcher() {
+
+            private boolean isFormatting;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (isFormatting) return;
+
+                isFormatting = true;
+
+                // Solo números
+                String digits = editable.toString().replaceAll("[^\\d]", "");
+
+                // Máximo 9 dígitos (ZIP+4)
+                if (digits.length() > 9) {
+                    digits = digits.substring(0, 9);
+                }
+
+                String formatted;
+
+                if (digits.length() > 5) {
+                    formatted = digits.substring(0, 5) + "-" + digits.substring(5);
+                } else {
+                    formatted = digits;
+                }
+
+                if (!formatted.equals(editable.toString())) {
+                    binding.editZipCode.setText(formatted);
+                    binding.editZipCode.setSelection(formatted.length());
+                }
+
+                isFormatting = false;
+
+                // Guarda en el ViewModel
+                autoSaveWatcher.onTextChanged(formatted, 0, 0, formatted.length());
             }
         });
     }

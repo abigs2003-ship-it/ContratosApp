@@ -6,10 +6,12 @@ import com.example.contrato.ContratoModelo;
 import com.example.contrato.data.DbConnection;
 import com.example.contrato.model.VentasEngancheDiferido;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class VentasEngancheDiferidoRepository {
 
@@ -18,16 +20,26 @@ public class VentasEngancheDiferidoRepository {
 
     public boolean huboCambios(List<VentasEngancheDiferido> actuales, List<ContratoModelo.PagoDiferido> nuevos) {
         if (actuales.size() != nuevos.size()) return true;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        sdf.setTimeZone(TimeZone.getDefault());
+
         for (int i = 0; i < actuales.size(); i++) {
             VentasEngancheDiferido a = actuales.get(i);
             ContratoModelo.PagoDiferido n = nuevos.get(i);
-            if (!Objects.equals(a.cantidadPago, parseMonto(n.monto))
-                    || !Objects.equals(String.valueOf(a.fechaPago), convertirMesANumero(n.fecha)))
-                return true;
+
+            double montoActual = a.cantidadPago != null ? a.cantidadPago : 0.0;
+            double montoNuevo = parseMonto(n.monto);
+            boolean montoCambio = Math.abs(montoActual - montoNuevo) > 0.005; // tolerancia de centavo
+
+            String fechaActualStr = a.fechaPago != null ? sdf.format(a.fechaPago) : "";
+            String fechaNuevaStr = convertirMesANumero(n.fecha); // ya regresa dd/MM/yyyy
+            boolean fechaCambio = !fechaActualStr.equals(fechaNuevaStr);
+
+            if (montoCambio || fechaCambio) return true;
         }
         return false;
     }
-
     private double parseMonto(String value) {
         if (value == null || value.isEmpty()) return 0.0;
         try {

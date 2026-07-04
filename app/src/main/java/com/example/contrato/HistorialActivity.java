@@ -54,21 +54,27 @@ public class HistorialActivity extends AppCompatActivity {
 
         binding.layoutCargando.setVisibility(View.VISIBLE);
         viewModel.cargaHistorialBaseDatos(idUsuario);
+
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        navegandoAEdicion = false; // reset so next click works
+
+        navegandoAEdicion = false;
+        esModoEdicion = false;
+        adapter.setEsModoEdicion(false);
+
 
         long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
         if (!yaFueCargado) return;
+
         viewModel.cargaHistorialBaseDatos(idUsuario);
     }
 
     private void setupRecyclerView() {
-        adapter = new ContratoAdapter(new ArrayList<>(), contrato -> {
+        adapter = new ContratoAdapter(new ArrayList<>(), contrato ->  {
             Log.d("HISTORIAL", "Se ejecuta click en contrato: " + contrato.getId());
             viewModel.fetchContratoPorId(
                     Long.parseLong(contrato.getId())

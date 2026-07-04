@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,12 +37,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (AppCompatDelegate.getApplicationLocales().isEmpty()) {
+            Log.d("LOCALE_DEBUG", "isEmpty=true -> forcing es-MX");
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags("es-MX"));
+        } else {
+            Log.d("LOCALE_DEBUG", "isEmpty=false, current=" + AppCompatDelegate.getApplicationLocales().toLanguageTags());
         }
 
         SharedContratoViewModel vm = new ViewModelProvider(this).get(SharedContratoViewModel.class);
         LocaleListCompat locales = AppCompatDelegate.getApplicationLocales();
-        String lang = locales.isEmpty() ? "es" : locales.get(0).getLanguage();
+        String lang = locales.get(0).getLanguage();
         vm.setIdiomaActual(lang);
 
         long idContrato = getIntent().getLongExtra("ID_CONTRATO", -1);
@@ -92,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
-        //si el pago es de contado la opcion de financiamiento desaparece
+        //si el pago es de contado la opcion de financiamiento se oculta
         vm.getContrato().observe(this, contrato -> {
             if (contrato == null) return;
 
@@ -100,59 +105,82 @@ public class MainActivity extends AppCompatActivity {
 
             boolean hide = "Contado".equalsIgnoreCase(tipoPago != null ? tipoPago : "");
 
-            MenuItem item = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento);
+            MenuItem financiamiento = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento);
+            MenuItem financiamiento2 = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento2);
 
-            if (item != null) {
-                item.setVisible(!hide);
+
+            if (financiamiento != null && financiamiento2 != null) {
+                financiamiento.setVisible(!hide);
+                financiamiento2.setVisible(!hide);
             }
         });
 
         if (!userName.isEmpty()) {
             binding.usuario.setText(userName + "!");
         }
-        if (idContrato != -1) {
+        if (idContrato != -1 && savedInstanceState == null) {
+            final boolean[] yaSincronizado = {false};
+
+            vm.getContrato().observe(this, contratoCargado -> {
+                if (yaSincronizado[0]) return;
+                if (contratoCargado == null || !contratoCargado.isDatosListos()) return; // ignora el placeholder
+
+                yaSincronizado[0] = true; // solo actúa una vez por apertura
+
+                String idiomaContrato = contratoCargado.getIdioma();
+                boolean esIngles = idiomaContrato != null && (
+                        idiomaContrato.equalsIgnoreCase("en")
+                                || idiomaContrato.equalsIgnoreCase("Inglés")
+                                || idiomaContrato.equalsIgnoreCase("English")
+                                || idiomaContrato.equalsIgnoreCase("ING")
+                );
+
+                String targetTag = esIngles ? "en-US" : "es-MX";
+                String currentTag = AppCompatDelegate.getApplicationLocales().toLanguageTags();
+
+                Log.d("LOCALE_DEBUG", "Idioma real del contrato = " + idiomaContrato + " -> target=" + targetTag + " current=" + currentTag);
+
+                if (!currentTag.equalsIgnoreCase(targetTag)) {
+                    AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(targetTag));
+                }
+            });
+
             vm.fetchContratoPorId(idContrato);
         }
 
-        setupSpinnerIdiomas();
-    }
 
-    private void setupSpinnerIdiomas() {
-        Spinner spin = binding.traductorSpinner;
-        String[] idiomas = getResources().getStringArray(R.array.idiomas);
-        IdiomasAdapter adapter = new IdiomasAdapter(this, idiomas);
-        spin.setAdapter(adapter);
+        setupSwitchIdiomas();
+    }
+    private void setupSwitchIdiomas() {
+        SwitchCompat switchIdioma = binding.switchIdioma;
+        TextView textEs = binding.textEs;
+        TextView textEn = binding.textEn;
 
         String activeLangTag = AppCompatDelegate.getApplicationLocales().toLanguageTags();
+        boolean esIngles = activeLangTag.toLowerCase().startsWith("en");
 
-        if (activeLangTag.toLowerCase().startsWith("en")) {
-            spin.setSelection(1, false);
-        } else {
-            spin.setSelection(0, false);
-        }
+        switchIdioma.setOnCheckedChangeListener(null);
+        switchIdioma.setChecked(esIngles);
+        actualizaEstiloEtiquetas(esIngles, textEs, textEn);
+        switchIdioma.setEnabled(true);
 
-        spin.post(() -> {
-            spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    String current = AppCompatDelegate.getApplicationLocales().toLanguageTags();
-                    String targetBase = (position == 1) ? "en" : "es";
-                    String targetFull = (position == 1) ? "en-US" : "es-MX";
+        switchIdioma.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            buttonView.setEnabled(false);
 
+            String targetBase = isChecked ? "en" : "es";
+            String targetFull = isChecked ? "en-US" : "es-MX";
 
-                    if (!current.toLowerCase().startsWith(targetBase)) {
-                        convertirFechasEnViewModel(targetBase);
-                        new ViewModelProvider(MainActivity.this).get(SharedContratoViewModel.class).setIdiomaActual(targetBase);
-                        AppCompatDelegate.setApplicationLocales(
-                                LocaleListCompat.forLanguageTags(targetFull)
-                        );
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
+            convertirFechasEnViewModel(targetBase);
+            new ViewModelProvider(MainActivity.this).get(SharedContratoViewModel.class).setIdiomaActual(targetBase);
+            AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(targetFull)
+            );
         });
+    }
+
+    private void actualizaEstiloEtiquetas(boolean esIngles, TextView textEs, TextView textEn) {
+        textEs.setAlpha(esIngles ? 0.4f : 1.0f);
+        textEn.setAlpha(esIngles ? 1.0f : 0.4f);
     }
     private void convertirFechasEnViewModel(String toLang) {
         SharedContratoViewModel viewModel =
