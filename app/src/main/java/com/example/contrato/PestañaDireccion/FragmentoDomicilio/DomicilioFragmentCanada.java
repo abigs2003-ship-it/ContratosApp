@@ -63,7 +63,8 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
         };
         binding.editStreetCanada.addTextChangedListener(watcher);
         binding.editCityCanada.addTextChangedListener(watcher);
-        binding.editCPCanada.addTextChangedListener(watcher);
+        setupZipCodeFormatter(watcher);
+
         binding.spinnerProvincias.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -75,21 +76,66 @@ public class DomicilioFragmentCanada extends Fragment implements PestañaDirecci
             }
         });
     }
+    private void setupZipCodeFormatter(TextWatcher autoSaveWatcher) {
 
+        binding.editCPCanada.addTextChangedListener(new TextWatcher() {
+
+            private boolean isFormatting;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                if (isFormatting) return;
+
+                isFormatting = true;
+
+                // Solo números
+                String digits = editable.toString().replaceAll("[^\\d]", "");
+
+                // Máximo 9 dígitos (ZIP+4)
+                if (digits.length() > 9) {
+                    digits = digits.substring(0, 9);
+                }
+
+                String formatted;
+
+                if (digits.length() > 5) {
+                    formatted = digits.substring(0, 5) + "-" + digits.substring(5);
+                } else {
+                    formatted = digits;
+                }
+
+                if (!formatted.equals(editable.toString())) {
+                    binding.editCPCanada.setText(formatted);
+                    binding.editCPCanada                                                                                                                                              .setSelection(formatted.length());
+                }
+
+                isFormatting = false;
+
+                // Guarda en el ViewModel
+                autoSaveWatcher.onTextChanged(formatted, 0, 0, formatted.length());
+            }
+        });
+    }
     private void guardaDatosViewModel() {
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
-        
+
         Contrato.setCanCalle(binding.editStreetCanada.getText().toString());
         Contrato.setCanCity(binding.editCityCanada.getText().toString());
         Contrato.setCanProvince(binding.spinnerProvincias.getSelectedItem().toString());
         Contrato.setCanPostalCode(binding.editCPCanada.getText().toString());
 
         Contrato.setTipoDir("CAN");
+        Contrato.setPais("Canadá");
 
-        Contrato.setPais(binding.editPaisCanada.getText().toString());
-        
         viewModel.setContrato(Contrato);
     }
 

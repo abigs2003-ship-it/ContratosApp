@@ -109,6 +109,19 @@ public class FinanciamientoFragment extends Fragment {
         });
 
         actualizarVisibilidadColumnas();
+        binding.cbElegirFinanciamiento.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ContratoModelo Contrato = viewModel.getContratoValue();
+            if (Contrato == null) Contrato = new ContratoModelo();
+
+            if (isChecked) {
+                Contrato.setFinanciamientoElegido("1");
+            } else if ("1".equals(Contrato.getFinanciamientoElegido())) {
+                Contrato.setFinanciamientoElegido(null);
+            }
+
+            viewModel.setContrato(Contrato);
+        });
+
     }
     private void mostrarConfirmacionActualizar() {
         new AlertDialog.Builder(requireContext())
@@ -417,6 +430,8 @@ public class FinanciamientoFragment extends Fragment {
     private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
+            binding.cbElegirFinanciamiento.setChecked("1".equals(Contrato.getFinanciamientoElegido()));
+
             if (Contrato.getMontoFinanciar() != null) binding.etMontoFinanciar.setText(Contrato.getMontoFinanciar());
             if (Contrato.getNumPagos() != null) binding.etNumeroPagos.setText(Contrato.getNumPagos());
             if (Contrato.getTasaInteres() != null) binding.etTasaInteres.setText(Contrato.getTasaInteres());

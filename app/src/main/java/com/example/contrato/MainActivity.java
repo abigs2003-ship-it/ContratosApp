@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             if (contrato == null) return;
 
             String tipoPago = contrato.getTipoPago();
+           // String financiamientoElegido = contrato.getFinanciamientoElegido();
 
             boolean hide = "Contado".equalsIgnoreCase(tipoPago != null ? tipoPago : "");
 
@@ -147,7 +148,38 @@ public class MainActivity extends AppCompatActivity {
 
             vm.fetchContratoPorId(idContrato);
         }
+        vm.getContrato().observe(this, contrato -> {
+            if (contrato == null) return;
 
+            String tipoPago = contrato.getTipoPago();
+            String financiamientoElegido = contrato.getFinanciamientoElegido();
+            boolean modoEdicion = contrato.getModoEdicion();
+
+            boolean hideAmbos = "Contado".equalsIgnoreCase(tipoPago != null ? tipoPago : "");
+
+            MenuItem financiamiento  = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento);
+            MenuItem financiamiento2 = binding.bottomNav.getMenu().findItem(R.id.nav_financiamiento2);
+
+            if (financiamiento != null && financiamiento2 != null) {
+                if (hideAmbos) {
+                    financiamiento.setVisible(false);
+                    financiamiento2.setVisible(false);
+                } else if (modoEdicion) {
+                    // En modo edición solo se muestra Financiamiento1
+                    financiamiento.setVisible(true);
+                    financiamiento2.setVisible(false);
+                } else if ("1".equals(financiamientoElegido)) {
+                    financiamiento.setVisible(true);
+                    financiamiento2.setVisible(false);
+                } else if ("2".equals(financiamientoElegido)) {
+                    financiamiento.setVisible(false);
+                    financiamiento2.setVisible(true);
+                } else {
+                    financiamiento.setVisible(true);
+                    financiamiento2.setVisible(true);
+                }
+            }
+        });
 
         setupSwitchIdiomas();
     }

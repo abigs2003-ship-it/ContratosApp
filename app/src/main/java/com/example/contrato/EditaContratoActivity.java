@@ -267,7 +267,6 @@ public class EditaContratoActivity extends AppCompatActivity {
                 setText(viewDir, R.id.tvUsaCity, contrato.getUsaCity());
                 setText(viewDir, R.id.tvUsaState, contrato.getUsaState());
                 setText(viewDir, R.id.tvUsaZip, contrato.getUsaZip());
-                setText(viewDir, R.id.tvUsaNeighborhood, contrato.getUsaNeighborhood());
                 break;
             case "US2":
                 viewDir = inflater.inflate(R.layout.historial_pobox_format, binding.containerDireccionDinamica, false);
@@ -276,7 +275,6 @@ public class EditaContratoActivity extends AppCompatActivity {
                 setText(viewDir, R.id.tvUsaCity, contrato.getUsaCity());
                 setText(viewDir, R.id.tvUsaState, contrato.getUsaState());
                 setText(viewDir, R.id.tvUsaZip, contrato.getUsaZip());
-                setText(viewDir, R.id.tvUsaNeighborhood, contrato.getUsaNeighborhood());
                 break;
             case "US3":
                 viewDir = inflater.inflate(R.layout.historial_cmr_format, binding.containerDireccionDinamica, false);
@@ -872,19 +870,19 @@ public class EditaContratoActivity extends AppCompatActivity {
                         .append(trow("Código Postal",  textOf(viewDir, R.id.tvCanPostalCode), null, null));
                 break;
             case "US1":
-                sb.append(trow("Calle",      textOf(viewDir, R.id.tvUsaCalle),        null, null))
-                        .append(trow("Ciudad",     textOf(viewDir, R.id.tvUsaCity),
-                                "Estado",   textOf(viewDir, R.id.tvUsaState)))
-                        .append(trow("ZIP",        textOf(viewDir, R.id.tvUsaZip),
-                                "Vecindario", textOf(viewDir, R.id.tvUsaNeighborhood)));
+                sb.append(trow("Calle", textOf(viewDir, R.id.tvUsaCalle), null, null))
+                        .append(trow("Ciudad", textOf(viewDir, R.id.tvUsaCity),
+                                "Estado", textOf(viewDir, R.id.tvUsaState)))
+                        .append(trow("ZIP", textOf(viewDir, R.id.tvUsaZip),
+                                null, null));
                 break;
             case "US2":
-                sb.append(trow("Calle",    textOf(viewDir, R.id.tvUsaCalle),          null, null))
-                        .append(trow("PO Box",   textOf(viewDir, R.id.tvUsaPoBox),          null, null))
-                        .append(trow("Ciudad",   textOf(viewDir, R.id.tvUsaCity),
+                sb.append(trow("Calle", textOf(viewDir, R.id.tvUsaCalle), null, null))
+                        .append(trow("PO Box", textOf(viewDir, R.id.tvUsaPoBox), null, null))
+                        .append(trow("Ciudad", textOf(viewDir, R.id.tvUsaCity),
                                 "Estado", textOf(viewDir, R.id.tvUsaState)))
-                        .append(trow("ZIP",      textOf(viewDir, R.id.tvUsaZip),
-                                "Vecindario", textOf(viewDir, R.id.tvUsaNeighborhood)));
+                        .append(trow("ZIP", textOf(viewDir, R.id.tvUsaZip),
+                                null, null));
                 break;
             case "US3":
                 sb.append(trow("CMR",    textOf(viewDir, R.id.tvUsaCmr),
@@ -1081,20 +1079,20 @@ public class EditaContratoActivity extends AppCompatActivity {
                 break;
 
             case "US1":
-                sb.append(field("Calle",      textOf(viewDir, R.id.tvUsaCalle)))
-                        .append(row("Ciudad",       textOf(viewDir, R.id.tvUsaCity),
-                                "Estado",      textOf(viewDir, R.id.tvUsaState)))
-                        .append(row("ZIP",          textOf(viewDir, R.id.tvUsaZip),
-                                "Vecindario",  textOf(viewDir, R.id.tvUsaNeighborhood)));
+                sb.append(trow("Calle", textOf(viewDir, R.id.tvUsaCalle), null, null))
+                        .append(trow("Ciudad", textOf(viewDir, R.id.tvUsaCity),
+                                "Estado", textOf(viewDir, R.id.tvUsaState)))
+                        .append(trow("ZIP", textOf(viewDir, R.id.tvUsaZip),
+                                null, null));
                 break;
 
             case "US2":
-                sb.append(field("Calle",      textOf(viewDir, R.id.tvUsaCalle)))
-                        .append(field("PO Box",     textOf(viewDir, R.id.tvUsaPoBox)))
-                        .append(row("Ciudad",       textOf(viewDir, R.id.tvUsaCity),
-                                "Estado",      textOf(viewDir, R.id.tvUsaState)))
-                        .append(row("ZIP",          textOf(viewDir, R.id.tvUsaZip),
-                                "Vecindario",  textOf(viewDir, R.id.tvUsaNeighborhood)));
+                sb.append(trow("Calle", textOf(viewDir, R.id.tvUsaCalle), null, null))
+                        .append(trow("PO Box", textOf(viewDir, R.id.tvUsaPoBox), null, null))
+                        .append(trow("Ciudad", textOf(viewDir, R.id.tvUsaCity),
+                                "Estado", textOf(viewDir, R.id.tvUsaState)))
+                        .append(trow("ZIP", textOf(viewDir, R.id.tvUsaZip),
+                                null, null));
                 break;
 
             case "US3":

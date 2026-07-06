@@ -116,7 +116,7 @@
                 android:layout_height="40dp"
                 android:textSize="15sp"
                 android:background="@drawable/bg_input"
-                android:nextFocusForward="@id/editNeighborhood"
+                android:nextFocusForward="@id/editCountryUSA"
                 android:imeOptions="actionDone"
                 android:paddingStart="12dp"
                 android:maxLength="10"
@@ -128,23 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Neighborhood"
-                android:fontFamily="serif"
-                android:textSize="15sp"
-                android:textColor="@color/pacificagris"
-                android:textStyle="bold" />
-            <EditText
-                android:id="@+id/editNeighborhood"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textSize="15sp"
-                android:background="@drawable/bg_input"
-                android:paddingStart="12dp"
-                android:imeOptions="actionDone"
-                android:inputType="textCapWords" />
+
         </LinearLayout>
     </LinearLayout>
 

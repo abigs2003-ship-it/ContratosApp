@@ -70,6 +70,18 @@ public class FinanciamientoFragment2 extends Fragment {
         cargaDatosExistentes();
         setupObservers();
         formateaMontos(binding.etMontoFinanciar);
+        binding.cbElegirFinanciamiento.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            ContratoModelo Contrato = viewModel.getContratoValue();
+            if (Contrato == null) Contrato = new ContratoModelo();
+
+            if (isChecked) {
+                Contrato.setFinanciamientoElegido("2");
+            } else if ("2".equals(Contrato.getFinanciamientoElegido())) {
+                Contrato.setFinanciamientoElegido(null);
+            }
+
+            viewModel.setContrato(Contrato);
+        });
 
 
         binding.textInputLayoutFechaPrimerpago.setEndIconOnClickListener(v -> {
@@ -415,6 +427,8 @@ public class FinanciamientoFragment2 extends Fragment {
     private void cargaDatosExistentes() {
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato != null) {
+            binding.cbElegirFinanciamiento.setChecked("2".equals(Contrato.getFinanciamientoElegido()));
+
             if (Contrato.getMontoFinanciar() != null) binding.etMontoFinanciar.setText(Contrato.getMontoFinanciar());
             if (Contrato.getNumPagos() != null) binding.etNumeroPagos.setText(Contrato.getNumPagos());
             if (Contrato.getTasaInteres() != null) binding.etTasaInteres.setText(Contrato.getTasaInteres());

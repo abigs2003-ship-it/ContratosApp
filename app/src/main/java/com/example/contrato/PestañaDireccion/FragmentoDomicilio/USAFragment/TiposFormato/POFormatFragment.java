@@ -114,7 +114,7 @@ public class POFormatFragment extends Fragment implements PestañaDireccionFragm
 
                 if (!formatted.equals(editable.toString())) {
                     binding.editZipCode2.setText(formatted);
-                    binding.editZipCode2.setSelection(formatted.length());
+                    binding.editZipCode2                                                                                                                                              .setSelection(formatted.length());
                 }
 
                 isFormatting = false;

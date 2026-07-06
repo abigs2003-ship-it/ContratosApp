@@ -45,7 +45,6 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
             binding.editCalle.setText(Contrato.getUsaCalle());
             binding.editCity.setText(Contrato.getUsaCity());
             binding.editZipCode.setText(Contrato.getUsaZip());
-            binding.editNeighborhood.setText(Contrato.getUsaNeighborhood());
             if (Contrato.getUsaState() != null) {
                 ArrayAdapter<String> adapter = (ArrayAdapter<String>) binding.spinnerEstadoUSA.getAdapter();
                 if (adapter != null) {
@@ -65,7 +64,6 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
         binding.editCalle.addTextChangedListener(watcher);
         binding.editCity.addTextChangedListener(watcher);
         setupZipCodeFormatter(watcher);
-        binding.editNeighborhood.addTextChangedListener(watcher);
         binding.editCountryUSA.addTextChangedListener(watcher);
         binding.spinnerEstadoUSA.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -135,7 +133,6 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
         Contrato.setUsaCity(binding.editCity.getText().toString());
         Contrato.setUsaState(binding.spinnerEstadoUSA.getSelectedItem().toString());
         Contrato.setUsaZip(binding.editZipCode.getText().toString());
-        Contrato.setUsaNeighborhood(binding.editNeighborhood.getText().toString());
 
         Contrato.setTipoDir("US1");
         Contrato.setPais(binding.editCountryUSA.getText().toString());
@@ -153,8 +150,7 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
         }
         return !binding.editCalle.getText().toString().trim().isEmpty() &&
                !binding.editCity.getText().toString().trim().isEmpty() &&
-               !binding.editZipCode.getText().toString().trim().isEmpty() &&
-               !binding.editNeighborhood.getText().toString().trim().isEmpty();
+               !binding.editZipCode.getText().toString().trim().isEmpty();
     }
 
     @Override
@@ -164,7 +160,6 @@ public class StandardFormatFragment extends Fragment implements PestañaDireccio
             binding.editCity.setText("");
             binding.spinnerEstadoUSA.setSelection(0);
             binding.editZipCode.setText("");
-            binding.editNeighborhood.setText("");
             guardaDatosViewModel();
         }
     }

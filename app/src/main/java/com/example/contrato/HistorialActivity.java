@@ -43,12 +43,8 @@ public class HistorialActivity extends AppCompatActivity {
 
         binding.btnBack.setOnClickListener(v -> finish());
 
-        binding.btnEditMode.setOnClickListener(v -> {
-            esModoEdicion = !esModoEdicion;
-            adapter.setEsModoEdicion(esModoEdicion);
-            binding.btnEditMode.setText(esModoEdicion ? "CANCELAR" : "EDITAR");
-        });
 
+        binding.btnEditMode.setOnClickListener(v -> setModoEdicion(!esModoEdicion));
         setupRecyclerView();
         setupObservers();
 
@@ -57,22 +53,23 @@ public class HistorialActivity extends AppCompatActivity {
 
     }
 
-
+    private void setModoEdicion(boolean activo) {
+        esModoEdicion = activo;
+        adapter.setEsModoEdicion(activo);
+        binding.btnEditMode.setText(activo ? "CANCELAR" : "EDITAR");
+    }
     @Override
     protected void onResume() {
         super.onResume();
 
         navegandoAEdicion = false;
-        esModoEdicion = false;
-        adapter.setEsModoEdicion(false);
-
+        setModoEdicion(false);
 
         long idUsuario = getIntent().getLongExtra("ID_USUARIO", -1);
         if (!yaFueCargado) return;
 
         viewModel.cargaHistorialBaseDatos(idUsuario);
     }
-
     private void setupRecyclerView() {
         adapter = new ContratoAdapter(new ArrayList<>(), contrato ->  {
             Log.d("HISTORIAL", "Se ejecuta click en contrato: " + contrato.getId());
@@ -150,8 +147,7 @@ public class HistorialActivity extends AppCompatActivity {
                             Long.parseLong(contrato.getId()),
                             nuevoEstatus
                     );
-                    adapter.setEsModoEdicion(false);
-                    binding.btnEditMode.setText("EDITAR");
+                    setModoEdicion(false);
                 })
                 .setNegativeButton("Regresar", null)
                 .show();

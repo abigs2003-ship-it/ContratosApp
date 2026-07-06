@@ -17,6 +17,7 @@ public class ContratoModelo implements Serializable {
 
     private String estatus;
 
+
     // Titulares y Beneficiarios
     private List<Persona> titulares = new ArrayList<>();
     private List<Persona> beneficiarios = new ArrayList<>();
@@ -43,7 +44,6 @@ public class ContratoModelo implements Serializable {
     private String USACP;
     private String CanCP;
     private String Mexcolonia;
-    private String USANeighborhood;
 
     private String delegacion;
     private String nacionalidad;
@@ -52,6 +52,8 @@ public class ContratoModelo implements Serializable {
     private String cmr;
     private String apo;
     private String province;
+    public long idUsuarioModificacion;
+    private String financiamientoElegido;
     private String Linea1, Linea2, Linea3, Linea4, Linea5;
 
     // Contacto
@@ -195,6 +197,8 @@ public class ContratoModelo implements Serializable {
     }
 
     // Getters y Setters
+    public String getFinanciamientoElegido() { return financiamientoElegido; }
+    public void setFinanciamientoElegido(String financiamientoElegido) { this.financiamientoElegido = financiamientoElegido; }
     public void setPrimerPagoDiferido(String primerPagoDiferido) {this.primerPagoDiferido = primerPagoDiferido;}
     public String getPrimerPagoDiferido(){return primerPagoDiferido;}
 
@@ -263,8 +267,6 @@ public class ContratoModelo implements Serializable {
     //colonias
     public String getMexColonia() { return Mexcolonia; }
     public void setMexColonia(String Mexcolonia) { this.Mexcolonia = Mexcolonia; }
-    public String getUsaNeighborhood() { return USANeighborhood; }
-    public void setUsaNeighborhood(String USANeighborhood) { this.USANeighborhood = USANeighborhood; }
     public String getDelegacion() { return delegacion; }
     public void setDelegacion(String delegacion) { this.delegacion = delegacion; }
     public String getNacionalidad() { return nacionalidad; }
@@ -278,7 +280,7 @@ public class ContratoModelo implements Serializable {
     public String getCmr() { return cmr; }
     public void setCmr(String cmr) { this.cmr = cmr; }
     public String getApo() { return apo; }
-    public void setApo(String usaApo) { this.apo = apo; }
+    public void setApo(String usaApo) { this.apo = usaApo; }
 
 
     public String getCanProvince() { return province; }

@@ -29,6 +29,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView style="@style/FieldLabel" android:text="Neighborhood" />
-    <TextView android:id="@+id/tvUsaNeighborhood" style="@style/FieldInput" android:inputType="text" />
+
 </LinearLayout>

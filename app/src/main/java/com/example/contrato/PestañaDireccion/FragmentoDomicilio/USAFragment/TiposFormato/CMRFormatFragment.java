@@ -138,8 +138,7 @@ public class CMRFormatFragment extends Fragment implements PestañaDireccionFrag
         Contrato.setUsaState(binding.spinnerEstadoUSA.getSelectedItem().toString());
         Contrato.setUsaZip(binding.zipcode.getText().toString());
         Contrato.setTipoDir("US3");
-        Contrato.setPais(binding.editCMR1.getText().toString());
-
+        Contrato.setPais("USA");
         viewModel.setContrato(Contrato);
     }
 

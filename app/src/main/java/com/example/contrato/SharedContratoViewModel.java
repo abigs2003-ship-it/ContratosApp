@@ -172,8 +172,6 @@ public class SharedContratoViewModel extends ViewModel {
     }
 
 
-
-
     public void actualizaContratoBaseDatos(ContratoModelo model) {
         new Thread(() -> {
             try {
@@ -188,9 +186,10 @@ public class SharedContratoViewModel extends ViewModel {
                     if (vc.fechaAlta != null) originalFechaAlta = vc.fechaAlta;
                     originalIdUsuarioAlta = vc.idUsuarioAlta;
                     vc.fechaModificacion = now;
+                    vc.idUsuarioModificacion = idUsuario;
                     Log.d("IDIOMA_DEBUG", "actualizaContratoBaseDatos: model.getIdioma()=" + model.getIdioma() + " -> mapeado=" + mapeaIdiomaBD(model.getIdioma()));
                     vc.idioma = mapeaIdiomaBD(model.getIdioma());
-                    vc.estatus = "M";
+                    vc.estatus = "A"; // se mantiene activo; ya no existe el estado "M"
                     contratoRepo.update(vc);
                 }
 
@@ -198,41 +197,46 @@ public class SharedContratoViewModel extends ViewModel {
                 VentasInformacionGeneral vigActual = infoGralRepo.getByContratoId(idContrato);
                 VentasInformacionGeneral vigNuevo  = new VentasInformacionGeneral();
                 vigNuevo.idContrato   = idContrato;
-                vigNuevo.pais         = truncate(model.getPais(), 50);
-                vigNuevo.nacionalidad = truncate(model.getNacionalidad(), 50);
-                vigNuevo.tipoDir      = model.getTipoDir();
+                vigNuevo.pais         = orEmpty(truncate(model.getPais(), 50));
+                vigNuevo.nacionalidad = orEmpty(truncate(model.getNacionalidad(), 50));
+                vigNuevo.tipoDir      = orEmpty(model.getTipoDir());
+
+
+                vigNuevo.calle = vigNuevo.noExt = vigNuevo.noInt = "";
+                vigNuevo.poBox = vigNuevo.box = vigNuevo.cmr = vigNuevo.apo = "";
+                vigNuevo.colonia = vigNuevo.delegacion = vigNuevo.ciudad = vigNuevo.estado = vigNuevo.cp = "";
+                vigNuevo.linea1 = vigNuevo.linea2 = vigNuevo.linea3 = vigNuevo.linea4 = vigNuevo.linea5 = "";
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
-                    vigNuevo.calle      = truncate(model.getMexCalle(), 150);
-                    vigNuevo.noExt      = truncate(model.getMexNumExt(), 10);
-                    vigNuevo.noInt      = truncate(model.getMexNumInt(), 10);
-                    vigNuevo.colonia    = truncate(model.getMexColonia(), 50);
-                    vigNuevo.delegacion = truncate(model.getDelegacion(), 50);
-                    vigNuevo.ciudad     = truncate(model.getMexCiudad(), 50);
-                    vigNuevo.estado     = truncate(model.getMexEstado(), 50);
-                    vigNuevo.cp         = truncate(model.getMexCP(), 15);
+                    vigNuevo.calle      = orEmpty(truncate(model.getMexCalle(), 150));
+                    vigNuevo.noExt      = orEmpty(truncate(model.getMexNumExt(), 10));
+                    vigNuevo.noInt      = orEmpty(truncate(model.getMexNumInt(), 10));
+                    vigNuevo.colonia    = orEmpty(truncate(model.getMexColonia(), 50));
+                    vigNuevo.delegacion = orEmpty(truncate(model.getDelegacion(), 50));
+                    vigNuevo.ciudad     = orEmpty(truncate(model.getMexCiudad(), 50));
+                    vigNuevo.estado     = orEmpty(truncate(model.getMexEstado(), 50));
+                    vigNuevo.cp         = orEmpty(truncate(model.getMexCP(), 15));
                 } else if ("EEUU".equalsIgnoreCase(model.getPais()) || "USA".equalsIgnoreCase(model.getPais()) || (model.getPais() != null && model.getPais().contains("USA"))) {
-                    vigNuevo.calle   = truncate(model.getUsaCalle(), 150);
-                    vigNuevo.ciudad  = truncate(model.getUsaCity(), 50);
-                    vigNuevo.estado  = truncate(model.getUsaState(), 50);
-                    vigNuevo.cp      = truncate(model.getUsaZip(), 15);
-                    vigNuevo.colonia = truncate(model.getUsaNeighborhood(), 50);
-                    vigNuevo.poBox   = truncate(model.getPoBox(), 10);
-                    vigNuevo.box     = truncate(model.getBox(), 10);
-                    vigNuevo.cmr     = truncate(model.getCmr(), 10);
-                    vigNuevo.apo     = truncate(model.getApo(), 10);
+                    vigNuevo.calle   = orEmpty(truncate(model.getUsaCalle(), 150));
+                    vigNuevo.ciudad  = orEmpty(truncate(model.getUsaCity(), 50));
+                    vigNuevo.estado  = orEmpty(truncate(model.getUsaState(), 50));
+                    vigNuevo.cp      = orEmpty(truncate(model.getUsaZip(), 15));
+                    vigNuevo.poBox   = orEmpty(truncate(model.getPoBox(), 10));
+                    vigNuevo.box     = orEmpty(truncate(model.getBox(), 10));
+                    vigNuevo.cmr     = orEmpty(truncate(model.getCmr(), 10));
+                    vigNuevo.apo     = orEmpty(truncate(model.getApo(), 10));
                 } else if ("Canadá".equalsIgnoreCase(model.getPais())) {
-                    vigNuevo.calle  = truncate(model.getCanCalle(), 150);
-                    vigNuevo.ciudad = truncate(model.getCanCity(), 50);
-                    vigNuevo.estado = truncate(model.getCanProvince(), 50);
-                    vigNuevo.cp     = truncate(model.getCanPostalCode(), 15);
+                    vigNuevo.calle  = orEmpty(truncate(model.getCanCalle(), 150));
+                    vigNuevo.ciudad = orEmpty(truncate(model.getCanCity(), 50));
+                    vigNuevo.estado = orEmpty(truncate(model.getCanProvince(), 50));
+                    vigNuevo.cp     = orEmpty(truncate(model.getCanPostalCode(), 15));
                 } else {
-                    vigNuevo.linea1 = truncate(model.getLinea1(), 150);
-                    vigNuevo.linea2 = truncate(model.getLinea2(), 150);
-                    vigNuevo.linea3 = truncate(model.getLinea3(), 150);
-                    vigNuevo.linea4 = truncate(model.getLinea4(), 150);
-                    vigNuevo.linea5 = truncate(model.getLinea5(), 150);
-                    vigNuevo.pais   = truncate(model.getPaisOtro(), 50);
+                    vigNuevo.linea1 = orEmpty(truncate(model.getLinea1(), 150));
+                    vigNuevo.linea2 = orEmpty(truncate(model.getLinea2(), 150));
+                    vigNuevo.linea3 = orEmpty(truncate(model.getLinea3(), 150));
+                    vigNuevo.linea4 = orEmpty(truncate(model.getLinea4(), 150));
+                    vigNuevo.linea5 = orEmpty(truncate(model.getLinea5(), 150));
+                    vigNuevo.pais   = orEmpty(truncate(model.getPaisOtro(), 50));
                 }
 
                 limpiaTelefonos(vigNuevo);
@@ -250,10 +254,10 @@ public class SharedContratoViewModel extends ViewModel {
                     if (p.esPrincipal) vigNuevo.telefonoDefault = truncate(p.etiqueta, 20);
                 }
 
-                vigNuevo.email1 = (model.getEmails().size() > 0) ? truncate(model.getEmails().get(0), 60) : null;
-                vigNuevo.email2 = (model.getEmails().size() > 1) ? truncate(model.getEmails().get(1), 60) : null;
-                vigNuevo.email3 = (model.getEmails().size() > 2) ? truncate(model.getEmails().get(2), 60) : null;
-                vigNuevo.email4 = (model.getEmails().size() > 3) ? truncate(model.getEmails().get(3), 60) : null;
+                vigNuevo.email1 = (model.getEmails().size() > 0) ? truncate(model.getEmails().get(0), 60) : "";
+                vigNuevo.email2 = (model.getEmails().size() > 1) ? truncate(model.getEmails().get(1), 60) : "";
+                vigNuevo.email3 = (model.getEmails().size() > 2) ? truncate(model.getEmails().get(2), 60) : "";
+                vigNuevo.email4 = (model.getEmails().size() > 3) ? truncate(model.getEmails().get(3), 60) : "";
 
                 if (vigActual == null || infoGralRepo.huboCambios(vigActual, vigNuevo)) {
                     infoGralRepo.replaceByContrato(vigNuevo, idUsuario);
@@ -491,89 +495,94 @@ public class SharedContratoViewModel extends ViewModel {
                 VentasInformacionGeneral vig = new VentasInformacionGeneral();
                 vig.idDatosVenta = infoGralRepo.getNextId();
                 vig.idContrato = idContrato;
-                vig.pais = truncate(model.getPais(), 50);
-                vig.tipoDir = model.getTipoDir();
-                vig.nacionalidad = truncate(model.getNacionalidad(), 50);
+                vig.pais = orEmpty(truncate(model.getPais(), 50));
+                vig.tipoDir = orEmpty(model.getTipoDir());
+                vig.nacionalidad = orEmpty(truncate(model.getNacionalidad(), 50));
+
+                vig.calle = vig.noExt = vig.noInt = "";
+                vig.poBox = vig.box = vig.cmr = vig.apo = "";
+                vig.colonia = vig.delegacion = vig.ciudad = vig.estado = vig.cp = "";
+                vig.linea1 = vig.linea2 = vig.linea3 = vig.linea4 = vig.linea5 = "";
 
                 if ("México".equalsIgnoreCase(model.getPais())) {
-                    vig.calle = truncate(model.getMexCalle(), 150); 
-                    vig.noExt = truncate(model.getMexNumExt(), 10); 
-                    vig.noInt = truncate(model.getMexNumInt(), 10);
-                    vig.colonia = truncate(model.getMexColonia(), 50); 
-                    vig.delegacion = truncate(model.getDelegacion(), 50);
-                    vig.ciudad = truncate(model.getMexCiudad(), 50); 
-                    vig.estado = truncate(model.getMexEstado(), 50); 
-                    vig.cp = truncate(model.getMexCP(), 15);
+                    vig.calle = orEmpty(truncate(model.getMexCalle(), 150));
+                    vig.noExt = orEmpty(truncate(model.getMexNumExt(), 10));
+                    vig.noInt = orEmpty(truncate(model.getMexNumInt(), 10));
+                    vig.colonia = orEmpty(truncate(model.getMexColonia(), 50));
+                    vig.delegacion = orEmpty(truncate(model.getDelegacion(), 50));
+                    vig.ciudad = orEmpty(truncate(model.getMexCiudad(), 50));
+                    vig.estado = orEmpty(truncate(model.getMexEstado(), 50));
+                    vig.cp = orEmpty(truncate(model.getMexCP(), 15));
                 } else if ("EEUU".equalsIgnoreCase(model.getPais()) || "USA".equalsIgnoreCase(model.getPais()) || (model.getPais() != null && model.getPais().contains("USA"))) {
-                    vig.calle = truncate(model.getUsaCalle(), 150); 
-                    vig.ciudad = truncate(model.getUsaCity(), 50); 
-                    vig.estado = truncate(model.getUsaState(), 50);
-                    vig.cp = truncate(model.getUsaZip(), 15); 
-                    vig.colonia = truncate(model.getUsaNeighborhood(), 50); 
-                    vig.poBox = truncate(model.getPoBox(), 10);
-                    vig.box = truncate(model.getBox(), 10);
-                    vig.cmr = truncate(model.getCmr(), 10);
-                    vig.apo = truncate(model.getApo(), 10);
+                    vig.calle = orEmpty(truncate(model.getUsaCalle(), 150));
+                    vig.ciudad = orEmpty(truncate(model.getUsaCity(), 50));
+                    vig.estado = orEmpty(truncate(model.getUsaState(), 50));
+                    vig.cp = orEmpty(truncate(model.getUsaZip(), 15));
+                    vig.poBox = orEmpty(truncate(model.getPoBox(), 10));
+                    vig.box = orEmpty(truncate(model.getBox(), 10));
+                    vig.cmr = orEmpty(truncate(model.getCmr(), 10));
+                    vig.apo = orEmpty(truncate(model.getApo(), 10));
                 } else if ("Canadá".equalsIgnoreCase(model.getPais())) {
-                    vig.calle = truncate(model.getCanCalle(), 150); 
-                    vig.ciudad = truncate(model.getCanCity(), 50); 
-                    vig.estado = truncate(model.getCanProvince(), 50); 
-                    vig.cp = truncate(model.getCanPostalCode(), 15);
+                    vig.calle = orEmpty(truncate(model.getCanCalle(), 150));
+                    vig.ciudad = orEmpty(truncate(model.getCanCity(), 50));
+                    vig.estado = orEmpty(truncate(model.getCanProvince(), 50));
+                    vig.cp = orEmpty(truncate(model.getCanPostalCode(), 15));
                 } else {
-                    vig.linea1 = truncate(model.getLinea1(), 150);
-                    vig.linea2 = truncate(model.getLinea2(), 150);
-                    vig.linea3 = truncate(model.getLinea3(), 150);
-                    vig.linea4 = truncate(model.getLinea4(), 150);
-                    vig.linea5 = truncate(model.getLinea5(), 150);
-                    vig.pais = truncate(model.getPaisOtro(), 50);
+                    vig.linea1 = orEmpty(truncate(model.getLinea1(), 150));
+                    vig.linea2 = orEmpty(truncate(model.getLinea2(), 150));
+                    vig.linea3 = orEmpty(truncate(model.getLinea3(), 150));
+                    vig.linea4 = orEmpty(truncate(model.getLinea4(), 150));
+                    vig.linea5 = orEmpty(truncate(model.getLinea5(), 150));
+                    vig.pais = orEmpty(truncate(model.getPaisOtro(), 50));
                 }
 
                 for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
                     String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
-                    if (p.etiqueta.contains("Casa 1")) { 
-                        vig.ladaCasa1 = truncate(cleanLada, 5); 
-                        vig.telefonoCasa1 = truncate(cleanNum, 15); 
-                        vig.whatsAppCasa1 = p.isWhatsApp; 
+                    if (p.etiqueta.contains("Casa 1")) {
+                        vig.ladaCasa1 = truncate(cleanLada, 5);
+                        vig.telefonoCasa1 = truncate(cleanNum, 15);
+                        vig.whatsAppCasa1 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Casa 2")) { 
-                        vig.ladaCasa2 = truncate(cleanLada, 5); 
-                        vig.telefonoCasa2 = truncate(cleanNum, 15); 
-                        vig.whatsAppCasa2 = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Casa 2")) {
+                        vig.ladaCasa2 = truncate(cleanLada, 5);
+                        vig.telefonoCasa2 = truncate(cleanNum, 15);
+                        vig.whatsAppCasa2 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Celular 1")) { 
-                        vig.ladaCelular1 = truncate(cleanLada, 5); 
-                        vig.telefonoCelular1 = truncate(cleanNum, 15); 
-                        vig.whatsAppCelular1 = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Celular 1")) {
+                        vig.ladaCelular1 = truncate(cleanLada, 5);
+                        vig.telefonoCelular1 = truncate(cleanNum, 15);
+                        vig.whatsAppCelular1 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Celular 2")) { 
-                        vig.ladaCelular2 = truncate(cleanLada, 5); 
-                        vig.telefonoCelular2 = truncate(cleanNum, 15); 
-                        vig.whatsAppCelular2 = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Celular 2")) {
+                        vig.ladaCelular2 = truncate(cleanLada, 5);
+                        vig.telefonoCelular2 = truncate(cleanNum, 15);
+                        vig.whatsAppCelular2 = p.isWhatsApp;
                     }
                     else if (p.etiqueta.contains("Celular 3")) {
                         vig.ladaCelular3 = truncate(cleanLada, 5);
                         vig.telefonoCelular3 = truncate(cleanNum, 15);
                         vig.whatsAppCelular3 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Oficina 1")) { 
-                        vig.ladaOficina1 = truncate(cleanLada, 5); 
-                        vig.telefonoOficina1 = truncate(cleanNum, 15); 
-                        vig.whatsAppOficina1 = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Oficina 1")) {
+                        vig.ladaOficina1 = truncate(cleanLada, 5);
+                        vig.telefonoOficina1 = truncate(cleanNum, 15);
+                        vig.whatsAppOficina1 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Oficina 2")) { 
-                        vig.ladaOficina2 = truncate(cleanLada, 5); 
-                        vig.telefonoOficina2 = truncate(cleanNum, 15); 
-                        vig.whatsAppOficina2 = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Oficina 2")) {
+                        vig.ladaOficina2 = truncate(cleanLada, 5);
+                        vig.telefonoOficina2 = truncate(cleanNum, 15);
+                        vig.whatsAppOficina2 = p.isWhatsApp;
                     }
-                    else if (p.etiqueta.contains("Mensajes")) { 
-                        vig.ladaMensajes = truncate(cleanLada, 5); 
-                        vig.telefonoMensajes = truncate(cleanNum, 15); 
-                        vig.whatsAppMensajes = p.isWhatsApp; 
+                    else if (p.etiqueta.contains("Mensajes")) {
+                        vig.ladaMensajes = truncate(cleanLada, 5);
+                        vig.telefonoMensajes = truncate(cleanNum, 15);
+                        vig.whatsAppMensajes = p.isWhatsApp;
                     }
                     if (p.esPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
                 }
 
+                vig.email1 = ""; vig.email2 = ""; vig.email3 = ""; vig.email4 = "";
                 List<String> emails = model.getEmails();
                 if (emails.size() > 0) vig.email1 = truncate(emails.get(0), 60);
                 if (emails.size() > 1) vig.email2 = truncate(emails.get(1), 60);
@@ -865,11 +874,10 @@ public class SharedContratoViewModel extends ViewModel {
     }
 
     private String truncate(String value, int length) {
-        if (value == null) return null;
+        if (value == null) return "";          // <-- was: return null;
         if (value.length() <= length) return value;
         return value.substring(0, length);
     }
-
 
     public void limpiarModoEdicion() {
         ContratoModelo contrato = Contrato.getValue();
@@ -1009,6 +1017,8 @@ public class SharedContratoViewModel extends ViewModel {
             }
         }).start();
     }
+
+    private String orEmpty(String v) { return v == null ? "" : v; }
     public int getLastDgTab() { return lastDgTab; }
     public void setLastDgTab(int lastDgTab) { this.lastDgTab = lastDgTab; }
     public int getLastCondTab() { return lastCondTab; }

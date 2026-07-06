@@ -134,15 +134,15 @@ public class VentasContratoRepository {
             cs.executeUpdate();
         }
     }
-
     // 1.3
     public void update(VentasContrato c) throws SQLException {
         try (Connection conn = DbConnection.getConnection();
-             CallableStatement cs = conn.prepareCall("{call sp_App_Contrato_Update(?,?,?,?)}")) {
+             CallableStatement cs = conn.prepareCall("{call sp_App_Contrato_Update(?,?,?,?,?)}")) {
             cs.setLong(1, c.idContrato);
             cs.setTimestamp(2, c.fechaModificacion);
             cs.setString(3, c.estatus);
             cs.setString(4, c.idioma);
+            cs.setLong(5, c.idUsuarioModificacion);
             cs.executeUpdate();
         }
     }
@@ -431,7 +431,6 @@ public class VentasContratoRepository {
             m.setUsaCity(rs.getString("Ciudad"));
             m.setUsaState(rs.getString("Estado"));
             m.setUsaZip(rs.getString("CP"));
-            m.setUsaNeighborhood(rs.getString("Colonia"));
             m.setPoBox(rs.getString("PoBox"));
             m.setBox(rs.getString("Box"));
             m.setCmr(rs.getString("Cmr"));

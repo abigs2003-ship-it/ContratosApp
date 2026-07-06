@@ -7,8 +7,7 @@ import java.sql.*;
 import java.util.Objects;
 
 public class VentasInformacionGeneralRepository {
-    // Baja lógica: marca el registro activo como 'C' sin eliminar físicamente
-
+    private String nz(String v) { return v == null ? "" : v; }
     private void mapResultSet(VentasInformacionGeneral g, ResultSet rs) throws SQLException {
         g.idDatosVenta = rs.getLong("IdDatosVenta");
         g.idContrato = rs.getLong("IdContrato");
@@ -180,130 +179,129 @@ public class VentasInformacionGeneralRepository {
                                        long idDatosVenta, long idUsuarioAlta) throws SQLException {
         cs.setLong(1, idDatosVenta);
         cs.setLong(2, g.idContrato);
-        cs.setString(3, g.tipoDir);
-        cs.setString(4, g.calle);
-        cs.setString(5, g.noExt);
-        cs.setString(6, g.noInt);
-        cs.setString(7, g.poBox);
-        cs.setString(8, g.box);
-        cs.setString(9, g.cmr);
-        cs.setString(10, g.apo);
-        cs.setString(11, g.colonia);
-        cs.setString(12, g.delegacion);
-        cs.setString(13, g.ciudad);
-        cs.setString(14, g.estado);
-        cs.setString(15, g.pais);
-        cs.setString(16, g.cp);
-        cs.setString(17, g.linea1);
-        cs.setString(18, g.linea2);
-        cs.setString(19, g.linea3);
-        cs.setString(20, g.linea4);
-        cs.setString(21, g.linea5);
-        cs.setString(22, g.telefonoDefault);
-        cs.setString(23, g.ladaCasa1);
-        cs.setString(24, g.telefonoCasa1);
+        cs.setString(3, nz(g.tipoDir));
+        cs.setString(4, nz(g.calle));
+        cs.setString(5, nz(g.noExt));
+        cs.setString(6, nz(g.noInt));
+        cs.setString(7, nz(g.poBox));
+        cs.setString(8, nz(g.box));
+        cs.setString(9, nz(g.cmr));
+        cs.setString(10, nz(g.apo));
+        cs.setString(11, nz(g.colonia));
+        cs.setString(12, nz(g.delegacion));
+        cs.setString(13, nz(g.ciudad));
+        cs.setString(14, nz(g.estado));
+        cs.setString(15, nz(g.pais));
+        cs.setString(16, nz(g.cp));
+        cs.setString(17, nz(g.linea1));
+        cs.setString(18, nz(g.linea2));
+        cs.setString(19, nz(g.linea3));
+        cs.setString(20, nz(g.linea4));
+        cs.setString(21, nz(g.linea5));
+        cs.setString(22, nz(g.telefonoDefault));
+        cs.setString(23, nz(g.ladaCasa1));
+        cs.setString(24, nz(g.telefonoCasa1));
         cs.setBoolean(25, g.whatsAppCasa1);
-        cs.setString(26, g.ladaCasa2);
-        cs.setString(27, g.telefonoCasa2);
+        cs.setString(26, nz(g.ladaCasa2));
+        cs.setString(27, nz(g.telefonoCasa2));
         cs.setBoolean(28, g.whatsAppCasa2);
-        cs.setString(29, g.ladaOficina1);
-        cs.setString(30, g.telefonoOficina1);
+        cs.setString(29, nz(g.ladaOficina1));
+        cs.setString(30, nz(g.telefonoOficina1));
         cs.setBoolean(31, g.whatsAppOficina1);
-        cs.setString(32, g.ladaOficina2);
-        cs.setString(33, g.telefonoOficina2);
+        cs.setString(32, nz(g.ladaOficina2));
+        cs.setString(33, nz(g.telefonoOficina2));
         cs.setBoolean(34, g.whatsAppOficina2);
-        cs.setString(35, g.ladaCelular1);
-        cs.setString(36, g.telefonoCelular1);
+        cs.setString(35, nz(g.ladaCelular1));
+        cs.setString(36, nz(g.telefonoCelular1));
         cs.setBoolean(37, g.whatsAppCelular1);
-        cs.setString(38, g.ladaCelular2);
-        cs.setString(39, g.telefonoCelular2);
+        cs.setString(38, nz(g.ladaCelular2));
+        cs.setString(39, nz(g.telefonoCelular2));
         cs.setBoolean(40, g.whatsAppCelular2);
-        cs.setString(41, g.ladaCelular3);
-        cs.setString(42, g.telefonoCelular3);
+        cs.setString(41, nz(g.ladaCelular3));
+        cs.setString(42, nz(g.telefonoCelular3));
         cs.setBoolean(43, g.whatsAppCelular3);
-        cs.setString(44, g.ladaMensajes);
-        cs.setString(45, g.telefonoMensajes);
+        cs.setString(44, nz(g.ladaMensajes));
+        cs.setString(45, nz(g.telefonoMensajes));
         cs.setBoolean(46, g.whatsAppMensajes);
-        cs.setString(47, g.nacionalidad);
-        cs.setString(48, g.email1);
-        cs.setString(49, g.email2);
-        cs.setString(50, g.email3);
-        cs.setString(51, g.email4);
+        cs.setString(47, nz(g.nacionalidad));
+        cs.setString(48, nz(g.email1));
+        cs.setString(49, nz(g.email2));
+        cs.setString(50, nz(g.email3));
+        cs.setString(51, nz(g.email4));
         cs.setLong(52, idUsuarioAlta);
     }
-
 
     private void fillReplaceCallableStatement(CallableStatement cs,
                                               VentasInformacionGeneral g,
                                               long idUsuario) throws SQLException {
 
         cs.setLong(1, g.idContrato);
-        cs.setString(2, g.tipoDir);
-        cs.setString(3, g.calle);
-        cs.setString(4, g.noExt);
-        cs.setString(5, g.noInt);
-        cs.setString(6, g.poBox);
-        cs.setString(7, g.box);
-        cs.setString(8, g.cmr);
-        cs.setString(9, g.apo);
-        cs.setString(10, g.colonia);
-        cs.setString(11, g.delegacion);
-        cs.setString(12, g.ciudad);
-        cs.setString(13, g.estado);
-        cs.setString(14, g.pais);
-        cs.setString(15, g.cp);
-        cs.setString(16, g.linea1);
-        cs.setString(17, g.linea2);
-        cs.setString(18, g.linea3);
-        cs.setString(19, g.linea4);
-        cs.setString(20, g.linea5);
-        cs.setString(21, g.telefonoDefault);
+        cs.setString(2, nz(g.tipoDir));
+        cs.setString(3, nz(g.calle));
+        cs.setString(4, nz(g.noExt));
+        cs.setString(5, nz(g.noInt));
+        cs.setString(6, nz(g.poBox));
+        cs.setString(7, nz(g.box));
+        cs.setString(8, nz(g.cmr));
+        cs.setString(9, nz(g.apo));
+        cs.setString(10, nz(g.colonia));
+        cs.setString(11, nz(g.delegacion));
+        cs.setString(12, nz(g.ciudad));
+        cs.setString(13, nz(g.estado));
+        cs.setString(14, nz(g.pais));
+        cs.setString(15, nz(g.cp));
+        cs.setString(16, nz(g.linea1));
+        cs.setString(17, nz(g.linea2));
+        cs.setString(18, nz(g.linea3));
+        cs.setString(19, nz(g.linea4));
+        cs.setString(20, nz(g.linea5));
+        cs.setString(21, nz(g.telefonoDefault));
 
         // Casa
-        cs.setString(22, g.ladaCasa1);
-        cs.setString(23, g.telefonoCasa1);
+        cs.setString(22, nz(g.ladaCasa1));
+        cs.setString(23, nz(g.telefonoCasa1));
         cs.setBoolean(24, g.whatsAppCasa1);
 
-        cs.setString(25, g.ladaCasa2);
-        cs.setString(26, g.telefonoCasa2);
+        cs.setString(25, nz(g.ladaCasa2));
+        cs.setString(26, nz(g.telefonoCasa2));
         cs.setBoolean(27, g.whatsAppCasa2);
 
         // Celular 1
-        cs.setString(28, g.ladaCelular1);
-        cs.setString(29, g.telefonoCelular1);
+        cs.setString(28, nz(g.ladaCelular1));
+        cs.setString(29, nz(g.telefonoCelular1));
         cs.setBoolean(30, g.whatsAppCelular1);
 
         // Celular 2
-        cs.setString(31, g.ladaCelular2);
-        cs.setString(32, g.telefonoCelular2);
+        cs.setString(31, nz(g.ladaCelular2));
+        cs.setString(32, nz(g.telefonoCelular2));
         cs.setBoolean(33, g.whatsAppCelular2);
 
         // Celular 3
-        cs.setString(34, g.ladaCelular3);
-        cs.setString(35, g.telefonoCelular3);
+        cs.setString(34, nz(g.ladaCelular3));
+        cs.setString(35, nz(g.telefonoCelular3));
         cs.setBoolean(36, g.whatsAppCelular3);
 
         // Mensajes
-        cs.setString(37, g.ladaMensajes);
-        cs.setString(38, g.telefonoMensajes);
+        cs.setString(37, nz(g.ladaMensajes));
+        cs.setString(38, nz(g.telefonoMensajes));
         cs.setBoolean(39, g.whatsAppMensajes);
 
         // Oficina 1
-        cs.setString(40, g.ladaOficina1);
-        cs.setString(41, g.telefonoOficina1);
+        cs.setString(40, nz(g.ladaOficina1));
+        cs.setString(41, nz(g.telefonoOficina1));
         cs.setBoolean(42, g.whatsAppOficina1);
 
         // Oficina 2
-        cs.setString(43, g.ladaOficina2);
-        cs.setString(44, g.telefonoOficina2);
+        cs.setString(43, nz(g.ladaOficina2));
+        cs.setString(44, nz(g.telefonoOficina2));
         cs.setBoolean(45, g.whatsAppOficina2);
 
         // Restantes
-        cs.setString(46, g.nacionalidad);
-        cs.setString(47, g.email1);
-        cs.setString(48, g.email2);
-        cs.setString(49, g.email3);
-        cs.setString(50, g.email4);
+        cs.setString(46, nz(g.nacionalidad));
+        cs.setString(47, nz(g.email1));
+        cs.setString(48, nz(g.email2));
+        cs.setString(49, nz(g.email3));
+        cs.setString(50, nz(g.email4));
         cs.setLong(51, idUsuario);
     }
 }

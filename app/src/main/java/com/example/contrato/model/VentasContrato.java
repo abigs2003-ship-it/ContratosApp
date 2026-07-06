@@ -9,7 +9,7 @@ public class VentasContrato {
     public Timestamp fechaModificacion;
     public String estatus;
     public String idioma;
-    public long IdUsuarioModificacion;
+    public long idUsuarioModificacion;
 
     public VentasContrato() {}
 }

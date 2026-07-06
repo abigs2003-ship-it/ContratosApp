@@ -62,7 +62,7 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
         if (binding == null) return;
         ContratoModelo Contrato = viewModel.getContratoValue();
         if (Contrato == null) Contrato = new ContratoModelo();
-        
+
         Contrato.setLinea1(binding.editLinea1.getText().toString());
         Contrato.setLinea2(binding.editLinea2.getText().toString());
         Contrato.setLinea3(binding.editLinea3.getText().toString());
@@ -71,8 +71,8 @@ public class DomicilioFragmentOtro extends Fragment implements PestañaDireccion
         Contrato.setPaisOtro(binding.editPaisOtro.getText().toString());
 
         Contrato.setTipoDir("OTR");
+        Contrato.setPais("OTR");  
 
-        
         viewModel.setContrato(Contrato);
     }
 
