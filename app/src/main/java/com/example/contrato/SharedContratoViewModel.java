@@ -188,7 +188,7 @@ public class SharedContratoViewModel extends ViewModel {
                     vc.fechaModificacion = now;
                     vc.idUsuarioModificacion = idUsuario;
                     Log.d("IDIOMA_DEBUG", "actualizaContratoBaseDatos: model.getIdioma()=" + model.getIdioma() + " -> mapeado=" + mapeaIdiomaBD(model.getIdioma()));
-                    vc.idioma = mapeaIdiomaBD(model.getIdioma());
+                    vc.idioma = orEmpty(mapeaIdiomaBD(model.getIdioma()));
                     vc.estatus = "A"; // se mantiene activo; ya no existe el estado "M"
                     contratoRepo.update(vc);
                 }
@@ -243,21 +243,21 @@ public class SharedContratoViewModel extends ViewModel {
                 for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
                     String cleanNum  = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
                     String cleanLada = p.lada   != null ? p.lada.replaceAll("[^0-9]", "")   : "";
-                    if      (p.etiqueta.contains("Casa 1"))    { vigNuevo.ladaCasa1      = truncate(cleanLada, 5); vigNuevo.telefonoCasa1      = truncate(cleanNum, 15); vigNuevo.whatsAppCasa1      = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Casa 2"))    { vigNuevo.ladaCasa2      = truncate(cleanLada, 5); vigNuevo.telefonoCasa2      = truncate(cleanNum, 15); vigNuevo.whatsAppCasa2      = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Celular 1")) { vigNuevo.ladaCelular1   = truncate(cleanLada, 5); vigNuevo.telefonoCelular1   = truncate(cleanNum, 15); vigNuevo.whatsAppCelular1   = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Celular 2")) { vigNuevo.ladaCelular2   = truncate(cleanLada, 5); vigNuevo.telefonoCelular2   = truncate(cleanNum, 15); vigNuevo.whatsAppCelular2   = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Celular 3")) { vigNuevo.ladaCelular3   = truncate(cleanLada, 5); vigNuevo.telefonoCelular3  = truncate(cleanNum, 15); vigNuevo.whatsAppCelular3   = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Oficina 1")) { vigNuevo.ladaOficina1   = truncate(cleanLada, 5); vigNuevo.telefonoOficina1   = truncate(cleanNum, 15); vigNuevo.whatsAppOficina1   = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Oficina 2")) { vigNuevo.ladaOficina2   = truncate(cleanLada, 5); vigNuevo.telefonoOficina2   = truncate(cleanNum, 15); vigNuevo.whatsAppOficina2   = p.isWhatsApp; }
-                    else if (p.etiqueta.contains("Mensajes"))  { vigNuevo.ladaMensajes   = truncate(cleanLada, 5); vigNuevo.telefonoMensajes   = truncate(cleanNum, 15); vigNuevo.whatsAppMensajes   = p.isWhatsApp; }
-                    if (p.esPrincipal) vigNuevo.telefonoDefault = truncate(p.etiqueta, 20);
+                    if      (p.etiqueta.contains("Casa 1"))    { vigNuevo.ladaCasa1      = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoCasa1      = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppCasa1      = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Casa 2"))    { vigNuevo.ladaCasa2      = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoCasa2      = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppCasa2      = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Celular 1")) { vigNuevo.ladaCelular1   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoCelular1   = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppCelular1   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Celular 2")) { vigNuevo.ladaCelular2   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoCelular2   = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppCelular2   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Celular 3")) { vigNuevo.ladaCelular3   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoCelular3  = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppCelular3   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Oficina 1")) { vigNuevo.ladaOficina1   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoOficina1   = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppOficina1   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Oficina 2")) { vigNuevo.ladaOficina2   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoOficina2   = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppOficina2   = p.isWhatsApp; }
+                    else if (p.etiqueta.contains("Mensajes"))  { vigNuevo.ladaMensajes   = orEmpty(truncate(cleanLada, 5)); vigNuevo.telefonoMensajes   = orEmpty(truncate(cleanNum, 15)); vigNuevo.whatsAppMensajes   = p.isWhatsApp; }
+                    if (p.esPrincipal) vigNuevo.telefonoDefault = orEmpty(truncate(p.etiqueta, 20));
                 }
 
-                vigNuevo.email1 = (model.getEmails().size() > 0) ? truncate(model.getEmails().get(0), 60) : "";
-                vigNuevo.email2 = (model.getEmails().size() > 1) ? truncate(model.getEmails().get(1), 60) : "";
-                vigNuevo.email3 = (model.getEmails().size() > 2) ? truncate(model.getEmails().get(2), 60) : "";
-                vigNuevo.email4 = (model.getEmails().size() > 3) ? truncate(model.getEmails().get(3), 60) : "";
+                vigNuevo.email1 = orEmpty((model.getEmails().size() > 0) ? truncate(model.getEmails().get(0), 60) : "");
+                vigNuevo.email2 = orEmpty((model.getEmails().size() > 1) ? truncate(model.getEmails().get(1), 60) : "");
+                vigNuevo.email3 = orEmpty((model.getEmails().size() > 2) ? truncate(model.getEmails().get(2), 60) : "");
+                vigNuevo.email4 = orEmpty((model.getEmails().size() > 3) ? truncate(model.getEmails().get(3), 60) : "");
 
                 if (vigActual == null || infoGralRepo.huboCambios(vigActual, vigNuevo)) {
                     infoGralRepo.replaceByContrato(vigNuevo, idUsuario);
@@ -286,19 +286,19 @@ public class SharedContratoViewModel extends ViewModel {
 
                 VentasInventario viNuevo  = new VentasInventario();
                 viNuevo.idContrato              = idContrato;
-                viNuevo.unidad                  = model.getUnidad();
-                viNuevo.temporada               = model.getTemporada();
-                viNuevo.tipoVenta               = model.getTipoVenta();
-                viNuevo.tipoOcupacion           = model.getTipoOcupacion();
+                viNuevo.unidad                  = orEmpty(model.getUnidad());
+                viNuevo.temporada               = orEmpty(model.getTemporada());
+                viNuevo.tipoVenta               = orEmpty(model.getTipoVenta());
+                viNuevo.tipoOcupacion           = orEmpty(model.getTipoOcupacion());
                 viNuevo.aniosComprados          = parseInt(model.getNoAnios());
                 viNuevo.primerAnioUso           = parseLong(model.getAnioUso());
-                viNuevo.monedaVenta             = model.getMoneda();
+                viNuevo.monedaVenta             = orEmpty(model.getMoneda());
                 viNuevo.tipoCambioVenta         = parseDouble(model.getTipoCambio());
                 viNuevo.precioBruto             = parseDouble(model.getPrecioBruto());
                 viNuevo.montoCta                = parseDouble(model.getMontoCuenta());
                 viNuevo.noContratosMontoCta     = parseLong(model.getNoContratosMC());
                 viNuevo.precioNeto              = parseDouble(model.getPrecioNeto());
-                viNuevo.tipoPago                = model.getTipoPago();
+                viNuevo.tipoPago                = orEmpty(model.getTipoPago());
                 viNuevo.engancheTotal           = parseDouble(model.getEngancheTotal());
                 viNuevo.engancheTotalPorcentaje = parseDouble(model.getEnganchePorcentaje());
                 viNuevo.enganchePagarSala       = parseDouble(model.getEngancheSalaMonto());
@@ -308,13 +308,13 @@ public class SharedContratoViewModel extends ViewModel {
                 viNuevo.engancheDiferido        = parseDouble(model.getEngDiferidoMonto());
                 viNuevo.noPagosEngancheDiferido = parseLong(model.getNoPagosEng());
                 viNuevo.saldoEnganche           = parseDouble(model.getSaldoEnganche());
-                viNuevo.tipoPagoDiferido = model.getTipoPagoEnganche();
+                viNuevo.tipoPagoDiferido = orEmpty(model.getTipoPagoEnganche());
 
                 viNuevo.montoFinanciar          = parseDouble(model.getMontoFinanciar());
                 viNuevo.costoContrato           = parseDouble(model.getCostoContrato());
                 viNuevo.totalPagoSala           = parseDouble(model.getPagoSala());
                 viNuevo.costoMembresia          = parseDouble(model.getCostoMembresia());
-                viNuevo.comentariosRegalos      = model.getComentarios();
+                viNuevo.comentariosRegalos      = orEmpty(model.getComentarios());
                 viNuevo.primerPagoDiferido      = parseSqlDate(convertirMesANumero(model.getPrimerPagoDiferido()));
 
                 viNuevo.idUsuarioAlta           = originalIdUsuarioAlta;
@@ -331,7 +331,7 @@ public class SharedContratoViewModel extends ViewModel {
                         vd.idDescuento    = descuentosRepo.getNextId();
                         vd.idContrato     = idContrato;
                         vd.montoDescuento = parseDouble(dd.monto);
-                        vd.descripcion    = dd.descripcion;
+                        vd.descripcion    = orEmpty(dd.descripcion);
                         vd.idUsuarioAlta  = originalIdUsuarioAlta;
                         descuentosRepo.insert(vd);
                     }
@@ -345,7 +345,7 @@ public class SharedContratoViewModel extends ViewModel {
                         VentasRegalos vr = new VentasRegalos();
                         vr.idRegalo      = regalosRepo.getNextId();
                         vr.idContrato    = idContrato;
-                        vr.descripcion   = regalo;
+                        vr.descripcion   = orEmpty(regalo);
                         vr.idUsuarioAlta = originalIdUsuarioAlta;
                         regalosRepo.insert(vr);
                     }
@@ -359,7 +359,7 @@ public class SharedContratoViewModel extends ViewModel {
                         VentasMontoCta vmc = new VentasMontoCta();
                         vmc.idMontoCta   = montoCtaRepo.getNextId();
                         vmc.idContrato   = idContrato;
-                        vmc.xref         = xref;
+                        vmc.xref         = orEmpty(xref);
                         vmc.idUsuarioAlta = originalIdUsuarioAlta;
                         montoCtaRepo.insert(vmc);
                     }
@@ -386,7 +386,7 @@ public class SharedContratoViewModel extends ViewModel {
                 VentasFinanciamientos vfActual = financiamientoRepo.getByContratoId(idContrato);
                 VentasFinanciamientos vfNuevo  = new VentasFinanciamientos();
                 vfNuevo.idContrato      = idContrato;
-                vfNuevo.tipoPeriodo     = model.getTipoPeriodo();
+                vfNuevo.tipoPeriodo     = orEmpty(model.getTipoPeriodo());
                 vfNuevo.fechaPrimerPago = parseSqlDate(convertirMesANumero(model.getFechaPrimerPago()));
                 vfNuevo.montoAFinanciar = parseDouble(model.getMontoFinanciar());
                 vfNuevo.numeroPagos     = parseInt(model.getNumPagos());
@@ -404,9 +404,9 @@ public class SharedContratoViewModel extends ViewModel {
                 vrsNuevo.idUsuarioAlta = originalIdUsuarioAlta;
                 if (!model.isNoRedesSociales()) {
                     for (ContratoModelo.CuentaRed sa : model.getRedesSociales()) {
-                        if      ("Instagram".equalsIgnoreCase(sa.red)) vrsNuevo.usuarioInstagram = sa.usuario;
-                        else if ("Facebook".equalsIgnoreCase(sa.red))  vrsNuevo.usuarioFacebook  = sa.usuario;
-                        else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrsNuevo.usuarioTwitter = sa.usuario;
+                        if      ("Instagram".equalsIgnoreCase(sa.red)) vrsNuevo.usuarioInstagram = orEmpty(sa.usuario);
+                        else if ("Facebook".equalsIgnoreCase(sa.red))  vrsNuevo.usuarioFacebook  = orEmpty(sa.usuario);
+                        else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrsNuevo.usuarioTwitter = orEmpty(sa.usuario);
                     }
                 }
 
@@ -473,261 +473,6 @@ public class SharedContratoViewModel extends ViewModel {
         vig.telefonoMensajes = vig.ladaMensajes = null; vig.whatsAppMensajes = false;
     }
 
-    public void guardaContratoBaseDatos() {
-        ContratoModelo model = getContratoValue();
-        if (model == null) return;
-
-        new Thread(() -> {
-            try {
-                long idContrato = contratoRepo.getNextId();
-                Timestamp now = new Timestamp(System.currentTimeMillis());
-                long idUsuario = currentUserId != -1 ? currentUserId : 1;
-
-                VentasContrato vc = new VentasContrato();
-                vc.idContrato = idContrato;
-                vc.fechaAlta = now;
-                vc.idUsuarioAlta = idUsuario;
-                vc.fechaModificacion = null;
-                vc.estatus = "A";
-                vc.idioma = mapeaIdiomaBD(model.getIdioma());
-                contratoRepo.insert(vc);
-
-                VentasInformacionGeneral vig = new VentasInformacionGeneral();
-                vig.idDatosVenta = infoGralRepo.getNextId();
-                vig.idContrato = idContrato;
-                vig.pais = orEmpty(truncate(model.getPais(), 50));
-                vig.tipoDir = orEmpty(model.getTipoDir());
-                vig.nacionalidad = orEmpty(truncate(model.getNacionalidad(), 50));
-
-                vig.calle = vig.noExt = vig.noInt = "";
-                vig.poBox = vig.box = vig.cmr = vig.apo = "";
-                vig.colonia = vig.delegacion = vig.ciudad = vig.estado = vig.cp = "";
-                vig.linea1 = vig.linea2 = vig.linea3 = vig.linea4 = vig.linea5 = "";
-
-                if ("México".equalsIgnoreCase(model.getPais())) {
-                    vig.calle = orEmpty(truncate(model.getMexCalle(), 150));
-                    vig.noExt = orEmpty(truncate(model.getMexNumExt(), 10));
-                    vig.noInt = orEmpty(truncate(model.getMexNumInt(), 10));
-                    vig.colonia = orEmpty(truncate(model.getMexColonia(), 50));
-                    vig.delegacion = orEmpty(truncate(model.getDelegacion(), 50));
-                    vig.ciudad = orEmpty(truncate(model.getMexCiudad(), 50));
-                    vig.estado = orEmpty(truncate(model.getMexEstado(), 50));
-                    vig.cp = orEmpty(truncate(model.getMexCP(), 15));
-                } else if ("EEUU".equalsIgnoreCase(model.getPais()) || "USA".equalsIgnoreCase(model.getPais()) || (model.getPais() != null && model.getPais().contains("USA"))) {
-                    vig.calle = orEmpty(truncate(model.getUsaCalle(), 150));
-                    vig.ciudad = orEmpty(truncate(model.getUsaCity(), 50));
-                    vig.estado = orEmpty(truncate(model.getUsaState(), 50));
-                    vig.cp = orEmpty(truncate(model.getUsaZip(), 15));
-                    vig.poBox = orEmpty(truncate(model.getPoBox(), 10));
-                    vig.box = orEmpty(truncate(model.getBox(), 10));
-                    vig.cmr = orEmpty(truncate(model.getCmr(), 10));
-                    vig.apo = orEmpty(truncate(model.getApo(), 10));
-                } else if ("Canadá".equalsIgnoreCase(model.getPais())) {
-                    vig.calle = orEmpty(truncate(model.getCanCalle(), 150));
-                    vig.ciudad = orEmpty(truncate(model.getCanCity(), 50));
-                    vig.estado = orEmpty(truncate(model.getCanProvince(), 50));
-                    vig.cp = orEmpty(truncate(model.getCanPostalCode(), 15));
-                } else {
-                    vig.linea1 = orEmpty(truncate(model.getLinea1(), 150));
-                    vig.linea2 = orEmpty(truncate(model.getLinea2(), 150));
-                    vig.linea3 = orEmpty(truncate(model.getLinea3(), 150));
-                    vig.linea4 = orEmpty(truncate(model.getLinea4(), 150));
-                    vig.linea5 = orEmpty(truncate(model.getLinea5(), 150));
-                    vig.pais = orEmpty(truncate(model.getPaisOtro(), 50));
-                }
-
-                for (ContratoModelo.InfoTelefono p : model.getTelefonos()) {
-                    String cleanNum = p.numero != null ? p.numero.replaceAll("[^0-9]", "") : "";
-                    String cleanLada = p.lada != null ? p.lada.replaceAll("[^0-9]", "") : "";
-                    if (p.etiqueta.contains("Casa 1")) {
-                        vig.ladaCasa1 = truncate(cleanLada, 5);
-                        vig.telefonoCasa1 = truncate(cleanNum, 15);
-                        vig.whatsAppCasa1 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Casa 2")) {
-                        vig.ladaCasa2 = truncate(cleanLada, 5);
-                        vig.telefonoCasa2 = truncate(cleanNum, 15);
-                        vig.whatsAppCasa2 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Celular 1")) {
-                        vig.ladaCelular1 = truncate(cleanLada, 5);
-                        vig.telefonoCelular1 = truncate(cleanNum, 15);
-                        vig.whatsAppCelular1 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Celular 2")) {
-                        vig.ladaCelular2 = truncate(cleanLada, 5);
-                        vig.telefonoCelular2 = truncate(cleanNum, 15);
-                        vig.whatsAppCelular2 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Celular 3")) {
-                        vig.ladaCelular3 = truncate(cleanLada, 5);
-                        vig.telefonoCelular3 = truncate(cleanNum, 15);
-                        vig.whatsAppCelular3 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Oficina 1")) {
-                        vig.ladaOficina1 = truncate(cleanLada, 5);
-                        vig.telefonoOficina1 = truncate(cleanNum, 15);
-                        vig.whatsAppOficina1 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Oficina 2")) {
-                        vig.ladaOficina2 = truncate(cleanLada, 5);
-                        vig.telefonoOficina2 = truncate(cleanNum, 15);
-                        vig.whatsAppOficina2 = p.isWhatsApp;
-                    }
-                    else if (p.etiqueta.contains("Mensajes")) {
-                        vig.ladaMensajes = truncate(cleanLada, 5);
-                        vig.telefonoMensajes = truncate(cleanNum, 15);
-                        vig.whatsAppMensajes = p.isWhatsApp;
-                    }
-                    if (p.esPrincipal) vig.telefonoDefault = truncate(p.etiqueta, 20);
-                }
-
-                vig.email1 = ""; vig.email2 = ""; vig.email3 = ""; vig.email4 = "";
-                List<String> emails = model.getEmails();
-                if (emails.size() > 0) vig.email1 = truncate(emails.get(0), 60);
-                if (emails.size() > 1) vig.email2 = truncate(emails.get(1), 60);
-                if (emails.size() > 2) vig.email3 = truncate(emails.get(2), 60);
-                if (emails.size() > 3) vig.email4 = truncate(emails.get(3), 60);
-
-                vig.fechaAlta = now;
-                vig.idUsuarioAlta = idUsuario;
-                infoGralRepo.insert(vig);
-
-                guardaTitulares(model.getTitulares(), idContrato, "Titular", idUsuario, null);
-                guardaTitulares(model.getBeneficiarios(), idContrato, "Beneficiario", idUsuario, null);
-
-                VentasInventario vi = new VentasInventario();
-                vi.idCondicionesVenta = inventarioRepo.getNextId();
-                vi.idContrato = idContrato;
-                vi.unidad = model.getUnidad();
-                vi.temporada = model.getTemporada();
-                vi.tipoVenta = model.getTipoVenta();
-                vi.tipoOcupacion = model.getTipoOcupacion();
-                vi.aniosComprados = parseInt(model.getNoAnios());
-                vi.primerAnioUso = parseLong(model.getAnioUso());
-                vi.monedaVenta = model.getMoneda();
-                vi.tipoCambioVenta = parseDouble(model.getTipoCambio());
-                vi.precioBruto = parseDouble(model.getPrecioBruto());
-                vi.montoCta = parseDouble(model.getMontoCuenta());
-                vi.noContratosMontoCta = parseLong(model.getNoContratosMC());
-                vi.precioNeto = parseDouble(model.getPrecioNeto());
-                vi.tipoPago = model.getTipoPago();
-                vi.engancheTotal = parseDouble(model.getEngancheTotal());
-                vi.engancheTotalPorcentaje = parseDouble(model.getEnganchePorcentaje());
-                vi.enganchePagarSala = parseDouble(model.getEngancheSalaMonto());
-                vi.enganchePagarSalaPorcentaje = parseDouble(model.getEngancheSalaPorcentaje());
-                vi.descuentos = parseDouble(model.getVariosMonto());
-                vi.noDescuentos = parseInt(model.getNoDesc());
-                vi.engancheDiferido = parseDouble(model.getEngDiferidoMonto());
-                vi.noPagosEngancheDiferido = parseLong(model.getNoPagosEng());
-                vi.saldoEnganche = parseDouble(model.getSaldoEnganche());
-                vi.tipoPagoDiferido = model.getTipoPagoEnganche();
-                vi.montoFinanciar = parseDouble(model.getMontoFinanciar());
-                vi.costoContrato = parseDouble(model.getCostoContrato());
-                vi.totalPagoSala = parseDouble(model.getPagoSala());
-                vi.costoMembresia = parseDouble(model.getCostoMembresia());
-                vi.primerPagoDiferido = parseSqlDate(convertirMesANumero(model.getPrimerPagoDiferido()));
-
-                vi.comentariosRegalos = model.getComentarios();
-                vi.fechaAlta = now;
-                vi.idUsuarioAlta = idUsuario;
-                inventarioRepo.insert(vi);
-
-                for (ContratoModelo.DescuentoDetalle dd : model.getDescuentosDetalle()) {
-                    VentasDescuentos vd = new VentasDescuentos();
-                    vd.idDescuento = descuentosRepo.getNextId();
-                    vd.idContrato = idContrato;
-                    vd.montoDescuento = parseDouble(dd.monto);
-                    vd.descripcion = dd.descripcion;
-                    vd.fechaAlta = now;
-                    vd.idUsuarioAlta = idUsuario;
-                    descuentosRepo.insert(vd);
-                }
-
-                int i = 1;
-                for (ContratoModelo.PagoDiferido pd : model.getPagosDiferidos()) {
-                    VentasEngancheDiferido ved = new VentasEngancheDiferido();
-                    ved.idPago = engancheDiferidoRepo.getNextId();
-                    ved.idContrato = idContrato;
-                    ved.cantidadPago = parseDouble(pd.monto);
-                    ved.fechaPago = parseSqlDate(convertirMesANumero(pd.fecha));
-                    ved.fechaAlta = now;
-                    ved.idUsuarioAlta = idUsuario;
-                    ved.noPago = i++;
-                    engancheDiferidoRepo.insert(ved);
-                }
-
-                for (String xref : model.getContratosMontoCuenta()) {
-                    VentasMontoCta vmc = new VentasMontoCta();
-                    vmc.idMontoCta = montoCtaRepo.getNextId();
-                    vmc.idContrato = idContrato;
-                    vmc.xref = xref;
-                    vmc.fechaAlta = now;
-                    vmc.idUsuarioAlta = idUsuario;
-                    montoCtaRepo.insert(vmc);
-                }
-
-                VentasFinanciamientos vf = new VentasFinanciamientos();
-                vf.idFinanciamiento = financiamientoRepo.getNextId();
-                vf.idContrato = idContrato;
-                vf.tipoPeriodo = model.getTipoPeriodo();
-                vf.fechaPrimerPago = parseSqlDate(convertirMesANumero(model.getFechaPrimerPago()));
-                vf.montoAFinanciar = parseDouble(model.getMontoFinanciar());
-                vf.numeroPagos = parseInt(model.getNumPagos());
-                vf.tasaInteres = parseDouble(model.getTasaInteres());
-                vf.fechaAlta = now;
-                vf.idUsuarioAlta = idUsuario;
-                financiamientoRepo.insert(vf);
-
-                for (String regalo : model.getRegalos()) {
-                    VentasRegalos vr = new VentasRegalos();
-                    vr.idRegalo = regalosRepo.getNextId();
-                    vr.idContrato = idContrato;
-                    vr.descripcion = regalo;
-                    vr.fechaAlta = now;
-                    vr.idUsuarioAlta = idUsuario;
-                    regalosRepo.insert(vr);
-                }
-
-                if (model.getRedesSociales().size() > 0) {
-                    VentasRedesSociales vrs = new VentasRedesSociales();
-                    vrs.idRedSocial = redesSocialesRepo.getNextId();
-                    vrs.idContrato = idContrato;
-                    for (ContratoModelo.CuentaRed sa : model.getRedesSociales()) {
-                        if ("Instagram".equalsIgnoreCase(sa.red)) vrs.usuarioInstagram = sa.usuario;
-                        else if ("Facebook".equalsIgnoreCase(sa.red)) vrs.usuarioFacebook = sa.usuario;
-                        else if ("Twitter".equalsIgnoreCase(sa.red) || "X".equalsIgnoreCase(sa.red)) vrs.usuarioTwitter = sa.usuario;
-                    }
-                    vrs.fechaAlta = now;
-                    vrs.idUsuarioAlta = idUsuario;
-                    redesSocialesRepo.insert(vrs);
-                }
-// ── Detalle Financiamiento (tabla de amortización) ───────────────
-                List<ContratoModelo.FilaAmortizacion> filas = model.getFilasAmortizacion();
-                if (filas != null && !filas.isEmpty()) {
-                    for (ContratoModelo.FilaAmortizacion fa : filas) {
-                        VentasDetalleFinanciamiento df = new VentasDetalleFinanciamiento();
-                        df.idDetalleFinanciamiento = detalleFinRepo.getNextId();
-                        df.idContrato   = idContrato;
-                        df.no           = fa.no;
-                        df.fechaPago    = parseSqlDate(convertirMesANumero(fa.fecha));
-                        df.monto        = fa.monto;
-                        df.capital      = fa.capital;
-                        df.interes      = fa.interes;
-                        df.capAcumulado = fa.capAcumulado;
-                        df.saldo        = fa.saldo;
-                        df.idUsuarioAlta = idUsuario; // idUsuario ya viene de: long idUsuario = currentUserId != -1 ? currentUserId : 1;
-                        detalleFinRepo.insert(df);
-                    }
-                }
-                saveSuccess.postValue(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                errorMessage.postValue("Error al guardar: " + e.getMessage());
-                saveSuccess.postValue(false);
-            }
-        }).start();
-    }
 
     private void guardaTitulares(List<ContratoModelo.Persona> personas, long idContrato, String tipo,
                                  long idUsuarioAlta, Map<Long, VentasTitulares> archivosExistentes) throws SQLException {
